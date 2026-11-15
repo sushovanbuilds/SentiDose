@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@400..600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24..48,400..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container-high": "#dfe9f7", "surface-container-low": "#edf4ff", "border": "#E5E0D8", "primary-container": "#0f766e", "secondary-container": "#aff1ca", "warning": "#B7791F", "inverse-on-surface": "#e8f2ff", "surface-container": "#e4effd", "text-muted": "#52606D", "tertiary-container": "#945d00", "surface-tint": "#006a63", "primary-fixed-dim": "#80d5cb", "on-primary-fixed": "#00201d", "on-secondary-container": "#317051", "surface-dim": "#d1dbe8", "secondary": "#2b6a4b", "outline-variant": "#bdc9c6", "on-tertiary-fixed": "#2a1700", "tertiary-fixed": "#ffddb8", "danger": "#B42318", "primary": "#005c55", "success": "#4D8B6A", "surface-container-highest": "#d9e3f1", "surface": "#FFFFFF", "secondary-fixed-dim": "#94d4af", "tertiary": "#734700", "on-error-container": "#93000a", "surface-bright": "#f7f9ff", "on-background": "#121d26", "on-secondary-fixed-variant": "#0c5135", "text": "#1F2933", "focus-ring": "#0F766E", "danger-soft": "#FBEAE8", "on-primary": "#ffffff", "on-secondary-fixed": "#002112", "on-secondary": "#ffffff", "on-surface": "#121d26", "on-primary-container": "#a3faef", "background": "#f7f9ff", "success-soft": "#E8F2EC", "primary-hover": "#0B5F59", "outline": "#6e7977", "on-primary-fixed-variant": "#00504a", "bg": "#FAF8F4", "on-tertiary-container": "#ffe6cc", "tertiary-fixed-dim": "#ffb95f", "on-error": "#ffffff", "warning-soft": "#FBF1DE", "surface-container-lowest": "#ffffff", "error-container": "#ffdad6", "secondary-fixed": "#aff1ca", "inverse-surface": "#27313c", "surface-variant": "#d9e3f1", "on-tertiary-fixed-variant": "#653e00", "error": "#ba1a1a", "on-tertiary": "#ffffff", "inverse-primary": "#80d5cb", "on-surface-variant": "#3e4947", "primary-soft": "#E6F2F0", "primary-fixed": "#9cf2e8" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin": "1.5rem", "space-md": "1rem", "space-sm": "0.5rem", "gutter": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "margin-mobile": "1rem", "gutter-mobile": "0.75rem", "space-xs": "0.25rem" }, fontFamily: { "body-caretaker": ["Inter"], "headline-h2": ["Atkinson Hyperlegible Next"], "headline-h1-mobile": ["Atkinson Hyperlegible Next"], "label-lg": ["Atkinson Hyperlegible Next"], "label-caretaker": ["Inter"], "headline-h2-mobile": ["Atkinson Hyperlegible Next"], "headline-alarm-mobile": ["Atkinson Hyperlegible Next"], "headline-alarm": ["Atkinson Hyperlegible Next"], "headline-h1": ["Atkinson Hyperlegible Next"], "body-elder": ["Atkinson Hyperlegible Next"] }, fontSize: { "body-caretaker": ["16px", { lineHeight: "24px", fontWeight: "400" }], "headline-h2": ["28px", { lineHeight: "36px", fontWeight: "700" }], "headline-h1-mobile": ["28px", { lineHeight: "36px", fontWeight: "700" }], "label-lg": ["18px", { lineHeight: "24px", fontWeight: "600" }], "label-caretaker": ["14px", { lineHeight: "20px", fontWeight: "600" }], "headline-h2-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }], "headline-alarm-mobile": ["32px", { lineHeight: "40px", fontWeight: "700" }], "headline-alarm": ["40px", { lineHeight: "48px", fontWeight: "700" }], "headline-h1": ["36px", { lineHeight: "44px", fontWeight: "700" }], "body-elder": ["20px", { lineHeight: "30px", fontWeight: "400" }] } } } };</script><style>@layer base{html,body{width:100vw;min-height:100vh;margin:0;padding:0;background-color:#FAF8F4;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-bg text-text font-body-elder min-h-screen flex flex-col selection:bg-primary-soft selection:text-primary"><header class="fixed top-0 w-full z-50 bg-bg/85 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 max-w-[560px] mx-auto px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><button aria-label="Go back" class="min-w-[48px] min-h-[48px] -ml-2 rounded-full flex items-center justify-center text-text hover:bg-primary-soft active:bg-primary-soft transition-colors focus:outline-none focus:ring-2 focus:ring-focus-ring" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[26px]">arrow_back</span></button><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[28px]">spa</span><span class="font-label-lg text-label-lg text-primary tracking-tight">CareCircle</span></div></div><div class="flex items-center gap-space-sm"><span class="font-label-caretaker text-label-caretaker text-text-muted hidden sm:inline">Enter Care Space Code</span><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full max-w-[560px] mx-auto px-margin-mobile pt-16 pb-safe bg-bg"><div class="flex flex-col w-full pb-8">
+<!-- Accessibility & State Inspector Switcher -->
+<section aria-label="Interactive Demo State Selector" class="mb-4 pt-1">
+<div class="bg-surface p-2 rounded-xl flex items-center justify-between gap-1 shadow-sm">
+<span class="font-label-caretaker text-label-caretaker text-text-muted px-2 shrink-0 flex items-center gap-1">
+<svg aria-hidden="true" class="w-4 h-4 text-primary" fill="none" stroke="#0F766E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="m10 15 5-3-5-3v6Z"></path></svg>
+        State:
+      </span>
+<div class="flex items-center gap-1 w-full justify-end overflow-x-auto py-0.5" role="tablist">
+<button aria-selected="true" class="h-10 px-3 rounded-lg text-label-caretaker font-label-caretaker transition-all bg-primary text-on-primary" id="tab-input" onclick="setState('input')" role="tab" type="button">
+          Enter Code
+        </button>
+<button aria-selected="false" class="h-10 px-3 rounded-lg text-label-caretaker font-label-caretaker transition-all bg-surface-container-high text-text hover:bg-surface-container" id="tab-error" onclick="setState('error')" role="tab" type="button">
+          Invalid Code
+        </button>
+<button aria-selected="false" class="h-10 px-3 rounded-lg text-label-caretaker font-label-caretaker transition-all bg-surface-container-high text-text hover:bg-surface-container" id="tab-success" onclick="setState('success')" role="tab" type="button">
+          Joined Space
+        </button>
+</div>
+</div>
+</section>
+<!-- STATE A & C: PASSCODE INPUT / ERROR VIEW -->
+<div class="flex flex-col w-full" id="view-entry">
+<!-- Header Context Card -->
+<section aria-labelledby="heading-join" class="bg-surface rounded-xl p-5 mb-4 shadow-sm">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-primary-soft flex items-center justify-center shrink-0">
+<svg aria-hidden="true" class="w-6 h-6 text-primary" fill="none" stroke="#0F766E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+<path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.86.86 2.22.86 3.08 0L15 8.16"></path>
+</svg>
+</div>
+<span class="font-label-lg text-label-lg text-primary tracking-tight">CareCircle Invitation</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container px-2.5 py-1 rounded-full text-text-muted font-label-caretaker text-label-caretaker">
+<svg class="w-4 h-4 text-text-muted" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          Protected
+        </div>
+</div>
+<h1 class="font-headline-h1-mobile text-headline-h1-mobile text-text mb-1" id="heading-join">
+        Join a care space
+      </h1>
+<p class="font-body-elder text-body-elder text-text-muted">
+        Ask your family member or primary caregiver for their 6-digit invite code.
+      </p>
+</section>
+<!-- Error Banner (Visible in Error State) -->
+<div aria-live="assertive" class="hidden mb-4 p-4 rounded-xl bg-danger-soft transition-all" id="error-banner" role="alert">
+<div class="flex items-start gap-3">
+<svg aria-hidden="true" class="w-6 h-6 text-danger shrink-0 mt-0.5" fill="none" stroke="#B42318" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="12" x2="12" y1="8" y2="12"></line>
+<line x1="12" x2="12.01" y1="16" y2="16"></line>
+</svg>
+<div class="flex-1">
+<p class="font-label-lg text-label-lg text-danger">That code didn't work</p>
+<p class="font-body-caretaker text-body-caretaker text-danger mt-0.5">Check the 6 numbers with your family and try entering it again.</p>
+<div class="mt-3 pt-2.5 flex flex-wrap items-center justify-between gap-2">
+<span class="font-label-caretaker text-label-caretaker text-danger flex items-center gap-1">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              2 attempts left before 15m lock
+            </span>
+<button class="h-10 px-3 rounded-lg bg-surface text-danger font-label-caretaker text-label-caretaker inline-flex items-center gap-1.5 shadow-sm active:bg-danger-soft" onclick="populateCode('742091')" type="button">
+<svg class="w-4 h-4 text-danger" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              Ask Rahul for code
+            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- 6-Digit Passcode Display Boxes -->
+<section aria-label="Code Input Boxes" class="bg-surface rounded-xl p-5 mb-4 shadow-sm">
+<div class="flex items-center justify-between mb-3">
+<label class="font-label-caretaker text-label-caretaker text-text-muted tracking-wide uppercase" for="hidden-code-input">
+          Enter 6-digit code
+        </label>
+<span class="font-label-caretaker text-label-caretaker text-text-muted" id="digit-counter">0 / 6 entered</span>
+</div>
+<!-- Secret accessible input to allow keyboard entry on physical devices while syncing -->
+<input aria-label="6 digit care space invitation code" autofocus="" class="sr-only" id="hidden-code-input" inputmode="numeric" maxlength="6" pattern="[0-9]*" type="text"/>
+<div class="grid grid-cols-6 gap-2 w-full max-w-[420px] mx-auto transition-transform" id="pin-container" onclick="focusInput()">
+<!-- Slot 0 -->
+<div class="h-16 rounded-xl bg-bg flex items-center justify-center font-headline-h2-mobile text-headline-h2-mobile text-text transition-all duration-150" id="slot-0">
+<span class="slot-char">-</span>
+</div>
+<!-- Slot 1 -->
+<div class="h-16 rounded-xl bg-bg flex items-center justify-center font-headline-h2-mobile text-headline-h2-mobile text-text transition-all duration-150" id="slot-1">
+<span class="slot-char">-</span>
+</div>
+<!-- Slot 2 -->
+<div class="h-16 rounded-xl bg-bg flex items-center justify-center font-headline-h2-mobile text-headline-h2-mobile text-text transition-all duration-150" id="slot-2">
+<span class="slot-char">-</span>
+</div>
+<!-- Slot 3 -->
+<div class="h-16 rounded-xl bg-bg flex items-center justify-center font-headline-h2-mobile text-headline-h2-mobile text-text transition-all duration-150" id="slot-3">
+<span class="slot-char">-</span>
+</div>
+<!-- Slot 4 -->
+<div class="h-16 rounded-xl bg-bg flex items-center justify-center font-headline-h2-mobile text-headline-h2-mobile text-text transition-all duration-150" id="slot-4">
+<span class="slot-char">-</span>
+</div>
+<!-- Slot 5 -->
+<div class="h-16 rounded-xl bg-bg flex items-center justify-center font-headline-h2-mobile text-headline-h2-mobile text-text transition-all duration-150" id="slot-5">
+<span class="slot-char">-</span>
+</div>
+</div>
+<div class="mt-4 flex items-center justify-center gap-1.5 text-text-muted font-body-caretaker text-body-caretaker">
+<svg aria-hidden="true" class="w-4 h-4 text-text-muted" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+<span>Codes are 6 numbers and expire after 24 hours</span>
+</div>
+</section>
+<!-- Large Elder-Friendly Tactile Keypad -->
+<section aria-label="Virtual Keypad" class="bg-surface rounded-xl p-4 mb-4 shadow-sm">
+<div class="grid grid-cols-3 gap-2.5 max-w-[420px] mx-auto">
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('1')" type="button">
+          1
+        </button>
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('2')" type="button">
+          2
+        </button>
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('3')" type="button">
+          3
+        </button>
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('4')" type="button">
+          4
+        </button>
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('5')" type="button">
+          5
+        </button>
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('6')" type="button">
+          6
+        </button>
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('7')" type="button">
+          7
+        </button>
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('8')" type="button">
+          8
+        </button>
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('9')" type="button">
+          9
+        </button>
+<button aria-label="Clear all entered numbers" class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-surface-container-high text-text-muted font-label-caretaker text-label-caretaker flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleClear()" type="button">
+          Clear
+        </button>
+<button class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-primary-soft active:text-primary text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleKeyPress('0')" type="button">
+          0
+        </button>
+<button aria-label="Delete last digit" class="h-16 rounded-xl bg-bg hover:bg-surface-container active:bg-surface-container-high text-text font-headline-h2-mobile text-headline-h2-mobile flex items-center justify-center transition-colors shadow-sm focus:outline-none" onclick="handleBackspace()" type="button">
+<svg aria-hidden="true" class="w-7 h-7 text-text" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+<line x1="18" x2="12" y1="9" y2="15"></line>
+<line x1="12" x2="18" y1="9" y2="15"></line>
+</svg>
+</button>
+</div>
+</section>
+<!-- Main Action Button -->
+<div class="mb-4">
+<button class="w-full min-h-[56px] rounded-xl font-label-lg text-label-lg transition-all flex items-center justify-center gap-2 bg-primary text-on-primary opacity-50 cursor-not-allowed shadow-sm" disabled="" id="btn-submit-code" onclick="submitPasscode()" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" x2="3" y1="12" y2="12"></line></svg>
+<span>Join Care Space</span>
+</button>
+</div>
+<!-- Assurance & Alternative Action -->
+<footer class="flex flex-col items-center gap-3 text-center px-2">
+<p class="font-body-caretaker text-body-caretaker text-text-muted flex items-center justify-center gap-2">
+<svg class="w-4 h-4 text-text-muted shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        Only people with the code can view medication details.
+      </p>
+<button class="min-h-[48px] px-4 font-label-caretaker text-label-caretaker text-primary underline underline-offset-4 hover:text-primary-hover focus:outline-none" onclick="alert('Navigating to: Create Care Space flow')" type="button">
+        Need to start a space instead? Create a new care space
+      </button>
+</footer>
+</div>
+<!-- STATE B: SUCCESS CONFIRMATION VIEW -->
+<div class="hidden flex-col w-full" id="view-success">
+<!-- Success Banner Card -->
+<section aria-labelledby="success-heading" class="bg-surface rounded-xl p-6 mb-4 shadow-sm">
+<div class="w-16 h-16 rounded-full bg-success-soft flex items-center justify-center mb-4 mx-auto">
+<svg aria-hidden="true" class="w-9 h-9 text-success" fill="none" stroke="#4D8B6A" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+<polyline points="22 4 12 14.01 9 11.01"></polyline>
+</svg>
+</div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-soft text-success font-label-caretaker text-label-caretaker mb-3 mx-auto w-fit">
+<svg class="w-4 h-4 text-success" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg>
+        Code Verified • Active Space
+      </div>
+<h1 class="font-headline-h1-mobile text-headline-h1-mobile text-text text-center mb-2" id="success-heading">
+        You joined Dadu's care space
+      </h1>
+<p class="font-body-elder text-body-elder text-text-muted text-center mb-5">
+        Connected via Rahul's invitation code <span class="font-bold text-text">#742-091</span>.
+      </p>
+<!-- Role Pill Info -->
+<div class="bg-bg rounded-xl p-4 flex items-center justify-between gap-3 mb-5">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-primary-soft flex items-center justify-center shrink-0">
+<svg aria-hidden="true" class="w-6 h-6 text-primary" fill="none" stroke="#0F766E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+<circle cx="9" cy="7" r="4"></circle>
+<path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+</svg>
+</div>
+<div>
+<span class="font-label-caretaker text-label-caretaker text-text-muted block">Your Member Role</span>
+<span class="font-label-lg text-label-lg text-text">Family Circle Member</span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full bg-primary-soft text-primary font-label-caretaker text-label-caretaker">
+          Active
+        </span>
+</div>
+<!-- Permission Transparency Checklist -->
+<div class="flex flex-col gap-3 pt-2">
+<p class="font-label-caretaker text-label-caretaker text-text-muted uppercase tracking-wider">
+          What you can do in Dadu's space:
+        </p>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container-low">
+<div class="w-7 h-7 rounded-full bg-success-soft flex items-center justify-center shrink-0 mt-0.5">
+<svg class="w-4 h-4 text-success" fill="none" stroke="#4D8B6A" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-text">Daily Medication Tracking</p>
+<p class="font-body-caretaker text-body-caretaker text-text-muted">See when morning, afternoon, and evening medicines are checked off.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container-low">
+<div class="w-7 h-7 rounded-full bg-success-soft flex items-center justify-center shrink-0 mt-0.5">
+<svg class="w-4 h-4 text-success" fill="none" stroke="#4D8B6A" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-text">Suggest Schedule Updates</p>
+<p class="font-body-caretaker text-body-caretaker text-text-muted">Propose dosage changes or new doctor visits (always confirmed with Dadu).</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container-low">
+<div class="w-7 h-7 rounded-full bg-success-soft flex items-center justify-center shrink-0 mt-0.5">
+<svg class="w-4 h-4 text-success" fill="none" stroke="#4D8B6A" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-text">Voice Alarm Notes</p>
+<p class="font-body-caretaker text-body-caretaker text-text-muted">Record warm audio reminders that play directly with the morning pill alarm.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Space Navigation Actions -->
+<div class="flex flex-col gap-3">
+<button class="w-full min-h-[56px] rounded-xl font-label-lg text-label-lg bg-primary text-on-primary flex items-center justify-center gap-2 shadow-sm active:bg-primary-hover" onclick="alert('Opening Dadu\'s Care Space Dashboard...')" type="button">
+<span>Open Dadu's Space</span>
+<svg class="w-5 h-5 text-on-primary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+</button>
+<button class="w-full min-h-[48px] rounded-xl font-label-caretaker text-label-caretaker text-text-muted hover:bg-surface-container-high transition-colors" onclick="setState('input')" type="button">
+        Enter another code instead
+      </button>
+</div>
+</div>
+</div>
+<script>
+  let enteredCode = "";
+  const VALID_DEMO_CODE = "742091";
+
+  function updateSlotsDisplay(isError = false) {
+    for (let i = 0; i < 6; i++) {
+      const slot = document.getElementById(`slot-${i}`);
+      const charSpan = slot.querySelector('.slot-char');
+      
+      // Reset classes
+      slot.className = "h-16 rounded-xl flex items-center justify-center font-headline-h2-mobile text-headline-h2-mobile transition-all duration-150";
+
+      if (isError) {
+        slot.classList.add("bg-danger-soft", "text-danger");
+        charSpan.textContent = enteredCode[i] || "-";
+      } else if (i < enteredCode.length) {
+        slot.classList.add("bg-surface-container-low", "text-text");
+        charSpan.textContent = enteredCode[i];
+      } else if (i === enteredCode.length) {
+        slot.classList.add("bg-primary-soft", "text-primary");
+        charSpan.textContent = "•";
+      } else {
+        slot.classList.add("bg-bg", "text-text-muted");
+        charSpan.textContent = "-";
+      }
+    }
+
+    // Update Counter & Submit Button
+    const counter = document.getElementById("digit-counter");
+    if (counter) {
+      counter.textContent = `${enteredCode.length} / 6 entered`;
+    }
+
+    const submitBtn = document.getElementById("btn-submit-code");
+    if (submitBtn) {
+      if (enteredCode.length === 6) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
+      } else {
+        submitBtn.disabled = true;
+        submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+      }
+    }
+  }
+
+  function handleKeyPress(digit) {
+    if (enteredCode.length < 6) {
+      enteredCode += digit;
+      hideErrorBanner();
+      updateSlotsDisplay();
+      if (enteredCode.length === 6) {
+        // Auto-check on 6th digit
+        setTimeout(() => {
+          submitPasscode();
+        }, 300);
+      }
+    }
+  }
+
+  function handleBackspace() {
+    if (enteredCode.length > 0) {
+      enteredCode = enteredCode.slice(0, -1);
+      hideErrorBanner();
+      updateSlotsDisplay();
+    }
+  }
+
+  function handleClear() {
+    enteredCode = "";
+    hideErrorBanner();
+    updateSlotsDisplay();
+    focusInput();
+  }
+
+  function focusInput() {
+    const input = document.getElementById("hidden-code-input");
+    if (input) input.focus();
+  }
+
+  function hideErrorBanner() {
+    const banner = document.getElementById("error-banner");
+    if (banner) banner.classList.add("hidden");
+  }
+
+  function showErrorState() {
+    const banner = document.getElementById("error-banner");
+    if (banner) banner.classList.remove("hidden");
+    updateSlotsDisplay(true);
+
+    // Subtle gentle elder-safe shake animation
+    const container = document.getElementById("pin-container");
+    if (container) {
+      container.classList.add("translate-x-1");
+      setTimeout(() => container.classList.remove("translate-x-1"), 80);
+      setTimeout(() => container.classList.add("-translate-x-1"), 160);
+      setTimeout(() => container.classList.remove("-translate-x-1"), 240);
+    }
+  }
+
+  function submitPasscode() {
+    if (enteredCode.length !== 6) return;
+
+    if (enteredCode === VALID_DEMO_CODE) {
+      setState("success");
+    } else {
+      setState("error");
+    }
+  }
+
+  function populateCode(code) {
+    enteredCode = code;
+    setState("input");
+    updateSlotsDisplay();
+    setTimeout(() => {
+      setState("success");
+    }, 450);
+  }
+
+  function setState(state) {
+    const viewEntry = document.getElementById("view-entry");
+    const viewSuccess = document.getElementById("view-success");
+    const tabInput = document.getElementById("tab-input");
+    const tabError = document.getElementById("tab-error");
+    const tabSuccess = document.getElementById("tab-success");
+
+    // Reset tabs
+    [tabInput, tabError, tabSuccess].forEach(tab => {
+      tab.classList.remove("bg-primary", "text-on-primary");
+      tab.classList.add("bg-surface-container-high", "text-text");
+      tab.setAttribute("aria-selected", "false");
+    });
+
+    if (state === "input") {
+      viewEntry.classList.remove("hidden");
+      viewSuccess.classList.add("hidden");
+      tabInput.classList.add("bg-primary", "text-on-primary");
+      tabInput.classList.remove("bg-surface-container-high", "text-text");
+      tabInput.setAttribute("aria-selected", "true");
+      hideErrorBanner();
+      updateSlotsDisplay(false);
+    } else if (state === "error") {
+      viewEntry.classList.remove("hidden");
+      viewSuccess.classList.add("hidden");
+      tabError.classList.add("bg-primary", "text-on-primary");
+      tabError.classList.remove("bg-surface-container-high", "text-text");
+      tabError.setAttribute("aria-selected", "true");
+      if (enteredCode.length !== 6) enteredCode = "982143";
+      showErrorState();
+    } else if (state === "success") {
+      viewEntry.classList.add("hidden");
+      viewSuccess.classList.remove("hidden");
+      tabSuccess.classList.add("bg-primary", "text-on-primary");
+      tabSuccess.classList.remove("bg-surface-container-high", "text-text");
+      tabSuccess.setAttribute("aria-selected", "true");
+    }
+  }
+
+  // Keyboard listener for physical typing or desktop screen reader testing
+  document.getElementById("hidden-code-input")?.addEventListener("input", (e) => {
+    const val = e.target.value.replace(/\D/g, "");
+    enteredCode = val.slice(0, 6);
+    e.target.value = enteredCode;
+    hideErrorBanner();
+    updateSlotsDisplay();
+    if (enteredCode.length === 6) {
+      setTimeout(submitPasscode, 250);
+    }
+  });
+
+  // Initial display setup
+  updateSlotsDisplay();
+</script></main></body></html>

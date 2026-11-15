@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_standard" name="shell-type"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
+      }
+      * {
+        font-family: inherit;
+      }
+      .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined' !important;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#dfe9f7",
+            "secondary-container": "#aff1ca",
+            "tertiary-container": "#945d00",
+            "primary-soft": "#E6F2F0",
+            "success-soft": "#E8F2EC",
+            "on-primary-fixed-variant": "#00504a",
+            "on-tertiary-fixed-variant": "#653e00",
+            "danger-soft": "#FBEAE8",
+            "surface-dim": "#d1dbe8",
+            "primary-fixed-dim": "#80d5cb",
+            "on-surface": "#121d26",
+            "primary-hover": "#0B5F59",
+            "on-background": "#121d26",
+            "on-primary-fixed": "#00201d",
+            "on-secondary-fixed": "#002112",
+            "warning-soft": "#FBF1DE",
+            "secondary-fixed": "#aff1ca",
+            "on-tertiary-fixed": "#2a1700",
+            "secondary": "#2b6a4b",
+            "surface-variant": "#d9e3f1",
+            "warning": "#B7791F",
+            "surface-container-lowest": "#ffffff",
+            "surface-bright": "#f7f9ff",
+            "text": "#1F2933",
+            "success": "#4D8B6A",
+            "on-error-container": "#93000a",
+            "tertiary-fixed": "#ffddb8",
+            "outline": "#6e7977",
+            "on-secondary-container": "#317051",
+            "on-secondary": "#ffffff",
+            "surface-container": "#e4effd",
+            "on-tertiary": "#ffffff",
+            "tertiary": "#734700",
+            "outline-variant": "#bdc9c6",
+            "error": "#ba1a1a",
+            "inverse-surface": "#27313c",
+            "primary-fixed": "#9cf2e8",
+            "on-tertiary-container": "#ffe6cc",
+            "secondary-fixed-dim": "#94d4af",
+            "on-primary-container": "#a3faef",
+            "tertiary-fixed-dim": "#ffb95f",
+            "focus-ring": "#0F766E",
+            "inverse-on-surface": "#e8f2ff",
+            "primary": "#0F766E",
+            "primary-container": "#0F766E",
+            "error-container": "#ffdad6",
+            "bg": "#FAF8F4",
+            "on-secondary-fixed-variant": "#0c5135",
+            "on-primary": "#ffffff",
+            "text-muted": "#52606D",
+            "border": "#E5E0D8",
+            "surface-tint": "#0F766E",
+            "on-surface-variant": "#3e4947",
+            "inverse-primary": "#80d5cb",
+            "background": "#FAF8F4",
+            "danger": "#B42318",
+            "surface": "#FFFFFF",
+            "surface-container-low": "#edf4ff",
+            "surface-container-highest": "#d9e3f1",
+            "on-error": "#ffffff"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "1rem",
+            "2xl": "1rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["Atkinson Hyperlegible Next", "system-ui", "-apple-system", "sans-serif"],
+            body: ["Atkinson Hyperlegible Next", "system-ui", "-apple-system", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-bg text-text min-h-screen flex flex-col font-sans antialiased">
+<!-- Top Navigation Header -->
+<header class="fixed top-0 left-0 w-full z-50 bg-bg border-b border-border shadow-[0_1px_2px_rgba(31,41,51,0.08)]">
+<div class="h-20 max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between gap-4">
+<!-- Logo & Brand -->
+<div class="flex items-center gap-3 shrink-0">
+<div class="w-12 h-12 rounded-full bg-primary-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[32px]">favorite</span>
+</div>
+<span class="text-2xl font-bold text-primary tracking-tight">CareCircle</span>
+</div>
+<!-- Navigation Tabs -->
+<nav aria-label="Main navigation" class="flex items-center gap-3">
+<a aria-current="page" class="min-h-[56px] px-6 rounded-xl flex items-center justify-center transition-all bg-primary text-on-primary font-bold shadow-sm" href="#">
+          Today
+        </a>
+<a class="min-h-[56px] px-6 rounded-xl flex items-center justify-center text-lg font-medium text-text-muted hover:bg-primary-soft hover:text-primary transition-all border border-border bg-surface" href="#">
+          Medicines
+        </a>
+<a class="min-h-[56px] px-6 rounded-xl flex items-center justify-center text-lg font-medium text-text-muted hover:bg-primary-soft hover:text-primary transition-all border border-border bg-surface" href="#">
+          Family
+        </a>
+</nav>
+<!-- Right Controls: Text Size, Help, Profile -->
+<div class="flex items-center gap-4 shrink-0">
+<div aria-label="Adjust text size" class="flex items-center border border-border rounded-xl bg-surface p-1" role="group">
+<button aria-label="Decrease text size" class="min-h-[48px] min-w-[48px] px-2 rounded-lg text-lg font-bold text-text hover:bg-primary-soft hover:text-primary transition-colors flex items-center justify-center" type="button">
+            A-
+          </button>
+<div class="w-[1px] h-8 bg-border"></div>
+<button aria-label="Increase text size" class="min-h-[48px] min-w-[48px] px-2 rounded-lg text-lg font-bold text-text hover:bg-primary-soft hover:text-primary transition-colors flex items-center justify-center" type="button">
+            A+
+          </button>
+</div>
+<button class="min-h-[56px] px-5 rounded-xl bg-surface border border-border hover:bg-warning-soft text-text flex items-center gap-2 text-lg font-semibold transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[28px] text-warning">help</span>
+<span>Help</span>
+</button>
+<div class="flex items-center gap-3 pl-3 border-l border-border">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-semibold">
+<span class="material-symbols-outlined text-[24px]">person</span>
+</div>
+<div class="flex flex-col">
+<span class="text-base font-bold text-text leading-tight">Subrata</span>
+<span class="text-sm text-text-muted leading-tight">(Dadu)</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="w-full pt-28 pb-16 flex-1 bg-bg">
+<!-- Fluid/Responsive Centered Container -->
+<div class="w-full max-w-[560px] lg:max-w-[1040px] mx-auto px-6 lg:px-8">
+<!-- 12-Column Responsive Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- ==================== LEFT COLUMN (7 COLS ON DESKTOP) ==================== -->
+<section aria-label="Today's Primary Task" class="lg:col-span-7 flex flex-col gap-6 w-full min-w-0">
+<!-- Warm Personal Greeting Card -->
+<header class="bg-surface rounded-2xl p-6 lg:p-7 border border-border shadow-[0_1px_2px_rgba(31,41,51,0.08)] flex flex-col gap-3">
+<div class="flex flex-wrap items-center justify-between gap-3 min-w-0">
+<span class="inline-flex items-center gap-2 bg-primary-soft text-primary px-4 py-1.5 rounded-full text-base font-semibold whitespace-nowrap">
+<span class="material-symbols-outlined text-[22px]">calendar_today</span>
+<span>Thursday, 19 November</span>
+</span>
+<span class="inline-flex items-center gap-1.5 text-text-muted text-base font-semibold whitespace-nowrap">
+<span class="material-symbols-outlined text-[22px] text-primary">wb_sunny</span>
+<span>8:30 AM</span>
+</span>
+</div>
+<h1 class="text-[36px] leading-[44px] font-bold text-text tracking-tight mt-1 whitespace-nowrap">
+              Good morning, Dadu
+            </h1>
+<p class="text-lg text-text-muted flex items-center gap-2">
+<span class="material-symbols-outlined text-warning text-[24px] shrink-0">notifications_active</span>
+<span>You have <strong class="text-text font-bold">1 medicine</strong> due this morning.</span>
+</p>
+</header>
+<!-- Main "Next Medicine" Primary Card -->
+<article aria-labelledby="med-heading" class="bg-surface rounded-2xl p-6 lg:p-7 border border-border shadow-[0_1px_2px_rgba(31,41,51,0.08)] flex flex-col gap-6">
+<!-- Pill Header Badge -->
+<div class="flex flex-wrap items-center justify-between gap-3 min-w-0">
+<div class="inline-flex items-center gap-2 bg-warning-soft text-warning px-4 py-2 rounded-full text-base font-semibold whitespace-nowrap">
+<span class="material-symbols-outlined text-[24px]">schedule</span>
+<span>Due soon • 9:00 AM</span>
+</div>
+<span class="text-text-muted text-base font-medium whitespace-nowrap">Morning Schedule</span>
+</div>
+<!-- Medicine Details -->
+<div class="flex flex-col gap-2">
+<h2 class="text-4xl font-bold text-text tracking-tight" id="med-heading">
+                Metformin
+              </h2>
+<div class="flex flex-wrap items-center gap-3">
+<span class="inline-flex items-center gap-1.5 text-primary text-base font-bold bg-surface-container-low border border-border px-3.5 py-1.5 rounded-lg whitespace-nowrap">
+<span class="material-symbols-outlined text-[22px]">medication</span>
+<span>500 mg tablet</span>
+</span>
+<span class="text-text-muted text-lg font-medium whitespace-nowrap">• Take 1 tablet</span>
+</div>
+</div>
+<!-- Timing & Doctor Instructions -->
+<div class="bg-surface-container-low border border-border rounded-xl p-5 flex flex-col gap-2">
+<div class="flex items-center gap-3 text-text text-lg font-bold">
+<span class="material-symbols-outlined text-secondary text-[26px] shrink-0">restaurant</span>
+<span>Morning dose • Take after breakfast</span>
+</div>
+<p class="text-lg text-text-muted pl-9 leading-relaxed">
+                Doctor recommends taking with warm toast and a full glass of water.
+              </p>
+</div>
+<!-- Audio Voice Note from Caregiver -->
+<section aria-label="Family voice memo" class="bg-primary-soft border border-primary/20 rounded-xl p-5 flex flex-col gap-4">
+<div class="flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center gap-2 text-primary font-bold text-base">
+<span class="material-symbols-outlined text-[24px] shrink-0">record_voice_over</span>
+<span>Voice note from Rahul (Grandson)</span>
+</div>
+<span class="text-text-muted text-sm font-semibold whitespace-nowrap">0:12 duration</span>
+</div>
+<!-- Audio Player Box -->
+<div class="bg-surface rounded-xl p-4 border border-border shadow-sm flex flex-col gap-2.5">
+<div class="flex items-center gap-4">
+<!-- Circular Accessible 64px Play Button -->
+<button aria-label="Play voice message from Rahul" class="w-16 h-16 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 hover:bg-primary-hover active:scale-95 focus:outline-none focus:ring-4 focus:ring-focus-ring focus:ring-offset-2 transition-all shadow-sm" id="voice-play-btn" onclick="togglePlayVoice()" type="button">
+<span class="material-symbols-outlined text-[36px]" id="play-icon">play_arrow</span>
+</button>
+<!-- Waveform SVG representation -->
+<div class="flex-1 overflow-hidden flex items-center gap-1.5 h-10 px-2">
+<span class="w-1.5 h-4 bg-primary rounded-full shrink-0"></span>
+<span class="w-1.5 h-7 bg-primary rounded-full shrink-0"></span>
+<span class="w-1.5 h-9 bg-primary rounded-full shrink-0"></span>
+<span class="w-1.5 h-5 bg-primary rounded-full shrink-0"></span>
+<span class="w-1.5 h-8 bg-primary rounded-full shrink-0"></span>
+<span class="w-1.5 h-6 bg-primary rounded-full shrink-0"></span>
+<span class="w-1.5 h-10 bg-primary rounded-full shrink-0"></span>
+<span class="w-1.5 h-7 bg-primary rounded-full shrink-0"></span>
+<span class="w-1.5 h-8 bg-outline-variant rounded-full shrink-0"></span>
+<span class="w-1.5 h-5 bg-outline-variant rounded-full shrink-0"></span>
+<span class="w-1.5 h-7 bg-outline-variant rounded-full shrink-0"></span>
+<span class="w-1.5 h-4 bg-outline-variant rounded-full shrink-0"></span>
+<span class="w-1.5 h-8 bg-outline-variant rounded-full shrink-0"></span>
+<span class="w-1.5 h-5 bg-outline-variant rounded-full shrink-0"></span>
+<span class="w-1.5 h-3 bg-outline-variant rounded-full shrink-0"></span>
+</div>
+</div>
+<!-- Timestamps placed cleanly under waveform -->
+<div class="flex justify-between items-center text-text-muted text-sm font-semibold pl-20 pr-2">
+<span id="audio-time">0:00</span>
+<span>0:12 total</span>
+</div>
+</div>
+<p class="text-base text-text italic leading-relaxed pl-1">
+                “Dadu, remember to drink a full glass of water after your toast. Love you!”
+              </p>
+</section>
+<!-- Action Buttons Area -->
+<div class="flex flex-col gap-3 mt-1">
+<!-- Huge Primary Confirmation Button (min-h-[64px]) -->
+<button class="w-full min-h-[64px] bg-primary text-on-primary rounded-xl px-6 flex items-center justify-center gap-3 text-2xl font-bold hover:bg-primary-hover active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-focus-ring focus:ring-offset-2 transition-all shadow-[0_1px_2px_rgba(31,41,51,0.08)]" id="confirm-taken-btn" onclick="confirmMedication()" type="button">
+<span class="material-symbols-outlined text-[36px]">check_circle</span>
+<span id="confirm-btn-label">I took it</span>
+</button>
+<!-- Secondary Outlined Snooze Button (min-h-[56px]) -->
+<button class="w-full min-h-[56px] bg-surface text-primary border border-border rounded-xl px-6 flex items-center justify-center gap-3 text-lg font-bold hover:bg-primary-soft active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-focus-ring focus:ring-offset-2 transition-all" onclick="snoozeAlert()" type="button">
+<span class="material-symbols-outlined text-[28px]">hourglass_top</span>
+<span>Remind me in 10 minutes</span>
+</button>
+</div>
+</article>
+<!-- Reassurance Footer Note -->
+<aside aria-label="Family sync note" class="bg-success-soft border border-success/20 rounded-2xl p-5 flex items-center gap-4 text-text shadow-[0_1px_2px_rgba(31,41,51,0.08)]">
+<div class="w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center text-success shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[30px]">verified_user</span>
+</div>
+<p class="text-base lg:text-lg leading-relaxed">
+<strong class="font-bold">Rahul</strong> and <strong class="font-bold">Priya</strong> will receive confirmation on their phones immediately after you press <span class="font-bold text-primary">“I took it”</span>.
+            </p>
+</aside>
+</section>
+<!-- ==================== RIGHT COLUMN (5 COLS ON DESKTOP) ==================== -->
+<section aria-label="Quick Actions and Upcoming Schedule" class="lg:col-span-5 flex flex-col gap-6 w-full min-w-0">
+<!-- Voice Assistant Card -->
+<article aria-labelledby="voice-card-title" class="bg-surface rounded-2xl p-6 border border-border shadow-[0_1px_2px_rgba(31,41,51,0.08)] flex flex-col gap-4">
+<div class="flex flex-wrap items-center justify-between gap-3 min-w-0">
+<h2 class="text-2xl font-bold text-text" id="voice-card-title">
+                Voice Assistant
+              </h2>
+<span class="inline-flex items-center gap-1.5 text-secondary font-semibold text-sm bg-secondary-container px-3 py-1 rounded-full whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span>Ready</span>
+</span>
+</div>
+<p class="text-base text-text-muted leading-normal">
+              Prefer talking? Tap the microphone button or speak naturally:
+            </p>
+<!-- Big Friendly Voice Command Button (64px) -->
+<button class="w-full min-h-[64px] bg-primary text-on-primary rounded-xl px-5 flex items-center justify-center gap-3 text-lg font-bold hover:bg-primary-hover active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-focus-ring focus:ring-offset-2 transition-all shadow-[0_1px_2px_rgba(31,41,51,0.08)]" id="mic-action-btn" onclick="activateVoiceListening()" type="button">
+<span class="material-symbols-outlined text-[32px]">mic</span>
+<span id="voice-btn-text">Press to Speak</span>
+</button>
+<!-- Voice Prompts Guide -->
+<div class="bg-surface-container-low border border-border rounded-xl p-4 flex flex-col gap-2.5">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-primary text-[24px] shrink-0 mt-0.5">chat</span>
+<p class="text-base text-text">
+                  Try saying: <strong class="text-primary font-bold">“I took my Metformin”</strong>
+</p>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-primary text-[24px] shrink-0 mt-0.5">help_outline</span>
+<p class="text-base text-text">
+                  Or ask: <strong class="text-primary font-bold">“What is my next medicine?”</strong>
+</p>
+</div>
+</div>
+</article>
+<!-- "Later Today" Schedule Timeline -->
+<article aria-labelledby="later-today-title" class="bg-surface rounded-2xl p-6 border border-border shadow-[0_1px_2px_rgba(31,41,51,0.08)] flex flex-col gap-5">
+<!-- Header with side-by-side Title & Badge without overlap -->
+<div class="flex flex-wrap items-center justify-between gap-3 min-w-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[26px]">schedule</span>
+<h2 class="text-2xl font-bold text-text whitespace-nowrap" id="later-today-title">
+                  Later today
+                </h2>
+</div>
+<span class="bg-slate-100 border border-border text-text-muted text-sm font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+                2 remaining
+              </span>
+</div>
+<!-- Schedule Item 1: Doctor Visit -->
+<div class="flex flex-col gap-2.5 p-4 rounded-xl bg-surface-container-low border border-border">
+<div class="flex flex-wrap items-center justify-between gap-2 min-w-0">
+<span class="inline-flex items-center gap-1.5 bg-surface text-primary px-3 py-1 rounded-full text-sm font-bold border border-border shadow-sm whitespace-nowrap">
+<span class="material-symbols-outlined text-[20px]">medical_services</span>
+<span>11:30 AM Midday</span>
+</span>
+<span class="text-text-muted text-sm font-semibold whitespace-nowrap">In ~2 hours</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xl font-bold text-text">Dr. Banerjee Visit</span>
+<span class="text-base text-text-muted mt-0.5">Cardiology review at City Clinic • Accompanied by Rahul</span>
+</div>
+</div>
+<!-- Schedule Item 2: Evening Meds -->
+<div class="flex flex-col gap-2.5 p-4 rounded-xl bg-surface-container-low border border-border">
+<div class="flex flex-wrap items-center justify-between gap-2 min-w-0">
+<span class="inline-flex items-center gap-1.5 bg-surface text-text px-3 py-1 rounded-full text-sm font-bold border border-border shadow-sm whitespace-nowrap">
+<span class="material-symbols-outlined text-[20px]">bedtime</span>
+<span>9:00 PM Night</span>
+</span>
+<span class="text-text-muted text-sm font-semibold whitespace-nowrap">After dinner</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xl font-bold text-text">Amlodipine &amp; Metformin</span>
+<span class="text-base text-text-muted mt-0.5">Amlodipine 5 mg (1 tab) + Metformin 500 mg (1 tab)</span>
+</div>
+</div>
+</article>
+<!-- Next Appointment Detail Card -->
+<article aria-labelledby="appt-title" class="bg-surface rounded-2xl p-6 border border-border shadow-[0_1px_2px_rgba(31,41,51,0.08)] flex flex-col gap-5">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-primary-soft text-primary flex items-center justify-center shrink-0 border border-primary/20">
+<span class="material-symbols-outlined text-[30px]">local_hospital</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="text-xs font-bold text-primary tracking-wider uppercase">Upcoming Visit</span>
+<h2 class="text-2xl font-bold text-text leading-tight truncate" id="appt-title">
+                  Dr. Amitava Banerjee
+                </h2>
+</div>
+</div>
+<div class="flex flex-col gap-2.5 bg-surface-container-low border border-border p-4 rounded-xl text-base text-text">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-[22px] shrink-0">pin_drop</span>
+<span><strong>City Clinic</strong> • Block B, Salt Lake</span>
+</div>
+<div class="flex items-center gap-2.5 text-text-muted">
+<span class="material-symbols-outlined text-[22px] shrink-0">directions_car</span>
+<span>Rahul accompanying • Car booked for 10:45 AM</span>
+</div>
+</div>
+<!-- Two High-Contrast 56px Action Buttons Side-by-Side (12px gap, never overlapping) -->
+<div class="flex items-center gap-3 w-full">
+<button class="flex-1 min-h-[56px] px-4 rounded-xl border border-border bg-surface hover:bg-primary-soft text-primary font-bold text-base flex items-center justify-center gap-2 active:scale-95 focus:outline-none focus:ring-4 focus:ring-focus-ring focus:ring-offset-2 transition-all shadow-sm" onclick="showDirections()" type="button">
+<span class="material-symbols-outlined text-[24px]">navigation</span>
+<span>Directions</span>
+</button>
+<button class="flex-1 min-h-[56px] px-4 rounded-xl border border-border bg-surface hover:bg-surface-container-high text-text font-bold text-base flex items-center justify-center gap-2 active:scale-95 focus:outline-none focus:ring-4 focus:ring-focus-ring focus:ring-offset-2 transition-all shadow-sm" onclick="showAppointmentDetails()" type="button">
+<span class="material-symbols-outlined text-[24px]">info</span>
+<span>Details</span>
+</button>
+</div>
+</article>
+</section>
+</div>
+</div>
+<!-- Accessible Toast Feedback Overlay -->
+<div aria-live="polite" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-on-surface text-inverse-on-surface px-8 py-5 rounded-2xl shadow-xl flex items-center gap-4 transition-all duration-300 opacity-0 pointer-events-none z-50 max-w-lg w-full" id="accessible-toast" role="status">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[28px]">done</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xl font-bold text-inverse-on-surface leading-tight" id="toast-title">Confirmed</span>
+<span class="text-base text-inverse-on-surface" id="toast-body">Rahul &amp; Priya have been notified.</span>
+</div>
+</div>
+</main>
+<!-- Clean Spacious Footer -->
+<footer class="w-full bg-bg border-t border-border py-6 mt-auto">
+<div class="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-text-muted text-base font-normal">
+<p class="font-medium text-text">CareCircle Elder Interface • Direct Family Line Active</p>
+<p>Need urgent assistance? Press the Help button above or call 24/7 Support.</p>
+</div>
+</footer>
+<script>
+    let isPlayingVoice = false;
+    let voiceTimer = null;
+    let elapsed = 0;
+
+    function togglePlayVoice() {
+      const icon = document.getElementById('play-icon');
+      const timerLabel = document.getElementById('audio-time');
+      isPlayingVoice = !isPlayingVoice;
+
+      if (isPlayingVoice) {
+        icon.textContent = 'pause';
+        voiceTimer = setInterval(() => {
+          elapsed++;
+          if (elapsed > 12) {
+            elapsed = 0;
+            isPlayingVoice = false;
+            icon.textContent = 'play_arrow';
+            clearInterval(voiceTimer);
+          }
+          const s = elapsed < 10 ? '0' + elapsed : elapsed;
+          timerLabel.textContent = '0:' + s;
+        }, 1000);
+      } else {
+        icon.textContent = 'play_arrow';
+        clearInterval(voiceTimer);
+      }
+    }
+
+    function confirmMedication() {
+      const btn = document.getElementById('confirm-taken-btn');
+      const label = document.getElementById('confirm-btn-label');
+      
+      btn.classList.remove('bg-primary', 'hover:bg-primary-hover');
+      btn.classList.add('bg-secondary', 'cursor-default');
+      label.textContent = 'Recorded as Taken';
+      
+      showToast('Recorded as Taken', 'Rahul and Priya received confirmation.');
+    }
+
+    function snoozeAlert() {
+      showToast('Reminder Set', 'We will alert you again in 10 minutes at 9:10 AM.');
+    }
+
+    function activateVoiceListening() {
+      const btnText = document.getElementById('voice-btn-text');
+      btnText.textContent = 'Listening... Speak now';
+      
+      setTimeout(() => {
+        btnText.textContent = 'Press to Speak';
+        showToast('Voice Recorded', 'Understood: "Metformin morning dose recorded".');
+      }, 3000);
+    }
+
+    function showDirections() {
+      showToast('Directions Ready', 'City Clinic route sent to your car display & Rahul.');
+    }
+
+    function showAppointmentDetails() {
+      showToast('Appointment Details', 'Dr. Banerjee: ECG review & blood pressure check at 11:30 AM.');
+    }
+
+    function showToast(title, body) {
+      const toast = document.getElementById('accessible-toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-body').textContent = body;
+
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 4000);
+    }
+  </script>
+</body></html>

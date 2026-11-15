@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><title>CareCircle</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24..48,400..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: 'class', theme: { extend: { colors: { 'on-background': '#121d26', 'tertiary': '#734700', 'surface-container-lowest': '#ffffff', 'border': '#E5E0D8', 'danger': '#B42318', 'success-soft': '#E8F2EC', 'warning-soft': '#FBF1DE', 'on-tertiary-container': '#ffe6cc', 'bg': '#FAF8F4', 'primary': '#005c55', 'on-tertiary-fixed-variant': '#653e00', 'danger-soft': '#FBEAE8', 'on-primary-container': '#a3faef', 'primary-fixed': '#9cf2e8', 'outline': '#6e7977', 'primary-hover': '#0B5F59', 'on-surface': '#121d26', 'error': '#ba1a1a', 'surface-container-high': '#dfe9f7', 'inverse-on-surface': '#e8f2ff', 'tertiary-fixed': '#ffddb8', 'background': '#f7f9ff', 'secondary-fixed-dim': '#94d4af', 'secondary': '#2b6a4b', 'on-surface-variant': '#3e4947', 'on-tertiary-fixed': '#2a1700', 'on-secondary-container': '#317051', 'inverse-surface': '#27313c', 'surface-tint': '#006a63', 'on-error-container': '#93000a', 'error-container': '#ffdad6', 'on-tertiary': '#ffffff', 'on-secondary': '#ffffff', 'tertiary-fixed-dim': '#ffb95f', 'secondary-container': '#aff1ca', 'text': '#1F2933', 'on-secondary-fixed': '#002112', 'focus-ring': '#0F766E', 'on-primary-fixed-variant': '#00504a', 'primary-fixed-dim': '#80d5cb', 'warning': '#B7791F', 'surface-container-highest': '#d9e3f1', 'success': '#4D8B6A', 'inverse-primary': '#80d5cb', 'surface-bright': '#f7f9ff', 'primary-container': '#0f766e', 'secondary-fixed': '#aff1ca', 'surface-container': '#e4effd', 'surface': '#FFFFFF', 'primary-soft': '#E6F2F0', 'text-muted': '#52606D', 'on-primary-fixed': '#00201d', 'on-primary': '#ffffff', 'outline-variant': '#bdc9c6', 'surface-container-low': '#edf4ff', 'on-secondary-fixed-variant': '#0c5135', 'tertiary-container': '#945d00', 'on-error': '#ffffff', 'surface-dim': '#d1dbe8', 'surface-variant': '#d9e3f1' }, borderRadius: { 'DEFAULT': '0.25rem', 'lg': '0.5rem', 'xl': '0.75rem', 'full': '9999px' }, spacing: { 'margin-mobile': '1rem', 'space-sm': '0.5rem', 'space-lg': '1.5rem', 'space-md': '1rem', 'gutter-mobile': '0.75rem', 'gutter': '1rem', 'space-xl': '2rem', 'margin': '1.5rem', 'space-xs': '0.25rem' }, fontFamily: { 'headline-alarm': ['Atkinson Hyperlegible Next'], 'body-caretaker': ['Inter'], 'label-lg': ['Atkinson Hyperlegible Next'], 'body-elder': ['Atkinson Hyperlegible Next'], 'label-caretaker': ['Inter'], 'headline-h1-mobile': ['Atkinson Hyperlegible Next'], 'headline-h1': ['Atkinson Hyperlegible Next'], 'headline-alarm-mobile': ['Atkinson Hyperlegible Next'], 'headline-h2-mobile': ['Atkinson Hyperlegible Next'], 'headline-h2': ['Atkinson Hyperlegible Next'] }, fontSize: { 'headline-alarm': ['40px', { lineHeight: '48px', fontWeight: '700' }], 'body-caretaker': ['16px', { lineHeight: '24px', fontWeight: '400' }], 'label-lg': ['18px', { lineHeight: '24px', fontWeight: '600' }], 'body-elder': ['20px', { lineHeight: '30px', fontWeight: '400' }], 'label-caretaker': ['14px', { lineHeight: '20px', fontWeight: '600' }], 'headline-h1-mobile': ['28px', { lineHeight: '36px', fontWeight: '700' }], 'headline-h1': ['36px', { lineHeight: '44px', fontWeight: '700' }], 'headline-alarm-mobile': ['32px', { lineHeight: '40px', fontWeight: '700' }], 'headline-h2-mobile': ['24px', { lineHeight: '32px', fontWeight: '700' }], 'headline-h2': ['28px', { lineHeight: '36px', fontWeight: '700' }] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;min-height:100%;background-color:#FAF8F4;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}}::-webkit-scrollbar{display:none;}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 500,'GRAD' 0,'opsz' 28;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-bg text-on-surface font-body-elder antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 px-4 flex items-center justify-between max-w-[560px] mx-auto"><div class="flex items-center gap-2"><div class="w-10 h-10 rounded-full bg-primary-soft flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[24px]">favorite</span></div><span class="font-headline-h2-mobile text-headline-h2-mobile text-primary tracking-tight">CareCircle</span></div><div class="flex items-center gap-2"><div aria-label="Text size selector" class="inline-flex items-center bg-bg rounded-full p-1 border border-border" role="group"><button aria-label="Decrease text size" class="min-w-[44px] min-h-[44px] px-2 flex items-center justify-center font-label-caretaker text-label-caretaker text-on-surface hover:text-primary active:bg-primary-soft rounded-full transition-colors" type="button"><span class="font-bold">A-</span></button><div class="w-[1px] h-5 bg-border"></div><button aria-label="Increase text size" class="min-w-[44px] min-h-[44px] px-2 flex items-center justify-center font-label-caretaker text-label-caretaker text-on-surface hover:text-primary active:bg-primary-soft rounded-full transition-colors" type="button"><span class="font-bold text-base">A+</span></button></div><button aria-label="Get immediate help" class="w-12 h-12 flex items-center justify-center text-primary bg-primary-soft hover:bg-primary/20 rounded-full transition-colors" type="button"><span class="material-symbols-outlined text-[26px]">help</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full max-w-[560px] mx-auto px-4 pt-20 pb-28 bg-bg"><div class="flex flex-col w-full pb-8">
+<!-- Demo Mode Segmented Switcher -->
+<div class="w-full mb-6">
+<div class="flex items-center justify-between p-1 bg-surface-container rounded-xl gap-1">
+<button aria-pressed="true" class="flex-1 min-h-[48px] px-3 py-2 rounded-lg font-label-caretaker text-label-caretaker text-center font-bold bg-surface text-primary shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-focus-ring" id="btn-tab-pending" onclick="switchView('pending')" type="button">
+        Pending (2)
+      </button>
+<button aria-pressed="false" class="flex-1 min-h-[48px] px-3 py-2 rounded-lg font-label-caretaker text-label-caretaker text-center text-text-muted hover:text-text transition-all focus:outline-none focus:ring-2 focus:ring-focus-ring" id="btn-tab-empty" onclick="switchView('empty')" type="button">
+        Empty state (0)
+      </button>
+<button aria-pressed="false" class="flex-1 min-h-[48px] px-3 py-2 rounded-lg font-label-caretaker text-label-caretaker text-center text-text-muted hover:text-text transition-all focus:outline-none focus:ring-2 focus:ring-focus-ring" id="btn-tab-history" onclick="switchView('history')" type="button">
+        Approved (2)
+      </button>
+</div>
+</div>
+<!-- Screen Header -->
+<header class="w-full mb-6">
+<div class="flex items-center gap-2 mb-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-soft text-primary font-label-caretaker text-label-caretaker font-bold">
+<svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg>
+        Elder in control
+      </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-warning-soft text-warning font-label-caretaker text-label-caretaker font-semibold" id="badge-count">
+<svg aria-hidden="true" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span id="badge-count-text">2 waiting</span>
+</span>
+</div>
+<h1 class="font-headline-h1-mobile text-headline-h1-mobile text-text font-bold mb-2">
+      Suggestions from family
+    </h1>
+<p class="font-body-elder text-body-elder text-text-muted leading-relaxed">
+      Family can propose updates, but your medicine schedule only updates when you approve.
+    </p>
+</header>
+<!-- Reassurance Assurance Pill Box -->
+<section aria-label="Privacy and control guarantee" class="w-full mb-6 bg-surface p-4 rounded-xl shadow-sm">
+<div class="flex items-start gap-3">
+<div class="w-12 h-12 rounded-full bg-primary-soft flex items-center justify-center text-primary flex-shrink-0">
+<svg aria-hidden="true" class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-text font-bold leading-tight">
+          Nothing changes until you say yes.
+        </p>
+<p class="font-body-caretaker text-body-caretaker text-text-muted mt-0.5">
+          Only you can update your active voice alarms and schedule.
+        </p>
+</div>
+</div>
+</section>
+<!-- Main View Container: Pending List -->
+<div class="flex flex-col gap-5 w-full" id="view-pending">
+<!-- Proposal Card 1: Time Change -->
+<article class="w-full bg-surface rounded-xl p-5 shadow-sm transition-all" id="card-1">
+<!-- Card Proposer Header -->
+<div class="flex items-center gap-3.5 mb-4">
+<div aria-label="Rahul's initial" class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-headline-h2-mobile text-headline-h2-mobile font-bold flex-shrink-0">
+          R
+        </div>
+<div class="min-w-0 flex-1">
+<h2 class="font-label-lg text-label-lg text-text font-bold truncate">Rahul suggests a change</h2>
+<div class="flex items-center gap-1.5 text-text-muted font-body-caretaker text-body-caretaker mt-0.5">
+<svg aria-hidden="true" class="w-4 h-4 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>2 hours ago</span>
+</div>
+</div>
+</div>
+<!-- Medicine Pill Details -->
+<div class="mb-4">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low text-text font-label-caretaker text-label-caretaker font-bold mb-3">
+<svg aria-hidden="true" class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+<path d="m8.5 8.5 7 7"></path>
+</svg>
+          Metformin • 500 mg
+        </div>
+<!-- Before / After Diff Visual Box -->
+<div class="bg-primary-soft/50 rounded-xl p-4">
+<span class="block font-label-caretaker text-label-caretaker text-text-muted uppercase tracking-wider mb-2 font-bold">Dose Time Change</span>
+<div class="flex items-center gap-3">
+<div class="flex-1 bg-surface rounded-lg p-3 text-center">
+<span class="block text-text-muted font-body-caretaker text-body-caretaker line-through">9:00 AM</span>
+<span class="text-text-muted font-label-caretaker text-label-caretaker">Current schedule</span>
+</div>
+<div class="flex-shrink-0 text-primary">
+<svg aria-hidden="true" class="w-6 h-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<line x1="5" x2="19" y1="12" y2="12"></line>
+<polyline points="12 5 19 12 12 19"></polyline>
+</svg>
+</div>
+<div class="flex-1 bg-primary text-on-primary rounded-lg p-3 text-center">
+<span class="block font-headline-h2-mobile text-headline-h2-mobile font-bold leading-tight">8:30 AM</span>
+<span class="font-label-caretaker text-label-caretaker opacity-90">Proposed time</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Note from Family -->
+<div class="flex items-start gap-2.5 bg-surface-container-low rounded-xl p-3.5 mb-5">
+<svg aria-hidden="true" class="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<p class="font-body-elder text-body-elder text-text">
+<span class="font-bold text-text">Rahul:</span> “Doctor mentioned it works best 30 minutes before your morning toast and tea.”
+        </p>
+</div>
+<!-- High-Contrast Explicit Big Buttons -->
+<div class="flex flex-col sm:flex-row gap-3">
+<button aria-label="Approve Metformin time change to 8:30 AM" class="min-h-[56px] flex-1 bg-primary hover:bg-primary-hover active:bg-primary-hover text-on-primary rounded-xl font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 px-6 shadow-sm transition-colors focus:outline-none focus:ring-4 focus:ring-focus-ring/30" onclick="handleAction('card-1', 'approved')" type="button">
+<svg aria-hidden="true" class="w-6 h-6 text-on-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+<polyline points="22 4 12 14.01 9 11.01"></polyline>
+</svg>
+          Approve change
+        </button>
+<button aria-label="Do not approve Metformin time change" class="min-h-[56px] px-6 bg-surface-container hover:bg-surface-container-high text-text rounded-xl font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-focus-ring" onclick="handleAction('card-1', 'declined')" type="button">
+<svg aria-hidden="true" class="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+          Not now
+        </button>
+</div>
+</article>
+<!-- Proposal Card 2: Addition -->
+<article class="w-full bg-surface rounded-xl p-5 shadow-sm transition-all" id="card-2">
+<!-- Card Proposer Header -->
+<div class="flex items-center gap-3.5 mb-4">
+<div aria-label="Priya's initial" class="w-12 h-12 rounded-full bg-warning-soft text-warning font-headline-h2-mobile text-headline-h2-mobile font-bold flex items-center justify-center flex-shrink-0">
+          P
+        </div>
+<div class="min-w-0 flex-1">
+<h2 class="font-label-lg text-label-lg text-text font-bold truncate">Priya suggests adding a medicine</h2>
+<div class="flex items-center gap-1.5 text-text-muted font-body-caretaker text-body-caretaker mt-0.5">
+<svg aria-hidden="true" class="w-4 h-4 text-text-muted flex-shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>Yesterday at 5:10 PM</span>
+</div>
+</div>
+</div>
+<!-- Change Diff Display: New Pill Item -->
+<div class="bg-surface-container-low rounded-xl p-4 mb-4">
+<div class="flex items-center gap-2 text-secondary font-label-caretaker text-label-caretaker font-bold uppercase tracking-wider mb-2">
+<svg aria-hidden="true" class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="12" x2="12" y1="8" y2="16"></line>
+<line x1="8" x2="16" y1="12" y2="12"></line>
+</svg>
+          New Weekly Routine
+        </div>
+<p class="font-headline-h2-mobile text-headline-h2-mobile text-text font-bold">
+          Vitamin D3 • 60,000 IU
+        </p>
+<p class="font-body-elder text-body-elder text-primary font-bold mt-1">
+          Every Sunday at 2:00 PM (With lunch)
+        </p>
+</div>
+<!-- Note from Priya -->
+<div class="flex items-start gap-2.5 bg-surface-container-low rounded-xl p-3.5 mb-5">
+<svg aria-hidden="true" class="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+</svg>
+<p class="font-body-elder text-body-elder text-text">
+<span class="font-bold text-text">Priya:</span> “Doctor Sen recommended keeping bone strength up. Just once a week after Sunday lunch.”
+        </p>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-3">
+<button aria-label="Approve adding Vitamin D3 on Sundays" class="min-h-[56px] flex-1 bg-primary hover:bg-primary-hover active:bg-primary-hover text-on-primary rounded-xl font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 px-6 shadow-sm transition-colors focus:outline-none focus:ring-4 focus:ring-focus-ring/30" onclick="handleAction('card-2', 'approved')" type="button">
+<svg aria-hidden="true" class="w-6 h-6 text-on-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+<polyline points="22 4 12 14.01 9 11.01"></polyline>
+</svg>
+          Add to routine
+        </button>
+<button aria-label="Decline adding Vitamin D3" class="min-h-[56px] px-6 bg-surface-container hover:bg-surface-container-high text-text rounded-xl font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 transition-colors focus:outline-none focus:ring-2 focus:ring-focus-ring" onclick="handleAction('card-2', 'declined')" type="button">
+<svg aria-hidden="true" class="w-5 h-5 text-text-muted" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+          Not now
+        </button>
+</div>
+</article>
+</div>
+<!-- Empty State Card (Hidden by default or shown when zero pending) -->
+<div class="hidden flex-col items-center text-center p-8 bg-surface rounded-xl shadow-sm mb-6" id="view-empty">
+<div class="w-20 h-20 rounded-full bg-success-soft text-success flex items-center justify-center mb-4">
+<svg aria-hidden="true" class="w-10 h-10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+<polyline points="22 4 12 14.01 9 11.01"></polyline>
+</svg>
+</div>
+<h2 class="font-headline-h2-mobile text-headline-h2-mobile text-text font-bold mb-2">
+      All caught up
+    </h2>
+<p class="font-body-elder text-body-elder text-text max-w-sm mb-3">
+      No suggestions right now. Your medicine routine is up to date and active.
+    </p>
+<p class="font-body-caretaker text-body-caretaker text-text-muted max-w-xs">
+      When Rahul or Priya suggest a reminder or time change, it will appear here for you to check.
+    </p>
+</div>
+<!-- Recent Decisions Section -->
+<section aria-label="Decided recently" class="w-full mt-8">
+<div class="flex items-center justify-between mb-3 px-1">
+<h2 class="font-label-lg text-label-lg text-text font-bold">
+        Decided recently
+      </h2>
+<span class="font-label-caretaker text-label-caretaker text-text-muted">
+        Past 7 days
+      </span>
+</div>
+<div class="bg-surface rounded-xl shadow-sm p-2 flex flex-col gap-2">
+<!-- Decided Row 1 -->
+<div class="p-3 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-start justify-between gap-3">
+<div class="min-w-0">
+<h3 class="font-label-lg text-label-lg text-text font-bold truncate">
+              Amlodipine 5 mg • Evening dose
+            </h3>
+<p class="font-body-caretaker text-body-caretaker text-text-muted mt-0.5">
+              Priya suggested 9:30 PM
+            </p>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success-soft text-secondary font-label-caretaker text-label-caretaker font-bold flex-shrink-0">
+<svg aria-hidden="true" class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+            Approved
+          </span>
+</div>
+<div class="mt-2 text-text-muted font-body-caretaker text-body-caretaker">
+          Yesterday, 4:15 PM • Schedule updated
+        </div>
+</div>
+<div class="h-[1px] bg-border mx-3"></div>
+<!-- Decided Row 2 -->
+<div class="p-3 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-start justify-between gap-3">
+<div class="min-w-0">
+<h3 class="font-label-lg text-label-lg text-text font-bold truncate">
+              Paracetamol 650 mg • SOS
+            </h3>
+<p class="font-body-caretaker text-body-caretaker text-text-muted mt-0.5">
+              Rahul suggested daily alarm
+            </p>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-danger-soft text-danger font-label-caretaker text-label-caretaker font-bold flex-shrink-0">
+<svg aria-hidden="true" class="w-4 h-4 text-danger" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="15" x2="9" y1="9" y2="15"></line>
+<line x1="9" x2="15" y1="9" y2="15"></line>
+</svg>
+            Declined
+          </span>
+</div>
+<div class="mt-2 text-text-muted font-body-caretaker text-body-caretaker">
+          3 days ago • You tapped “Not now”
+        </div>
+</div>
+<!-- Dynamically appended decision items appear here -->
+<div class="contents" id="dynamic-history"></div>
+</div>
+</section>
+<!-- Elder Peace-of-Mind Guarantee Footer Note -->
+<div class="w-full mt-6 text-center px-4">
+<div class="inline-flex items-center gap-2 text-text-muted font-body-caretaker text-body-caretaker">
+<svg aria-hidden="true" class="w-4 h-4 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg>
+<span>Voice alerts and schedule changes strictly require your confirmation.</span>
+</div>
+</div>
+</div>
+<script>
+  let pendingCount = 2;
+
+  function switchView(mode) {
+    const pendingView = document.getElementById('view-pending');
+    const emptyView = document.getElementById('view-empty');
+    const btnPending = document.getElementById('btn-tab-pending');
+    const btnEmpty = document.getElementById('btn-tab-empty');
+    const btnHistory = document.getElementById('btn-tab-history');
+
+    // Reset tab button states
+    [btnPending, btnEmpty, btnHistory].forEach(btn => {
+      btn.classList.remove('bg-surface', 'text-primary', 'shadow-sm', 'font-bold');
+      btn.classList.add('text-text-muted');
+      btn.setAttribute('aria-pressed', 'false');
+    });
+
+    if (mode === 'pending') {
+      btnPending.classList.add('bg-surface', 'text-primary', 'shadow-sm', 'font-bold');
+      btnPending.classList.remove('text-text-muted');
+      btnPending.setAttribute('aria-pressed', 'true');
+      pendingView.classList.remove('hidden');
+      emptyView.classList.add('hidden');
+    } else if (mode === 'empty') {
+      btnEmpty.classList.add('bg-surface', 'text-primary', 'shadow-sm', 'font-bold');
+      btnEmpty.classList.remove('text-text-muted');
+      btnEmpty.setAttribute('aria-pressed', 'true');
+      pendingView.classList.add('hidden');
+      emptyView.classList.remove('hidden');
+    } else if (mode === 'history') {
+      btnHistory.classList.add('bg-surface', 'text-primary', 'shadow-sm', 'font-bold');
+      btnHistory.classList.remove('text-text-muted');
+      btnHistory.setAttribute('aria-pressed', 'true');
+      pendingView.classList.add('hidden');
+      emptyView.classList.remove('hidden');
+    }
+  }
+
+  function handleAction(cardId, actionType) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+
+    // Smooth feedback animation
+    card.style.opacity = '0.3';
+    card.style.pointerEvents = 'none';
+
+    setTimeout(() => {
+      card.remove();
+      pendingCount = Math.max(0, pendingCount - 1);
+      
+      // Update badge
+      const badgeText = document.getElementById('badge-count-text');
+      const badgeElem = document.getElementById('badge-count');
+      const tabPending = document.getElementById('btn-tab-pending');
+      
+      if (pendingCount > 0) {
+        badgeText.textContent = pendingCount + ' waiting';
+        tabPending.textContent = 'Pending (' + pendingCount + ')';
+      } else {
+        badgeElem.classList.remove('bg-warning-soft', 'text-warning');
+        badgeElem.classList.add('bg-success-soft', 'text-secondary');
+        badgeText.textContent = '0 waiting';
+        tabPending.textContent = 'Pending (0)';
+        // Show empty view automatically
+        switchView('empty');
+      }
+
+      // Add record to recently decided list
+      const dynamicHistory = document.getElementById('dynamic-history');
+      if (dynamicHistory) {
+        const item = document.createElement('div');
+        item.className = 'p-3 rounded-lg hover:bg-surface-container-low transition-colors';
+        const isApproved = actionType === 'approved';
+        
+        item.innerHTML = `
+          <div class="h-[1px] bg-border mb-3"></div>
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <h3 class="font-label-lg text-label-lg text-text font-bold truncate">
+                ${cardId === 'card-1' ? 'Metformin 500 mg' : 'Vitamin D3'}
+              </h3>
+              <p class="font-body-caretaker text-body-caretaker text-text-muted mt-0.5">
+                ${cardId === 'card-1' ? 'Rahul proposed 8:30 AM' : 'Priya proposed weekly'}
+              </p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${isApproved ? 'bg-success-soft text-secondary' : 'bg-danger-soft text-danger'} font-label-caretaker text-label-caretaker font-bold flex-shrink-0">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                ${isApproved ? '<polyline points="20 6 9 17 4 12"/>' : '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'}
+              </svg>
+              ${isApproved ? 'Approved' : 'Declined'}
+            </span>
+          </div>
+          <div class="mt-2 text-text-muted font-body-caretaker text-body-caretaker">
+            Just now &bull; ${isApproved ? 'Medicine schedule updated' : 'Kept previous schedule'}
+          </div>
+        `;
+        dynamicHistory.prepend(item);
+      }
+    }, 280);
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/95 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.06)]" data-active-classes="text-primary font-bold after:content-[''] after:block after:w-8 after:h-1 after:bg-primary after:rounded-full after:mt-1"><div class="flex justify-around items-center h-20 max-w-[560px] mx-auto px-2"><a class="flex flex-col items-center justify-center min-w-[72px] min-h-[56px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="today" href="#"><span class="material-symbols-outlined text-[28px]">calendar_today</span><span class="font-label-caretaker text-label-caretaker tracking-wide mt-0.5">Today</span></a><a class="flex flex-col items-center justify-center min-w-[72px] min-h-[56px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="medicines" href="#"><span class="material-symbols-outlined text-[28px]">pill</span><span class="font-label-caretaker text-label-caretaker tracking-wide mt-0.5">Medicines</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[72px] min-h-[56px] py-1 transition-colors text-primary font-bold after:content-[''] after:block after:w-8 after:h-1 after:bg-primary after:rounded-full after:mt-1" data-path="family" href="#"><span class="material-symbols-outlined text-[28px]">group</span><span class="font-label-caretaker text-label-caretaker tracking-wide mt-0.5">Family</span></a></div></nav></body></html>
