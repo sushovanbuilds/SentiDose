@@ -1,5 +1,5 @@
-/* Join with a 6-digit passcode, or create a care space.
-   Passcodes are never stored in the browser; this form will POST in M2. */
+/* Join or create a care space. Passcodes are sent only to the API and are not
+   persisted in browser storage. */
 
 (function joinPage() {
   const LENGTH = 6;
@@ -79,53 +79,92 @@
     initTextSize();
     hydrateIcons();
 
-    document.getElementById('join-form').addEventListener('submit', (event) => {
+    const roleInput = document.getElementById('join-role');
+    const emailField = document.getElementById('join-email-field');
+    const emailInput = document.getElementById('join-email');
+    const updateRoleFields = () => {
+      const needsEmail = roleInput.value !== 'elder';
+      emailField.hidden = !needsEmail;
+      emailInput.required = needsEmail;
+    };
+    roleInput.addEventListener('change', updateRoleFields);
+    updateRoleFields();
+    document.getElementById('create-timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+
+    document.getElementById('join-form').addEventListener('submit', async (event) => {
       event.preventDefault();
       const error = document.getElementById('join-error');
       const code = readCode(inputs);
       const name = document.getElementById('join-name').value.trim();
 
       if (!/^\d{6}$/.test(code)) {
-        error.innerHTML = `<span data-icon="alert-circle" data-size="18"></span>That code isn't 6 numbers. Check it and try again.`;
+        error.textContent = "That code isn't 6 numbers. Check it and try again.";
         error.hidden = false;
-        hydrateIcons();
         inputs[0].focus();
         return;
       }
       if (name.length < 2) {
-        error.innerHTML = `<span data-icon="alert-circle" data-size="18"></span>Please enter your name.`;
+        error.textContent = 'Please enter your name.';
         error.hidden = false;
-        hydrateIcons();
         document.getElementById('join-name').focus();
         return;
       }
 
       error.hidden = true;
-      /* Shortcut: no auth endpoint until M2. The demo opens the elder view. */
-      toast('Demo mode: opening the care space.');
-      setTimeout(() => {
+      const submit = document.querySelector('#join-form button[type="submit"]');
+      submit.disabled = true;
+      submit.textContent = 'Joining...';
+      try {
+        await API.post('/api/auth/join', {
+          name,
+          role: roleInput.value,
+          ...(emailInput.value.trim() ? { email: emailInput.value.trim() } : {}),
+          code,
+        });
+        toast('You joined the care space.');
         location.href = '/today';
-      }, 600);
+      } catch (requestError) {
+        error.textContent = requestError.message;
+        error.hidden = false;
+        submit.disabled = false;
+        submit.textContent = 'Join care space';
+      }
     });
 
-    document.getElementById('create-form').addEventListener('submit', (event) => {
+    document.getElementById('create-form').addEventListener('submit', async (event) => {
       event.preventDefault();
       const error = document.getElementById('create-error');
       const pin = document.getElementById('create-pin').value;
 
       if (!/^\d{6}$/.test(pin)) {
-        error.innerHTML = `<span data-icon="alert-circle" data-size="18"></span>Choose exactly 6 numbers.`;
+        error.textContent = 'Choose exactly 6 numbers.';
         error.hidden = false;
-        hydrateIcons();
         document.getElementById('create-pin').focus();
         return;
       }
 
       error.hidden = true;
-      toast('Demo mode: care space created.');
-      setTimeout(() => {
-        location.href = '/today';
-      }, 600);
+      const submit = document.querySelector('#create-form button[type="submit"]');
+      submit.disabled = true;
+      submit.textContent = 'Creating...';
+      try {
+        const result = await API.post('/api/auth/create', {
+          elderName: document.getElementById('create-elder').value.trim(),
+          elderEmail: document.getElementById('create-email').value.trim(),
+          pin,
+          timezone: document.getElementById('create-timezone').value.trim(),
+        });
+        document.getElementById('caretaker-code').textContent = result.inviteCodes.caretaker;
+        document.getElementById('family-code').textContent = result.inviteCodes.family;
+        document.getElementById('create-form').hidden = true;
+        document.getElementById('create-success').hidden = false;
+        document.getElementById('create-pin').value = '';
+      } catch (requestError) {
+        error.textContent = requestError.message;
+        error.hidden = false;
+        submit.disabled = false;
+        submit.textContent = 'Create care space';
+      }
     });
   });
 })();

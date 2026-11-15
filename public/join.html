@@ -42,9 +42,16 @@
               <input class="input" id="join-name" type="text" autocomplete="name" required>
             </div>
 
+            <div class="field" id="join-email-field" hidden>
+              <label class="field__label" for="join-email">Your email</label>
+              <p class="field__hint">Used for dose and appointment reminders.</p>
+              <input class="input" id="join-email" type="email" autocomplete="email">
+            </div>
+
             <div class="field">
               <label class="field__label" for="join-role">Your role</label>
               <select class="select" id="join-role">
+                <option value="elder">Elder — return to your care space</option>
                 <option value="family">Family — see the schedule and suggest changes</option>
                 <option value="caretaker">Caretaker — add and edit medicines</option>
               </select>
@@ -75,6 +82,11 @@
               <input class="input" id="create-email" type="email" autocomplete="email" required>
             </div>
             <div class="field">
+              <label class="field__label" for="create-timezone">Care space time zone</label>
+              <p class="field__hint">Medicine and appointment reminders follow this local time.</p>
+              <input class="input" id="create-timezone" type="text" autocomplete="off" required>
+            </div>
+            <div class="field">
               <label class="field__label" for="create-pin">Choose a 6-digit PIN</label>
               <input class="input" id="create-pin" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required>
               <p class="field__error" id="create-error" role="alert" hidden></p>
@@ -83,6 +95,17 @@
               <button class="btn btn--primary" type="submit">Create care space</button>
             </div>
           </form>
+
+          <section id="create-success" class="notice notice--info notice--spaced" aria-labelledby="create-success-title" aria-live="polite" hidden>
+            <span class="notice__icon" data-icon="shield-check" data-size="24"></span>
+            <div>
+              <h2 id="create-success-title">Care space created</h2>
+              <p>Save these role codes and share them with the right people. They expire in 24 hours and are shown only once.</p>
+              <p><strong>Caretaker code:</strong> <output id="caretaker-code"></output></p>
+              <p><strong>Family code:</strong> <output id="family-code"></output></p>
+              <a class="btn btn--primary" href="/today">Continue to Today</a>
+            </div>
+          </section>
         </div>
       </section>
     </main>

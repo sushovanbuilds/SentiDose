@@ -1,11 +1,15 @@
 /* Appointment list and add form. Dates are shown without a year (design.md §11). */
 
 (function appointmentsPage() {
-  const TODAY = DEMO_TODAY;
+  let canWrite = true;
+  const today = () => {
+    const date = new Date();
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  };
 
   function renderList() {
     const upcoming = store.state.appointments
-      .filter((a) => a.datetime >= TODAY)
+      .filter((a) => a.datetime >= today())
       .sort((a, b) => a.datetime.localeCompare(b.datetime));
 
     const holder = document.getElementById('appt-list');
@@ -16,12 +20,9 @@
           <span class="empty__icon" data-icon="calendar" data-size="32"></span>
           <h2 class="empty__title">No appointments coming up</h2>
           <p class="empty__body">Add a clinic visit so Rahul and Priya stay coordinated.</p>
-          <div class="empty__actions">
-            <button class="btn btn--primary" type="button" data-open-add>Add appointment</button>
-          </div>
+          ${canWrite ? '<div class="empty__actions"><button class="btn btn--primary" type="button" data-open-add>Add appointment</button></div>' : ''}
         </div>`;
       hydrateIcons();
-      wireOpenAdd();
       return;
     }
 
@@ -63,6 +64,7 @@
     const addTab = document.getElementById('tab-add');
     const upcomingPanel = document.getElementById('upcoming-panel');
     const addPanel = document.getElementById('add-panel');
+    addTab.hidden = !canWrite;
 
     const select = (which) => {
       const isUpcoming = which === 'upcoming';
@@ -86,7 +88,7 @@
     });
   }
 
-  function submit(event) {
+  async function submit(event) {
     event.preventDefault();
 
     const doctor = document.getElementById('appt-doctor').value.trim();
@@ -114,21 +116,27 @@
       return;
     }
 
-    store.state.appointments.push({
-      id: `appt-${Date.now()}`,
-      doctor,
-      specialty: document.getElementById('appt-specialty').value.trim() || 'Consultation',
-      datetime: `${date}T${time}`,
-      location: document.getElementById('appt-location').value.trim() || 'To be confirmed',
-      notes: document.getElementById('appt-notes').value.trim(),
-      accompaniedBy: 'Rahul',
-    });
-    saveState(store.state);
-
-    document.getElementById('appt-form').reset();
-    document.getElementById('tab-upcoming').click();
-    renderList();
-    toast('Appointment saved.');
+    const submitButton = document.querySelector('#appt-form button[type="submit"]');
+    submitButton.disabled = true;
+    try {
+      const { appointment } = await API.post('/api/appointments', {
+        doctor,
+        specialty: document.getElementById('appt-specialty').value.trim() || 'Consultation',
+        datetime: `${date}T${time}`,
+        location: document.getElementById('appt-location').value.trim() || 'To be confirmed',
+        notes: document.getElementById('appt-notes').value.trim(),
+      });
+      store.state.appointments.push(appointment);
+      document.getElementById('appt-form').reset();
+      document.getElementById('tab-upcoming').click();
+      renderList();
+      wireOpenAdd();
+      toast('Appointment saved.');
+    } catch (error) {
+      toast(error.message, 'error');
+    } finally {
+      submitButton.disabled = false;
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -139,10 +147,21 @@
     );
     document.getElementById('nav-holder').innerHTML = renderNav('caretaker', 'appointments');
 
-    renderList();
     wireTabs();
     wireOpenAdd();
     initTextSize();
     document.getElementById('appt-form').addEventListener('submit', submit);
+    Promise.all([API.get('/api/auth/me'), API.get('/api/appointments')])
+      .then(([{ user }, { appointments }]) => {
+        canWrite = user.role !== 'family';
+        document.getElementById('tab-add').hidden = !canWrite;
+        store.state.appointments = appointments;
+        renderList();
+        wireOpenAdd();
+      })
+      .catch((error) => {
+        document.getElementById('appt-list').innerHTML = '<p class="field__error" role="alert">Could not load appointments. Please sign in and try again.</p>';
+        toast(error.message, 'error');
+      });
   });
 })();

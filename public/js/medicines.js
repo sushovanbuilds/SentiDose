@@ -2,6 +2,8 @@
 
 (function medicinesPage() {
   const foodLabel = { before: 'Before food', after: 'After food', anytime: 'Any time' };
+  const weekdays = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays'];
+  let canWrite = false;
 
   /** @param {object} med @returns {string} */
   function stockChip(med) {
@@ -14,7 +16,7 @@
   /** @param {object} med @returns {string} */
   function scheduleText(med) {
     const times = med.times.map(formatTime).join(' & ');
-    return med.schedule.kind === 'weekly' ? `Sundays ${times}` : times;
+    return med.schedule.kind === 'weekly' ? `${weekdays[med.schedule.weekday]} ${times}` : times;
   }
 
   /** @param {string} query @returns {Array<object>} */
@@ -29,7 +31,7 @@
     });
   }
 
-  function render(query = '') {
+  function render(query = '', canWrite = true) {
     const meds = filtered(query);
     const list = document.getElementById('med-list');
 
@@ -42,9 +44,7 @@
           <span class="empty__icon" data-icon="pill" data-size="32"></span>
           <h2 class="empty__title">No medicines match</h2>
           <p class="empty__body">Try a different name, or add the medicine.</p>
-          <div class="empty__actions">
-            <a class="btn btn--primary" href="/add-medicine">Add medicine</a>
-          </div>
+          ${canWrite ? '<div class="empty__actions"><a class="btn btn--primary" href="/add-medicine">Add medicine</a></div>' : ''}
         </div>`;
       hydrateIcons();
       return;
@@ -58,12 +58,12 @@
               <h2 class="med__name" id="med-${med.id}">${escapeHtml(med.name)} ${escapeHtml(med.dose)}</h2>
               <p class="med__dose">${escapeHtml(scheduleText(med))}</p>
             </div>
-            <div class="med__actions">
+            ${canWrite ? `<div class="med__actions">
               <a class="iconbtn" href="/add-medicine?id=${encodeURIComponent(med.id)}"
                  aria-label="Edit ${escapeHtml(med.name)}">
                 <span data-icon="pencil" data-size="24"></span>
               </a>
-            </div>
+            </div>` : ''}
           </div>
           <p class="med__note">${escapeHtml(med.note)}</p>
           <div class="med__foot">
@@ -87,10 +87,22 @@
     );
     document.getElementById('nav-holder').innerHTML = renderNav('elder', 'medicines');
 
-    render();
     initTextSize();
+    store.state.medicines = [];
 
     const search = document.getElementById('med-search');
-    search.addEventListener('input', (event) => render(event.target.value));
+    search.addEventListener('input', (event) => render(event.target.value, canWrite));
+    Promise.all([API.get('/api/auth/me'), API.get('/api/medicines')])
+      .then(([{ user }, { medicines }]) => {
+        canWrite = user.role !== 'family';
+        store.state.medicines = medicines;
+        store.state.viewer = user;
+        document.querySelector('a[href="/add-medicine"]').hidden = !canWrite;
+        render(search.value, canWrite);
+      })
+      .catch((error) => {
+        document.getElementById('med-list').innerHTML = '<p class="field__error" role="alert">Could not load medicines. Please sign in and try again.</p>';
+        toast(error.message, 'error');
+      });
   });
 })();

@@ -1,9 +1,11 @@
 /* Caretaker overview: alert, adherence, fixed-column doses table, approvals. */
 
 (function dashboardPage() {
-  const TODAY = DEMO_TODAY;
+  const dateNow = new Date();
+  const TODAY = `${dateNow.getFullYear()}-${String(dateNow.getMonth() + 1).padStart(2, '0')}-${String(dateNow.getDate()).padStart(2, '0')}`;
+  let canWrite = true;
 
-  function render() {
+  function render(adherence) {
     document.getElementById('header-holder').innerHTML = renderHeader(
       'Overview',
       'Caretaker dashboard',
@@ -11,10 +13,11 @@
        <span class="chip chip--upcoming"><span data-icon="users" data-size="18"></span>Rahul</span>`
     );
     document.getElementById('nav-holder').innerHTML = renderNav('caretaker', 'dashboard');
+    document.querySelector('a[href="/add-medicine"]').hidden = !canWrite;
     document.getElementById('dash-date').textContent = `${formatDate(TODAY)} • ${store.state.space.elderName}`;
 
     renderAlert();
-    renderAdherence();
+    renderAdherence(adherence);
     renderApprovals();
     renderDoses();
     renderAppointments();
@@ -52,11 +55,10 @@
       </section>`;
   }
 
-  function renderAdherence() {
-    const stats = store.adherence(7);
+  function renderAdherence(stats) {
     document.getElementById('adherence-number').textContent = `${stats.percent}%`;
     document.getElementById('adherence-sub').textContent =
-      `${stats.taken} of ${stats.total} scheduled doses taken in the last 7 days`;
+      `${stats.taken} of ${stats.total} recorded doses taken in the last 7 days`;
 
     document.getElementById('week-strip').innerHTML = stats.days
       .map((day) => {
@@ -121,7 +123,9 @@
         const acted = dose.status === 'taken' ? `Taken (${formatTime(dose.actedAt || '00:00')})` : null;
         const action =
           dose.status === 'pending'
-            ? `<button class="btn btn--secondary btn--cc-sm" type="button" data-dose="${dose.id}" data-status="taken">Mark taken</button>`
+            ? canWrite
+              ? `<button class="btn btn--secondary btn--cc-sm" type="button" data-dose="${dose.id}" data-status="taken">Mark taken</button>`
+              : '<span class="field__hint">Pending</span>'
             : `<span class="field__hint">Recorded</span>`;
         return `<tr>
           <td>
@@ -136,10 +140,24 @@
       .join('');
 
     document.querySelectorAll('[data-dose]').forEach((button) => {
-      button.addEventListener('click', () => {
-        store.actOnDose(button.dataset.dose, button.dataset.status);
-        toast('Dose recorded.');
-        render();
+      button.addEventListener('click', async () => {
+        const selected = store.dose(button.dataset.dose);
+        if (!selected) return;
+        button.disabled = true;
+        try {
+          const { dose } = await API.post('/api/doses', {
+            medId: selected.medId,
+            scheduledFor: selected.scheduledFor,
+            status: button.dataset.status,
+          });
+          Object.assign(selected, dose);
+          const result = await API.get(`/api/doses/adherence?days=7&through=${TODAY}`);
+          toast('Dose recorded.');
+          render(result.adherence);
+        } catch (error) {
+          toast(error.message, 'error');
+          button.disabled = false;
+        }
       });
     });
   }
@@ -164,5 +182,28 @@
       .join('');
   }
 
-  document.addEventListener('DOMContentLoaded', render);
+  document.addEventListener('DOMContentLoaded', () => {
+    Promise.all([
+      API.get('/api/auth/me'),
+      API.get('/api/medicines'),
+      API.get(`/api/doses?date=${TODAY}`),
+      API.get('/api/appointments'),
+      API.get(`/api/doses/adherence?days=7&through=${TODAY}`),
+    ])
+      .then(([{ user }, medicineData, doseData, appointmentData, adherenceData]) => {
+        canWrite = user.role !== 'family';
+        store.state.viewer = user;
+        store.state.medicines = medicineData.medicines;
+        store.state.doseLogs = doseData.doses;
+        store.state.appointments = appointmentData.appointments;
+        render(adherenceData.adherence);
+      })
+      .catch((error) => {
+        store.state.medicines = [];
+        store.state.doseLogs = [];
+        store.state.appointments = [];
+        render({ percent: 0, taken: 0, total: 0, days: [] });
+        toast(error.message, 'error');
+      });
+  });
 })();

@@ -7,6 +7,14 @@ const cookieParser = require('cookie-parser');
 const path = require('node:path');
 
 const { loadConfig } = require('./config');
+const { createAuthRouter } = require('./routes/auth');
+const { createRecordsRouter } = require('./routes/records');
+const { createCronRouter } = require('./routes/cron');
+const { createFirestoreAccessor } = require('./services/firestore');
+const { createAuthService } = require('./services/auth');
+const { createRecordsService } = require('./services/records');
+const { createReminderService } = require('./services/reminders');
+const { createMailer } = require('./services/mailer');
 const { notFound, errorHandler } = require('./middleware/error');
 const logger = require('./utils/logger');
 
@@ -21,6 +29,17 @@ const PUBLIC_DIR = path.join(__dirname, '..', 'public');
  */
 function createApp(options = {}) {
   const config = options.config || loadConfig();
+  const authService = options.authService || createAuthService({
+    getFirestore: createFirestoreAccessor(config),
+    sessionSecret: config.sessionSecret,
+  });
+  const recordsService = options.recordsService || createRecordsService({
+    getFirestore: createFirestoreAccessor(config),
+  });
+  const reminderService = options.reminderService || createReminderService({
+    getFirestore: createFirestoreAccessor(config),
+    sendEmail: createMailer(config).sendEmail,
+  });
   const app = express();
 
   app.disable('x-powered-by');
@@ -89,6 +108,10 @@ function createApp(options = {}) {
   app.get('/health', (_request, response) => {
     response.status(200).json({ status: 'ok', service: 'sentidose' });
   });
+
+  app.use('/api/auth', createAuthRouter(config, authService));
+  app.use('/api', createRecordsRouter(config, recordsService));
+  app.use('/api/cron', createCronRouter(config, reminderService));
 
   app.use(notFound);
   app.use(errorHandler);

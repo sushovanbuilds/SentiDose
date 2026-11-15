@@ -1,7 +1,8 @@
 /* Elder Today screen: one next dose, a short list for later, next appointment. */
 
 (function todayPage() {
-  const TODAY = DEMO_TODAY;
+  const dateNow = new Date();
+  const TODAY = `${dateNow.getFullYear()}-${String(dateNow.getMonth() + 1).padStart(2, '0')}-${String(dateNow.getDate()).padStart(2, '0')}`;
 
   /** @param {number} hour @returns {string} */
   function greetingFor(hour) {
@@ -50,7 +51,7 @@
     document.getElementById('next-dose-status').innerHTML = statusChip('pending');
     document.getElementById('next-med-name').textContent = `${med.name} ${med.dose}`;
     document.getElementById('next-med-when').textContent =
-      `${formatTime(dose.scheduledFor)} • ${med.note}`;
+      `${formatTime(dose.scheduledFor)} • ${med.note || `Take ${med.withFood} food`}`;
 
     const voice = document.getElementById('voice-holder');
     voice.innerHTML = med.voiceFrom
@@ -141,7 +142,7 @@
         const detail =
           dose.status === 'taken'
             ? `Taken at ${formatTime(dose.actedAt || '00:00')}`
-            : `${STATUS[dose.status].label} • ${med.note}`;
+            : `${STATUS[dose.status].label} • ${med.note || `Take ${med.withFood} food`}`;
         return `<li class="timeline__row">
           <span class="chip chip--${tone}" aria-hidden="true"><span data-icon="${icon}" data-size="18"></span></span>
           <div class="timeline__body">
@@ -176,13 +177,25 @@
   function wireActions() {
     const tookButton = document.getElementById('took-it');
     if (tookButton) {
-      tookButton.addEventListener('click', () => {
+      tookButton.addEventListener('click', async () => {
         const doses = store.dosesFor(TODAY);
         const next = doses.find((d) => d.status === 'pending');
         if (!next) return;
-        store.actOnDose(next.id, 'taken');
-        toast('Recorded. Rahul and Priya can see it.');
-        render();
+        tookButton.disabled = true;
+        try {
+          const { dose } = await API.post('/api/doses', {
+            medId: next.medId,
+            scheduledFor: next.scheduledFor,
+            status: 'taken',
+          });
+          Object.assign(next, dose);
+          toast('Dose recorded.');
+          render();
+        } catch (error) {
+          toast(error.message, 'error');
+        } finally {
+          tookButton.disabled = false;
+        }
       });
     }
 
@@ -223,7 +236,28 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    render();
     wireActions();
+    Promise.all([
+      API.get('/api/auth/me'),
+      API.get('/api/medicines'),
+      API.get(`/api/doses?date=${TODAY}`),
+      API.get('/api/appointments'),
+    ])
+      .then(([{ user }, medicineData, doseData, appointmentData]) => {
+        store.state.viewer = user;
+        store.state.medicines = medicineData.medicines;
+        store.state.doseLogs = doseData.doses;
+        store.state.appointments = appointmentData.appointments;
+        document.querySelector('.next-card__actions').hidden = user.role === 'family';
+        render();
+      })
+      .catch((error) => {
+        store.state.medicines = [];
+        store.state.doseLogs = [];
+        store.state.appointments = [];
+        document.querySelector('.next-card__actions').hidden = true;
+        render();
+        toast(error.message, 'error');
+      });
   });
 })();

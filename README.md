@@ -48,6 +48,34 @@ Cloud Scheduler ── POST /api/cron/tick every minute (x-cron-secret)
 Cloud Run scales to zero, so reminders are driven by Cloud Scheduler only. There
 is no `setInterval` or node-cron anywhere in the codebase.
 
+### Backend API
+
+Care-space creation and joining use `POST /api/auth/create` and
+`POST /api/auth/join`. Both set a 12-hour `HttpOnly`, `SameSite=Strict` session
+cookie. `GET /api/auth/me` returns the signed-in member; `POST /api/auth/logout`
+clears the cookie. Caretaker and family invite codes are six digits, stored as
+bcrypt hashes, indexed with a keyed digest for lookup, and expire after 24 hours.
+Members provide an email when joining; the first caretaker to join is the primary
+escalation contact. The creator selects the care-space time zone, which governs
+scheduled doses and appointment reminders.
+
+The authenticated records API provides `GET/POST /api/medicines`,
+`PATCH/DELETE /api/medicines/:id`, `GET/POST /api/appointments`,
+`PATCH/DELETE /api/appointments/:id`, `GET /api/doses?date=YYYY-MM-DD`,
+`POST /api/doses`, and `GET /api/doses/adherence?days=7&through=YYYY-MM-DD`.
+Family members can read records; only elders and caretakers can change them.
+Dose actions are stored once per medicine and scheduled time. Adherence counts
+recorded outcomes and excludes pending doses; reminder-driven missed-dose
+materialization is handled by the scheduler milestone.
+
+`POST /api/cron/tick` accepts the `x-cron-secret` header and is intended for
+Cloud Scheduler once per minute. It emails the elder when a dose is due, the
+primary caretaker when a dose remains unrecorded for 30 minutes, and all family
+members after two missed doses in one day. Appointment notices go to the care
+space members the day before and two hours before the appointment. Reminder
+events use Firestore leases and sent timestamps to suppress duplicate delivery
+across overlapping scheduler calls.
+
 ```
 src/
   server.js              app bootstrap, security headers, static hosting
@@ -85,7 +113,7 @@ no horizontal scroll at 320px or 130% text size.
 | `PORT` | no (default 8080) | env | HTTP port |
 | `NODE_ENV` | no | env | `production` turns on HTTPS upgrade and caching |
 | `SESSION_SECRET` | **yes** | Secret Manager | signs the session cookie |
-| `CRON_SECRET` | **yes** | Secret Manager | authenticates the scheduler call |
+| `CRON_SECRET` | yes for scheduled reminders | Secret Manager | authenticates the scheduler call |
 | `GOOGLE_CLOUD_PROJECT` | **yes** | env | Firestore and Storage project |
 | `GCS_BUCKET` | no | env | voice clips and prescription images |
 | `GEMINI_API_KEY` | no | Secret Manager | prescription scan and voice intent |
@@ -94,8 +122,9 @@ no horizontal scroll at 320px or 130% text size.
 | `SMTP_USER`, `SMTP_PASS` | no | Secret Manager | mail credentials |
 | `APP_BASE_URL` | no | env | links inside reminder emails |
 
-Required variables are checked at boot. A missing one stops the container, so a
-misconfigured revision never serves traffic.
+`SESSION_SECRET` is checked at boot. `CRON_SECRET` is required by the scheduler
+endpoint; SMTP settings are required for reminder delivery. Missing optional
+integrations do not stop static pages from starting.
 
 ## Run locally
 

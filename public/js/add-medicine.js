@@ -97,7 +97,7 @@
     };
   }
 
-  function submit(event) {
+  async function submit(event) {
     event.preventDefault();
     const payload = validate();
     if (!payload) {
@@ -107,40 +107,55 @@
       return;
     }
 
-    if (editingId) {
-      const med = store.medicine(editingId);
-      if (med) Object.assign(med, payload);
-      saveState(store.state);
-      toast('Medicine updated.');
-    } else {
-      store.state.medicines.push({
-        id: `med-${Date.now()}`,
+    const submitButton = document.getElementById('save-med');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Saving...';
+    try {
+      const data = {
         ...payload,
         note: `${payload.times.map(formatTime).join(' and ')}, ${payload.withFood} food`,
-        voiceFrom: null,
-      });
-      saveState(store.state);
-      toast('Medicine added.');
+      };
+      if (editingId) {
+        const current = store.medicine(editingId);
+        if (current) data.schedule = current.schedule;
+        await API.patch(`/api/medicines/${encodeURIComponent(editingId)}`, data);
+        toast('Medicine updated.');
+      } else {
+        await API.post('/api/medicines', data);
+        toast('Medicine added.');
+      }
+      location.href = '/medicines';
+    } catch (error) {
+      toast(error.message, 'error');
+      submitButton.disabled = false;
+      submitButton.textContent = editingId ? 'Save changes' : 'Save medicine';
     }
-
-    location.href = '/medicines';
   }
 
-  function prefill() {
+  async function prefill() {
     if (!editingId) return;
-    const med = store.medicine(editingId);
-    if (!med) return;
+    try {
+      const { medicines } = await API.get('/api/medicines');
+      store.state.medicines = medicines;
+      const med = store.medicine(editingId);
+      if (!med) {
+        toast('That medicine could not be found.', 'error');
+        return;
+      }
 
-    document.getElementById('form-title').textContent = `Edit ${med.name}`;
-    document.getElementById('save-med').textContent = 'Save changes';
-    document.getElementById('med-name').value = med.name;
-    document.getElementById('med-dose').value = med.dose;
-    document.getElementById('med-stock').value = med.stock;
-    document.querySelector(`input[name="withFood"][value="${med.withFood}"]`).checked = true;
+      document.getElementById('form-title').textContent = `Edit ${med.name}`;
+      document.getElementById('save-med').textContent = 'Save changes';
+      document.getElementById('med-name').value = med.name;
+      document.getElementById('med-dose').value = med.dose;
+      document.getElementById('med-stock').value = med.stock;
+      document.querySelector(`input[name="withFood"][value="${med.withFood}"]`).checked = true;
 
-    document.getElementById('time-rows').innerHTML = '';
-    med.times.forEach((time) => addTimeRow(time));
-    wireRemoveButtons();
+      document.getElementById('time-rows').innerHTML = '';
+      med.times.forEach((time) => addTimeRow(time));
+      wireRemoveButtons();
+    } catch (error) {
+      toast(error.message, 'error');
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
