@@ -4,6 +4,23 @@
   const dateNow = new Date();
   const TODAY = `${dateNow.getFullYear()}-${String(dateNow.getMonth() + 1).padStart(2, '0')}-${String(dateNow.getDate()).padStart(2, '0')}`;
   let canWrite = true;
+  const doseSkeleton = Array.from({ length: 4 }, () => `
+    <tr aria-hidden="true">
+      <td class="skeleton-table-cell"><span class="skeleton-block skeleton-line skeleton-line--medium"></span><span class="skeleton-block skeleton-line skeleton-line--short"></span></td>
+      <td class="skeleton-table-cell"><span class="skeleton-block skeleton-line skeleton-line--short"></span></td>
+      <td class="skeleton-table-cell"><span class="skeleton-block skeleton-chip"></span></td>
+      <td class="skeleton-table-cell"><span class="skeleton-block skeleton-chip"></span></td>
+    </tr>`).join('');
+  const appointmentSkeleton = Array.from({ length: 2 }, () => `
+    <article class="card" aria-hidden="true">
+      <div class="row row--between">
+        <span class="skeleton-block skeleton-line skeleton-line--medium"></span>
+        <span class="skeleton-block skeleton-chip"></span>
+      </div>
+      <span class="skeleton-block skeleton-line skeleton-line--short"></span>
+      <span class="skeleton-block skeleton-line skeleton-line--long"></span>
+      <span class="skeleton-block skeleton-line skeleton-line--medium"></span>
+    </article>`).join('');
 
   function render(adherence) {
     document.getElementById('header-holder').innerHTML = renderHeader(
@@ -184,6 +201,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    const stopDoseSkeleton = beginDelayedSkeleton(document.getElementById('doses-body'), doseSkeleton);
+    const stopAppointmentSkeleton = beginDelayedSkeleton(document.getElementById('appt-list'), appointmentSkeleton);
     Promise.all([
       API.get('/api/auth/me'),
       API.get('/api/medicines'),
@@ -192,6 +211,8 @@
       API.get(`/api/doses/adherence?days=7&through=${TODAY}`),
     ])
       .then(([{ user }, medicineData, doseData, appointmentData, adherenceData]) => {
+        stopDoseSkeleton();
+        stopAppointmentSkeleton();
         canWrite = user.role !== 'family';
         store.state.viewer = user;
         store.state.medicines = medicineData.medicines;
@@ -200,6 +221,8 @@
         render(adherenceData.adherence);
       })
       .catch((error) => {
+        stopDoseSkeleton();
+        stopAppointmentSkeleton();
         store.state.medicines = [];
         store.state.doseLogs = [];
         store.state.appointments = [];

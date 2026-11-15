@@ -49,6 +49,12 @@ describe('Automated Frontend Accessibility & Markup Integrity', () => {
       expect(h1s).toHaveLength(1);
     });
 
+    test('includes the branded, announced app loader', () => {
+      expect(content).toMatch(/id="app-loader"[^>]*role="status"[^>]*aria-live="polite"/);
+      expect(content).toContain('Getting your care space ready…');
+      expect(content).toContain('<script src="/js/loading.js" defer></script>');
+    });
+
     test('does not use inline styles or style attributes (strict CSP)', () => {
       expect(content).not.toMatch(/<style[^>]*>/i);
       expect(content).not.toMatch(/\sstyle\s*=/i);

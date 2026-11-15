@@ -4,6 +4,33 @@
 
 html { scroll-behavior: auto; }
 
+.app-loader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-app-loader);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-6);
+  background: var(--bg);
+  color: var(--text);
+  text-align: center;
+  opacity: 1;
+  transition: opacity var(--motion-loader-fade) ease-out;
+}
+.app-loader[hidden] { display: none; }
+.app-loader--hiding { opacity: 0; pointer-events: none; }
+.app-loader__icon { width: var(--sp-16); height: var(--sp-16); color: var(--primary); }
+.app-loader__icon svg { display: block; width: 100%; height: 100%; }
+.app-loader__icon--pulse { animation: loader-pulse var(--motion-loader-pulse) ease-in-out infinite; }
+.app-loader__message { margin: 0; font-size: var(--fs-body); font-weight: 600; }
+
+@keyframes loader-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.72; transform: scale(1.04); }
+}
+
 /* Reserve space before icon hydration replaces each slot with an SVG. */
 [data-icon] {
   display: inline-flex;
@@ -355,6 +382,9 @@ body:has(.nav) main { padding-bottom: calc(var(--tap) + var(--sp-8)); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none; }
   .btn { transition: none; }
+  .app-loader { transition: none; }
+  .app-loader__icon--pulse { animation: none; }
+  .skeleton-block::after { display: none; }
 }
 
 /* ---------- Table ---------- */

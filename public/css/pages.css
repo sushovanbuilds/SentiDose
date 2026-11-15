@@ -13,6 +13,44 @@ body.elder .page-main { padding-block-start: var(--sp-4); }
   font-size: var(--fs-label);
 }
 
+/* Loading placeholders reuse the final card and row geometry. */
+.skeleton-block {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--border);
+  border-radius: var(--radius-sm);
+}
+.skeleton-block::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--surface), transparent);
+  content: '';
+  transform: translateX(-100%);
+  animation: skeleton-shimmer var(--motion-skeleton-shimmer) ease-in-out infinite;
+}
+@keyframes skeleton-shimmer {
+  to { transform: translateX(100%); }
+}
+.skeleton-line { height: calc(var(--fs-body) * var(--lh-body)); }
+.skeleton-line--title { height: calc(var(--fs-h2) * var(--lh-heading)); width: 62%; }
+.skeleton-line--short { width: 38%; }
+.skeleton-line--medium { width: 68%; }
+.skeleton-line--long { width: 88%; }
+.skeleton-chip { width: var(--skeleton-chip-width); height: var(--sp-8); border-radius: var(--radius-full); }
+.skeleton-icon { width: var(--icon-md); height: var(--icon-md); flex: 0 0 auto; border-radius: var(--radius-full); }
+.skeleton-row { display: flex; align-items: flex-start; gap: var(--sp-4); }
+.skeleton-row__body { display: grid; flex: 1 1 auto; gap: var(--sp-2); min-width: 0; }
+.skeleton-med__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-4); }
+.skeleton-med__text { display: grid; flex: 1 1 auto; gap: var(--sp-2); min-width: 0; }
+.skeleton-med__foot { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-3); }
+.skeleton-appt__date { display: grid; align-content: center; justify-items: center; gap: 0; width: var(--sp-16); flex: 0 0 auto; }
+.skeleton-appt__date .skeleton-line:nth-child(2) { height: var(--fs-h2); }
+.skeleton-appt__body { display: grid; flex: 1 1 auto; gap: var(--sp-2); min-width: 0; }
+.skeleton-appt__action { width: var(--skeleton-action-width); height: var(--tap); margin-top: var(--sp-4); }
+.skeleton-table-cell { padding-block: var(--sp-3); }
+.skeleton-table-cell .skeleton-block { height: calc(var(--fs-body) * var(--lh-body)); }
+
 .hero__chip { margin-bottom: var(--sp-4); }
 .hero__actions { margin-top: var(--sp-6); }
 .hero__title { font-size: var(--fs-display); line-height: 1.15; }

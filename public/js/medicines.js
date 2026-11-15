@@ -4,6 +4,21 @@
   const foodLabel = { before: 'Before food', after: 'After food', anytime: 'Any time' };
   const weekdays = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays'];
   let canWrite = false;
+  const listSkeleton = Array.from({ length: 3 }, () => `
+    <article class="card med" aria-hidden="true">
+      <div class="skeleton-med__head">
+        <div class="skeleton-med__text">
+          <span class="skeleton-block skeleton-line skeleton-line--title"></span>
+          <span class="skeleton-block skeleton-line skeleton-line--short"></span>
+        </div>
+        <span class="skeleton-block skeleton-icon"></span>
+      </div>
+      <span class="skeleton-block skeleton-line skeleton-line--long med__note"></span>
+      <div class="skeleton-med__foot">
+        <span class="skeleton-block skeleton-chip"></span>
+        <span class="skeleton-block skeleton-chip"></span>
+      </div>
+    </article>`).join('');
 
   /** @param {object} med @returns {string} */
   function stockChip(med) {
@@ -94,8 +109,10 @@
 
     const search = document.getElementById('med-search');
     search.addEventListener('input', (event) => render(event.target.value, canWrite));
+    const stopListSkeleton = beginDelayedSkeleton(document.getElementById('med-list'), listSkeleton);
     Promise.all([API.get('/api/auth/me'), API.get('/api/medicines')])
       .then(([{ user }, { medicines }]) => {
+        stopListSkeleton();
         canWrite = user.role !== 'family';
         store.state.medicines = medicines;
         store.state.viewer = user;
@@ -103,6 +120,7 @@
         render(search.value, canWrite);
       })
       .catch((error) => {
+        stopListSkeleton();
         document.getElementById('med-list').innerHTML = '<p class="field__error" role="alert">Could not load medicines. Please sign in and try again.</p>';
         toast(error.message, 'error');
       });

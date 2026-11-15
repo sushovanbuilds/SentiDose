@@ -64,6 +64,14 @@
   --icon-lg: 28px;
   --icon-xl: 32px;
 
+  /* Loading motion and overlay layer. */
+  --layer-app-loader: 1000;
+  --motion-loader-fade: 200ms;
+  --motion-loader-pulse: 2.4s;
+  --motion-skeleton-shimmer: 1.6s;
+  --skeleton-chip-width: 7rem;
+  --skeleton-action-width: 8rem;
+
   /* Layout */
   --container: 560px;
   --container-wide: 1040px;

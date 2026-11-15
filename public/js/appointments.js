@@ -2,6 +2,24 @@
 
 (function appointmentsPage() {
   let canWrite = true;
+  const listSkeleton = Array.from({ length: 2 }, () => `
+    <article class="card appt" aria-hidden="true">
+      <div class="appt__head">
+        <div class="appt__date skeleton-appt__date">
+          <span class="skeleton-block skeleton-line skeleton-line--short"></span>
+          <span class="skeleton-block skeleton-line"></span>
+          <span class="skeleton-block skeleton-line skeleton-line--short"></span>
+        </div>
+        <div class="skeleton-appt__body">
+          <span class="skeleton-block skeleton-line skeleton-line--medium"></span>
+          <span class="skeleton-block skeleton-line skeleton-line--short"></span>
+          <span class="skeleton-block skeleton-line skeleton-line--long"></span>
+          <span class="skeleton-block skeleton-line skeleton-line--medium"></span>
+          <span class="skeleton-block skeleton-line skeleton-line--medium"></span>
+        </div>
+      </div>
+      <span class="skeleton-block skeleton-appt__action" aria-hidden="true"></span>
+    </article>`).join('');
   const today = () => {
     const date = new Date();
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -167,8 +185,10 @@
     wireOpenAdd();
     initTextSize();
     document.getElementById('appt-form').addEventListener('submit', submit);
+    const stopListSkeleton = beginDelayedSkeleton(document.getElementById('appt-list'), listSkeleton);
     Promise.all([API.get('/api/auth/me'), API.get('/api/appointments')])
       .then(([{ user }, { appointments }]) => {
+        stopListSkeleton();
         canWrite = user.role !== 'family';
         document.getElementById('tab-add').hidden = !canWrite;
         store.state.appointments = appointments;
@@ -176,6 +196,7 @@
         wireOpenAdd();
       })
       .catch((error) => {
+        stopListSkeleton();
         document.getElementById('appt-list').innerHTML = '<p class="field__error" role="alert">Could not load appointments. Please sign in and try again.</p>';
         toast(error.message, 'error');
       });

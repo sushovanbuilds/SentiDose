@@ -3,6 +3,28 @@
 (function todayPage() {
   const dateNow = new Date();
   const TODAY = `${dateNow.getFullYear()}-${String(dateNow.getMonth() + 1).padStart(2, '0')}-${String(dateNow.getDate()).padStart(2, '0')}`;
+  const listSkeleton = Array.from({ length: 3 }, () => `
+    <li class="timeline__row" aria-hidden="true">
+      <span class="skeleton-block skeleton-icon"></span>
+      <div class="skeleton-row__body">
+        <span class="skeleton-block skeleton-line skeleton-line--medium"></span>
+        <span class="skeleton-block skeleton-line skeleton-line--long"></span>
+      </div>
+    </li>`).join('');
+  const appointmentSkeleton = `
+    <div class="appt__head" aria-hidden="true">
+      <div class="appt__date skeleton-appt__date">
+        <span class="skeleton-block skeleton-line skeleton-line--short"></span>
+        <span class="skeleton-block skeleton-line"></span>
+        <span class="skeleton-block skeleton-line skeleton-line--short"></span>
+      </div>
+      <div class="skeleton-appt__body">
+        <span class="skeleton-block skeleton-line skeleton-line--medium"></span>
+        <span class="skeleton-block skeleton-line skeleton-line--short"></span>
+        <span class="skeleton-block skeleton-line skeleton-line--long"></span>
+      </div>
+    </div>
+    <span class="skeleton-block skeleton-appt__action" aria-hidden="true"></span>`;
 
   /** @param {number} hour @returns {string} */
   function greetingFor(hour) {
@@ -258,6 +280,8 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     wireActions();
+    const stopListSkeleton = beginDelayedSkeleton(document.getElementById('later-list'), listSkeleton);
+    const stopAppointmentSkeleton = beginDelayedSkeleton(document.getElementById('next-appt'), appointmentSkeleton);
     Promise.all([
       API.get('/api/auth/me'),
       API.get('/api/medicines'),
@@ -265,6 +289,8 @@
       API.get('/api/appointments'),
     ])
       .then(([{ user }, medicineData, doseData, appointmentData]) => {
+        stopListSkeleton();
+        stopAppointmentSkeleton();
         store.state.viewer = user;
         store.state.medicines = medicineData.medicines;
         store.state.doseLogs = doseData.doses;
@@ -273,6 +299,8 @@
         render();
       })
       .catch((error) => {
+        stopListSkeleton();
+        stopAppointmentSkeleton();
         store.state.medicines = [];
         store.state.doseLogs = [];
         store.state.appointments = [];
