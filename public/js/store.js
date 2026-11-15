@@ -207,7 +207,7 @@ const store = {
     const log = this.dose(id);
     if (!log) return null;
     log.status = status;
-    log.actedAt = new Date().toTimeString().slice(0, 5);
+    log.actedAt = SentiDoseClock.now().toTimeString().slice(0, 5);
     saveState(this.state);
     return log;
   },

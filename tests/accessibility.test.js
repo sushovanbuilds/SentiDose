@@ -55,6 +55,11 @@ describe('Automated Frontend Accessibility & Markup Integrity', () => {
       expect(content).toContain('<script src="/js/loading.js" defer></script>');
     });
 
+    test('loads the local clock without a live announcement region', () => {
+      expect(content).toContain('<script src="/js/clock.js" defer></script>');
+      expect(content).not.toMatch(/<time[^>]+aria-live=/i);
+    });
+
     test('does not use inline styles or style attributes (strict CSP)', () => {
       expect(content).not.toMatch(/<style[^>]*>/i);
       expect(content).not.toMatch(/\sstyle\s*=/i);

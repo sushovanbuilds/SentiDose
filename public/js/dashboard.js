@@ -1,7 +1,7 @@
 /* Caretaker overview: alert, adherence, fixed-column doses table, approvals. */
 
 (function dashboardPage() {
-  const dateNow = new Date();
+  const dateNow = SentiDoseClock.now();
   const TODAY = `${dateNow.getFullYear()}-${String(dateNow.getMonth() + 1).padStart(2, '0')}-${String(dateNow.getDate()).padStart(2, '0')}`;
   let canWrite = true;
   const doseSkeleton = Array.from({ length: 4 }, () => `

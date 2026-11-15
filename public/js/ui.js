@@ -86,7 +86,7 @@ function renderNav(variant, active) {
           { key: 'dashboard', href: '/dashboard', label: 'Overview', icon: 'calendar' },
           { key: 'medicines', href: '/medicines', label: 'Medicines', icon: 'pill' },
           { key: 'appointments', href: '/appointments', label: 'Appointments', icon: 'stethoscope' },
-          { key: 'approvals', href: '/approvals', label: 'Approvals', icon: 'hourglass' },
+          { key: 'family', href: '/family', label: 'Family', icon: 'users' },
         ];
 
   const links = items
@@ -105,6 +105,8 @@ function renderNav(variant, active) {
 
 /** @param {string} title @param {string} [subtitle] @param {string} [trailing] */
 function renderHeader(title, subtitle, trailing) {
+  const clock = SentiDoseClock.renderClockMarkup();
+  queueMicrotask(() => SentiDoseClock.startClock());
   return `<header class="site-header">
     <div class="container site-header__inner">
       <a class="brand" href="/">
@@ -114,7 +116,7 @@ function renderHeader(title, subtitle, trailing) {
           ${subtitle ? `<span class="brand__sub">${escapeHtml(subtitle)}</span>` : ''}
         </span>
       </a>
-      <div class="row">${renderTextSize()}${trailing || ''}</div>
+      <div class="row">${clock}${renderTextSize()}${trailing || ''}</div>
     </div>
   </header>`;
 }

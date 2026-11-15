@@ -9,7 +9,7 @@
       'Caretaker dashboard',
       `<a class="btn btn--ghost" href="/family"><span data-icon="help-circle" data-size="24"></span> Help</a>`
     );
-    document.getElementById('nav-holder').innerHTML = renderNav('caretaker', 'approvals');
+    document.getElementById('nav-holder').innerHTML = renderNav('caretaker', '');
 
     const list = document.getElementById('audit-list');
     if (store.state.auditLog.length === 0) {

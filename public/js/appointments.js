@@ -21,7 +21,7 @@
       <span class="skeleton-block skeleton-appt__action" aria-hidden="true"></span>
     </article>`).join('');
   const today = () => {
-    const date = new Date();
+    const date = SentiDoseClock.now();
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   };
 

@@ -1,7 +1,7 @@
 /* Elder Today screen: one next dose, a short list for later, next appointment. */
 
 (function todayPage() {
-  const dateNow = new Date();
+  const dateNow = SentiDoseClock.now();
   const TODAY = `${dateNow.getFullYear()}-${String(dateNow.getMonth() + 1).padStart(2, '0')}-${String(dateNow.getDate()).padStart(2, '0')}`;
   const listSkeleton = Array.from({ length: 3 }, () => `
     <li class="timeline__row" aria-hidden="true">
@@ -43,7 +43,7 @@
     document.getElementById('nav-holder').innerHTML = renderNav('elder', 'today');
 
     document.getElementById('greeting').textContent =
-      `${greetingFor(new Date().getHours())}, ${store.state.space.elderNickname}`;
+      `${greetingFor(SentiDoseClock.now().getHours())}, ${store.state.space.elderNickname}`;
     document.getElementById('today-date').textContent = formatDate(TODAY);
 
     const doses = store.dosesFor(TODAY);

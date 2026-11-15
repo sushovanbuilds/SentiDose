@@ -85,6 +85,16 @@ describe('service skeleton', () => {
     expect(response.text).toContain('Not medical advice. Consult your doctor.');
   });
 
+  test.each([
+    '/today', '/dashboard', '/medicines', '/add-medicine', '/appointments',
+    '/approvals', '/family', '/audit', '/join', '/alarm', '/scan',
+  ])('serves the %s page route', async (route) => {
+    const response = await request(app()).get(route);
+
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toContain('text/html');
+  });
+
   test('unknown API path returns JSON 404', async () => {
     const response = await request(app()).get('/api/nope');
 

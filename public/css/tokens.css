@@ -75,6 +75,7 @@
   /* Layout */
   --container: 560px;
   --container-wide: 1040px;
+  --nav-width: 240px;
 }
 
 /* Elder scale: larger body, 56px targets, single column max 560px. */

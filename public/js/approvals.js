@@ -89,7 +89,7 @@
       'Elder care space',
       `<a class="btn btn--ghost" href="/family"><span data-icon="help-circle" data-size="24"></span> Help</a>`
     );
-    document.getElementById('nav-holder').innerHTML = renderNav('elder', 'family');
+    document.getElementById('nav-holder').innerHTML = renderNav('elder', '');
 
     render();
     initTextSize();

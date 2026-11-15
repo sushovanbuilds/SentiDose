@@ -1,6 +1,7 @@
 /* Shared bootstrap for pages that do not need page-specific behaviour. */
 
 document.addEventListener('DOMContentLoaded', () => {
+  if (typeof SentiDoseClock === 'object') SentiDoseClock.startClock();
   if (typeof hydrateIcons === 'function') hydrateIcons();
   if (typeof initTextSize === 'function') initTextSize();
 

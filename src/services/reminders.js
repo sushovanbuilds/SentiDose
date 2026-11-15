@@ -3,6 +3,7 @@
 const { createHash } = require('node:crypto');
 const { FieldPath } = require('@google-cloud/firestore');
 const logger = require('../utils/logger');
+const { now: currentTime } = require('../../public/js/clock');
 const { doseDocumentId, medicineScheduledOn, PAGE_LIMIT } = require('./records');
 
 const EVENT_LEASE_MS = 2 * 60 * 1000;
@@ -68,7 +69,7 @@ function eventCanBeClaimed(event, currentTime) {
 }
 
 /** @param {object} dependencies */
-function createReminderService({ getFirestore, sendEmail, now = () => new Date() }) {
+function createReminderService({ getFirestore, sendEmail, now = currentTime }) {
   const firestore = () => getFirestore();
 
   async function sendOnce({ spaceRef, targetRef, targetField, claimUpdate, kind, key, recipients, subject, text, allowTarget }) {
