@@ -23,6 +23,13 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/index.html",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -31,10 +38,6 @@
     {
       "source": "/health",
       "destination": "/api/index"
-    },
-    {
-      "source": "/",
-      "destination": "/index.html"
     },
     {
       "source": "/today",
