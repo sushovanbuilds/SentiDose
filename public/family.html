@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0f766e">
-    <meta name="description" content="The care circle for Dadu: who is in it and what each person can do.">
+    <meta name="description" content="The care circle: who is in it and what each person can do.">
     <title>Family — SentiDose</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,8 +33,55 @@
       <div id="nav-holder"></div>
 
       <main id="main" tabindex="-1" class="container page-main">
-        <h1 class="page-title">Your care circle</h1>
-        <p class="page-lede">Loading your care-space members…</p>
+        <h1 class="page-title" id="family-title">Your care circle</h1>
+        <p class="page-lede" id="family-copy">Loading your care-space members…</p>
+        <section aria-labelledby="members-title">
+          <h2 class="section-title" id="members-title">People in this care space</h2>
+          <ul class="list card" id="member-list" aria-busy="true"></ul>
+          <p class="field__hint" id="member-empty" hidden>No family members added yet. Add one.</p>
+        </section>
+        <section id="member-management" aria-labelledby="manage-members-title" hidden>
+          <h2 id="manage-members-title">Manage people</h2>
+          <button class="btn btn--primary" id="add-person" type="button">Add person</button>
+          <form class="card stack member-form" id="member-form" hidden>
+            <h3 id="member-form-title">Add person</h3>
+            <div class="field"><label class="field__label" for="member-name">Name</label><input class="input" id="member-name" maxlength="60" required></div>
+            <div class="field"><label class="field__label" for="member-role">Role</label><select class="select" id="member-role"><option value="caretaker">Caretaker</option><option value="family">Family</option></select></div>
+            <div class="field"><label class="field__label" for="member-email">Email (optional)</label><input class="input" id="member-email" type="email" autocomplete="email"></div>
+            <div class="field"><label class="field__label" for="member-phone">Phone (optional)</label><input class="input" id="member-phone" type="tel" autocomplete="tel"></div>
+            <div class="field"><label class="field__label" for="member-relation">Relation</label><select class="select" id="member-relation"><option>Son</option><option>Daughter</option><option>Grandson</option><option>Granddaughter</option><option>Spouse</option><option>Sibling</option><option>Friend</option><option selected>Other</option></select></div>
+            <p class="field__error" id="member-error" role="alert" hidden></p>
+            <div class="row"><button class="btn btn--primary" type="submit">Save person</button><button class="btn btn--ghost" id="cancel-member" type="button">Cancel</button></div>
+          </form>
+        </section>
+        <section id="elder-only-guide" aria-labelledby="role-guide-title" hidden>
+          <h2 id="role-guide-title">What each role can do</h2>
+          <ul class="list card">
+            <li class="list__row"><span data-icon="shield-check" data-size="28"></span><div class="list__body"><p class="list__title" id="elder-role-name"></p><p class="list__meta">Controls sharing and approves or declines family suggestions.</p></div></li>
+            <li class="list__row"><span data-icon="stethoscope" data-size="28"></span><div class="list__body"><p class="list__title">Caretaker</p><p class="list__meta">Adds medicines, records doses and manages appointments.</p></div></li>
+            <li class="list__row"><span data-icon="users" data-size="28"></span><div class="list__body"><p class="list__title">Family</p><p class="list__meta">Sees the schedule and suggests changes for the elder to approve.</p></div></li>
+          </ul>
+        </section>
+        <section id="elder-invites" aria-labelledby="invite-title" hidden>
+          <h2 id="invite-title">Invite someone</h2>
+          <div class="card stack">
+            <p>Generate a new code. The previous code for that role stops working.</p>
+            <div class="row"><button class="btn btn--primary" type="button" data-generate-code="caretaker">Generate caretaker code</button><button class="btn btn--secondary" type="button" data-generate-code="family">Generate family code</button></div>
+            <div id="invite-result" hidden><p>Share this code now. It is shown only once.</p><label class="field__label" id="invite-code-label" for="invite-code">Invite code</label><input class="input" id="invite-code" readonly><button class="btn btn--secondary" id="invite-copy" type="button">Copy code</button></div>
+            <p id="invite-error" class="field__error" role="alert" hidden></p>
+          </div>
+        </section>
+        <section id="caretaker-actions" aria-labelledby="caretaker-title" hidden>
+          <h2 id="caretaker-title">Your care tasks</h2><p>You can add medicines, record doses and manage appointments.</p>
+          <div class="row"><a class="btn btn--primary" href="/medicines">Medicines</a><a class="btn btn--secondary" href="/appointments">Appointments</a><a class="btn btn--secondary" href="/today">Today</a></div>
+        </section>
+        <section id="family-actions" aria-labelledby="family-actions-title" hidden>
+          <h2 id="family-actions-title">Your family access</h2><p id="family-approval-copy"></p>
+          <div class="row"><a class="btn btn--secondary" href="/dashboard">Schedule</a><a class="btn btn--primary" href="#suggestion-form">Suggest a change</a></div>
+          <form class="card stack" id="suggestion-create-form"><h3 id="suggestion-form">Suggest a change</h3><label class="field__label" for="suggestion-subject">What should change?</label><input class="input" id="suggestion-subject" required minlength="3" maxlength="120"><label class="field__label" for="suggestion-details">Explain your suggestion</label><textarea class="textarea" id="suggestion-details" required minlength="3" maxlength="1000"></textarea><button class="btn btn--primary" type="submit">Send suggestion</button><p id="family-suggestion-message" role="status" hidden></p></form>
+        </section>
+        <a class="btn btn--secondary" id="elder-activity-link" href="/audit" hidden><span data-icon="log" data-size="24"></span> Activity log</a>
+        <section id="family-error" role="alert" hidden><p>We couldn't load the care circle.</p><button class="btn btn--primary" id="family-retry" type="button">Try again</button></section>
       </main>
     </div>
 

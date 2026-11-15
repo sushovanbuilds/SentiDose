@@ -42,7 +42,7 @@
     document.getElementById('nav-holder').innerHTML = renderNav('elder', 'today');
 
     document.getElementById('greeting').textContent =
-      `${greetingFor(SentiDoseClock.now().getHours())}, ${store.state.space.elderNickname}`;
+      `${greetingFor(SentiDoseClock.now().getHours())}, ${window.SentiDoseUser?.displayName || 'the elder'}`;
     document.getElementById('today-date').textContent = formatDate(TODAY);
 
     const doses = store.dosesFor(TODAY);
@@ -158,7 +158,7 @@
     const missed = doses.find((dose) => dose.status === 'missed');
     if (missed) {
       const med = store.medicine(missed.medId);
-      // Plain language, one recovery step, no blame. Dadu should not have to
+      // Plain language, one recovery step, no blame. The elder should not have to
       // wonder what a missed dose means for him.
       list.insertAdjacentHTML(
         'afterend',
@@ -166,7 +166,7 @@
            <span class="notice__icon" data-icon="info" data-size="28"></span>
            <div>
              <p class="timeline__title">${escapeHtml(med ? `${med.name} this morning was not recorded.` : 'A dose was not recorded.')}</p>
-             <p>We have told your family. Do not take it twice — wait for the next dose. If you feel unwell, call Rahul.</p>
+             <p>We have told your family. Do not take it twice — wait for the next dose. If you feel unwell, contact your care team.</p>
            </div>
          </div>`
       );

@@ -19,6 +19,7 @@ async function api(path, options = {}) {
     if (!response.ok) {
       const error = new Error(body.error || `Request failed with ${response.status}`);
       error.status = response.status;
+      error.fields = body.fields || [];
       throw error;
     }
 

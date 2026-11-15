@@ -374,6 +374,8 @@ body:has(.nav) main { padding-bottom: calc(var(--tap) + var(--sp-12)); }
   font-size: var(--fs-label);
   margin: var(--sp-2) 0 0;
 }
+.input[aria-invalid="true"], .select[aria-invalid="true"] { border-color: var(--danger); }
+.btn--link { padding: 0; min-height: 0; color: var(--primary); text-align: left; text-decoration: underline; }
 
 /* ---------- Audio player ---------- */
 

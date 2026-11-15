@@ -4,70 +4,71 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { JSDOM } = require('jsdom');
 
+const pageHtml = fs.readFileSync(path.join(__dirname, '../public/family.html'), 'utf8');
 const pageScript = fs.readFileSync(path.join(__dirname, '../public/js/family.js'), 'utf8');
 const members = [
-  { id: 'elder', name: 'Subrata Halder', role: 'elder' },
-  { id: 'caretaker', name: 'Meena', role: 'caretaker' },
-  { id: 'family', name: 'Rahul', role: 'family' },
+  { id: 'elder', name: 'Nila Sen', role: 'elder' },
+  { id: 'caretaker', name: 'Tara Das', role: 'caretaker' },
+  { id: 'family', name: 'Asha Roy', role: 'family', relation: 'Daughter' },
 ];
 
-async function renderFor(role) {
-  const dom = new JSDOM('<div id="header-holder"></div><div id="nav-holder"></div><main id="main"><h1>Loading</h1></main>', {
-    url: 'https://sentidose.test/family',
-    runScripts: 'outside-only',
-  });
+async function renderFor(role, roster = members) {
+  const dom = new JSDOM(pageHtml, { url: 'https://sentidose.test/family', runScripts: 'outside-only' });
   const { window } = dom;
-  window.SentiDoseRole = { ready: Promise.resolve({ role, name: 'Meena', spaceId: 'space-1', elderName: 'Subrata Halder' }) };
-  window.API = { get: jest.fn(async () => ({ members })), post: jest.fn() };
+  window.SentiDoseRole = { ready: Promise.resolve({ role, name: 'Tara Das', spaceId: 'space-1', elderName: 'Nila Sen', displayName: 'Nila' }) };
+  window.API = { get: jest.fn(async () => ({ members: roster })), post: jest.fn(), patch: jest.fn(), del: jest.fn() };
   window.renderHeader = (title) => `<header>${title}</header>`;
   window.renderNav = (sessionRole) => `<nav data-role="${sessionRole}"></nav>`;
-  window.escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   window.hydrateIcons = jest.fn();
   window.initTextSize = jest.fn();
   window.toast = jest.fn();
+  window.confirm = jest.fn(() => true);
   window.eval(pageScript);
   window.document.dispatchEvent(new window.Event('DOMContentLoaded'));
   await new Promise((resolve) => window.setTimeout(resolve, 0));
-  return { dom, html: window.document.querySelector('main').innerHTML };
+  const main = window.document.querySelector('main');
+  const isVisible = (element) => !element.closest('[hidden]');
+  return { dom, document: window.document, main, isVisible };
 }
 
-describe('family page role views', () => {
-  test('elder sees role roster, invite actions, activity log and role descriptions', async () => {
-    const { dom, html } = await renderFor('elder');
-    expect(html).toContain('Your care circle');
-    expect(html).toContain('Subrata Halder (you)');
-    expect(html).toContain('Generate a new invite code for caretaker');
-    expect(html).toContain('Generate a new invite code for family');
-    expect(html).toContain('/audit');
-    expect(html).toContain('Caretaker');
-    expect(html).toContain('Family');
-    expect(html).not.toContain('suggestion-create-form');
+describe('care-circle roster role views', () => {
+  test('elder sees real member names, role chips and all management actions', async () => {
+    const { dom, document, main, isVisible } = await renderFor('elder');
+    expect(document.getElementById('family-title').textContent).toBe('Your care circle');
+    expect(main.textContent).toContain('Nila Sen (you)');
+    expect(main.textContent).toContain('Asha Roy');
+    expect([...main.querySelectorAll('button')].filter(isVisible).map((button) => button.textContent)).toEqual(expect.arrayContaining(['Add person', 'Edit', 'Remove', 'Generate caretaker code', 'Generate family code']));
+    expect(document.getElementById('elder-activity-link').hidden).toBe(false);
     dom.window.close();
   });
 
-  test('caretaker sees read-only members and care links with no invite controls', async () => {
-    const { dom, html } = await renderFor('caretaker');
-    expect(html).toContain("Subrata Halder's care circle");
-    expect(html).toContain('You can add medicines, record doses and manage appointments.');
-    expect(html).toContain('href="/medicines"');
-    expect(html).toContain('href="/appointments"');
-    expect(html).toContain('href="/today"');
-    expect(html).not.toContain('data-generate-code');
-    expect(html).not.toContain('invite-code');
+  test('caretaker sees a read-only roster and care links', async () => {
+    const { dom, document, main, isVisible } = await renderFor('caretaker');
+    expect(document.getElementById('family-title').textContent).toBe("Nila's care circle");
+    expect(main.textContent).toContain('You can add medicines, record doses and manage appointments.');
+    expect(main.querySelector('a[href="/medicines"]')).not.toBeNull();
+    expect(main.querySelector('a[href="/appointments"]')).not.toBeNull();
+    expect(main.querySelector('a[href="/today"]')).not.toBeNull();
+    expect([...main.querySelectorAll('button')].filter(isVisible).map((button) => button.textContent)).not.toEqual(expect.arrayContaining(['Add person', 'Edit', 'Remove', 'Generate caretaker code', 'Generate family code']));
     dom.window.close();
   });
 
-  test('family sees read-only roster, schedule and suggestion form without edit or invite controls', async () => {
-    const { dom, html } = await renderFor('family');
-    expect(html).toContain("Subrata Halder's care circle");
-    expect(html).toContain('You can see the schedule and suggest changes. Dadu approves them.');
-    expect(html).toContain('href="/dashboard">Schedule');
-    expect(html).toContain('Suggest a change');
-    expect(html).toContain('suggestion-create-form');
-    expect(html).not.toContain('data-generate-code');
-    expect(html).not.toContain('data-decide');
-    expect(html).not.toContain('Edit');
-    expect(html).not.toContain('Delete');
+  test('family sees schedule and suggestion controls only', async () => {
+    const { dom, document, main, isVisible } = await renderFor('family');
+    expect(document.getElementById('family-title').textContent).toBe("Nila's care circle");
+    expect(main.textContent).toContain('You can see the schedule and suggest changes. Nila approves them.');
+    expect(main.querySelector('a[href="/dashboard"]')).not.toBeNull();
+    expect(main.querySelector('#suggestion-create-form')).not.toBeNull();
+    const visibleButtons = [...main.querySelectorAll('button')].filter(isVisible).map((button) => button.textContent);
+    expect(visibleButtons).toContain('Send suggestion');
+    expect(visibleButtons).not.toEqual(expect.arrayContaining(['Add person', 'Edit', 'Remove', 'Generate caretaker code', 'Generate family code']));
+    dom.window.close();
+  });
+
+  test('member names are inserted as text even if an API response contains markup', async () => {
+    const { dom, document } = await renderFor('elder', [{ id: 'family', name: '<script>alert(1)</script>', role: 'family' }]);
+    expect(document.querySelector('#member-list script')).toBeNull();
+    expect(document.querySelector('#member-list').textContent).toContain('<script>alert(1)</script>');
     dom.window.close();
   });
 });

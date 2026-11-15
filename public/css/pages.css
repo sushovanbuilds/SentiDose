@@ -14,6 +14,23 @@ body[data-role="elder"] .page-main { padding-block-start: var(--sp-4); }
   font-size: var(--fs-label);
 }
 
+.create-step > .btn { margin-top: var(--sp-4); }
+.person-row { margin-block: var(--sp-4); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--sp-4); }
+.person-row legend { padding-inline: var(--sp-2); }
+.create-progress { color: var(--text-muted); font-size: var(--fs-label); }
+.review-section { border-bottom: 1px solid var(--border); padding-block: var(--sp-4); }
+.review-section h2 { display: inline-block; margin: 0 var(--sp-3) 0 0; }
+.review-section ul { margin-block: var(--sp-3); overflow-wrap: anywhere; }
+.code-copy-row { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: var(--sp-2); margin-block: var(--sp-4); }
+.code-copy-row label { grid-column: 1 / -1; font-weight: 600; }
+.member-actions { margin-left: auto; }
+.member-form { margin-top: var(--sp-4); }
+@media (max-width: 480px) {
+  .code-copy-row { grid-template-columns: 1fr; }
+  .code-copy-row label { grid-column: auto; }
+  .member-actions { flex-wrap: wrap; }
+}
+
 /* Loading placeholders reuse the final card and row geometry. */
 .skeleton-block {
   position: relative;
@@ -198,6 +215,7 @@ body[data-role="elder"] .page-main { padding-block-start: var(--sp-4); }
 .notice p { margin: 0; }
 .notice--info { background: var(--primary-soft); border-color: var(--primary); }
 .notice--info .notice__icon { color: var(--primary); }
+.notice--danger { background: var(--danger-soft); border-color: var(--danger); }
 .notice--spaced { margin-top: var(--sp-8); }
 
 /* ---------- Tabs / segmented ---------- */

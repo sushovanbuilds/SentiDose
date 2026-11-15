@@ -51,7 +51,7 @@
     const list = document.getElementById('med-list');
 
     document.getElementById('med-count').textContent =
-      `Dadu's active routine • ${store.state.medicines.length} scheduled items`;
+      `Your active routine • ${store.state.medicines.length} scheduled items`;
 
     if (meds.length === 0) {
       announceViewChange(`No medicines match ${query || 'the search'}.`);

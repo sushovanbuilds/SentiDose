@@ -86,7 +86,7 @@ body[data-role="elder"] {
   --fs-label: 1.125rem;
   --fs-h2: clamp(1.35rem, 4vw + 0.75rem, 1.75rem);
   --fs-h1: clamp(1.65rem, 5vw + 1rem, 2.25rem);
-  /* The one thing Dadu must never miss: the medicine name on the dose card. */
+  /* Keep medicine names prominent on the elder dose card. */
   --fs-dose: clamp(1.75rem, 6vw + 1rem, 2.25rem);
   --fs-alarm: clamp(1.85rem, 6vw + 1rem, 2.5rem);
   --lh-body: 1.5;

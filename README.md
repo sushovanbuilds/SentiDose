@@ -214,8 +214,7 @@ voice intent parsing.
 Weekly AI digest, drug-interaction checking, refill prediction, multi-language UI
 beyond voice, native apps, payments, chat. No diagnosis, no dosage advice.
 
-## Demo data
+## New care spaces
 
-Elder: Subrata Halder ("Dadu"). Family: Rahul (grandson), Priya (daughter).
-Caretaker: Meena. Medicines: Metformin 500 mg, Amlodipine 5 mg, Telmisartan 40 mg,
-Vitamin D3. Appointments: Dr. Banerjee (Cardiology), Dr. Sen (Eye check-up).
+New care spaces start with only the details entered by the person creating them.
+Members, medicines, appointments and activity are empty until someone adds them.

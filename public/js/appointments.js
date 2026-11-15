@@ -37,7 +37,7 @@
         <div class="card empty">
           <span class="empty__icon" data-icon="calendar" data-size="32"></span>
           <h2 class="empty__title">No appointments coming up</h2>
-          <p class="empty__body">Add a clinic visit so Rahul and Priya stay coordinated.</p>
+          <p class="empty__body">Add a clinic visit to keep your care team informed.</p>
           ${canWrite ? '<div class="empty__actions"><button class="btn btn--primary" type="button" data-open-add>Add appointment</button></div>' : ''}
         </div>`;
       hydrateIcons();

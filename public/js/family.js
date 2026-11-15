@@ -1,141 +1,210 @@
-/* Role-specific care-circle screens and elder-only invitation rotation. */
+/* Care-space roster, with editing controls only for the elder. */
 (function familyPage() {
   const ROLE = {
     elder: { label: 'Elder', icon: 'shield-check' },
     caretaker: { label: 'Caretaker', icon: 'stethoscope' },
     family: { label: 'Family', icon: 'users' },
   };
+  let user;
+  let members = [];
 
-  function memberRows(members) {
-    return members.map((member) => {
-      const role = ROLE[member.role] || ROLE.family;
-      return `<li class="list__row">
-        <span data-icon="${role.icon}" data-size="28"></span>
-        <div class="list__body">
-          <p class="list__title">${escapeHtml(member.name)}</p>
-          <p class="list__meta"><span class="chip chip--neutral">${role.label}</span></p>
-        </div>
-      </li>`;
-    }).join('');
+  function addText(parent, tag, className, value) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    element.textContent = value;
+    parent.append(element);
+    return element;
   }
 
-  function roleLinks(user) {
-    if (user.role === 'caretaker') {
-      return `<section aria-labelledby="care-actions-title">
-        <h2 id="care-actions-title">Your care tasks</h2>
-        <p>You can add medicines, record doses and manage appointments.</p>
-        <div class="row">
-          <a class="btn btn--primary" href="/medicines">Medicines</a>
-          <a class="btn btn--secondary" href="/appointments">Appointments</a>
-          <a class="btn btn--secondary" href="/today">Today</a>
-        </div>
-      </section>`;
+  function memberRow(member) {
+    const item = document.createElement('li');
+    item.className = 'list__row';
+    const icon = document.createElement('span');
+    icon.dataset.icon = (ROLE[member.role] || ROLE.family).icon;
+    icon.dataset.size = '28';
+    item.append(icon);
+    const body = document.createElement('div');
+    body.className = 'list__body';
+    addText(body, 'p', 'list__title', member.name);
+    const meta = document.createElement('p');
+    meta.className = 'list__meta';
+    const chip = document.createElement('span');
+    chip.className = 'chip chip--neutral';
+    chip.textContent = (ROLE[member.role] || ROLE.family).label;
+    meta.append(chip);
+    if (member.relation) addText(meta, 'span', '', ` · ${member.relation}`);
+    body.append(meta);
+    item.append(body);
+    if (user.role === 'elder' && member.role !== 'elder') {
+      const actions = document.createElement('div');
+      actions.className = 'row member-actions';
+      const edit = document.createElement('button');
+      edit.className = 'btn btn--secondary';
+      edit.type = 'button';
+      edit.textContent = 'Edit';
+      edit.addEventListener('click', () => openMemberForm(member));
+      const remove = document.createElement('button');
+      remove.className = 'btn btn--ghost';
+      remove.type = 'button';
+      remove.textContent = 'Remove';
+      remove.addEventListener('click', () => removeMember(member));
+      actions.append(edit, remove);
+      item.append(actions);
     }
-    if (user.role === 'family') {
-      return `<section aria-labelledby="family-actions-title">
-        <h2 id="family-actions-title">Your family access</h2>
-        <p>You can see the schedule and suggest changes. Dadu approves them.</p>
-        <div class="row">
-          <a class="btn btn--secondary" href="/dashboard">Schedule</a>
-          <a class="btn btn--primary" href="#suggestion-form">Suggest a change</a>
-        </div>
-      </section>
-      <section id="suggestion-form" aria-labelledby="suggestion-title">
-        <h2 id="suggestion-title">Suggest a change</h2>
-        <form class="card stack" id="suggestion-create-form">
-          <label class="field__label" for="suggestion-subject">What should change?</label>
-          <input class="input" id="suggestion-subject" name="title" required minlength="3" maxlength="120">
-          <label class="field__label" for="suggestion-details">Explain your suggestion</label>
-          <textarea class="input" id="suggestion-details" name="details" required minlength="3" maxlength="1000"></textarea>
-          <button class="btn btn--primary" type="submit">Send suggestion</button>
-          <p id="suggestion-message" role="status" hidden></p>
-        </form>
-      </section>`;
-    }
-    return `<section aria-labelledby="role-guide-title">
-      <h2 id="role-guide-title">What each role can do</h2>
-      <ul class="list card">
-        <li class="list__row"><span data-icon="shield-check" data-size="28"></span><div class="list__body"><p class="list__title">${escapeHtml(user.elderName)} (you)</p><p class="list__meta">Controls sharing and approves or declines family suggestions.</p></div></li>
-        <li class="list__row"><span data-icon="stethoscope" data-size="28"></span><div class="list__body"><p class="list__title">Caretaker</p><p class="list__meta">Adds medicines, records doses and manages appointments.</p></div></li>
-        <li class="list__row"><span data-icon="users" data-size="28"></span><div class="list__body"><p class="list__title">Family</p><p class="list__meta">Sees the schedule and suggests changes for the elder to approve.</p></div></li>
-      </ul>
-    </section>
-    <section aria-labelledby="invite-title">
-      <h2 id="invite-title">Invite someone</h2>
-      <div class="card stack">
-        <p>Generate a new code for the person you want to invite. A new code replaces the previous code for that role.</p>
-        <div class="row">
-          <button class="btn btn--primary" type="button" data-generate-code="caretaker">Generate a new invite code for caretaker</button>
-          <button class="btn btn--secondary" type="button" data-generate-code="family">Generate a new invite code for family</button>
-        </div>
-        <div id="invite-result" aria-live="polite" hidden></div>
-        <p id="invite-error" class="field__error" role="alert" hidden></p>
-      </div>
-    </section>
-    <a class="btn btn--secondary" href="/audit"><span data-icon="log" data-size="24"></span> Activity log</a>`;
+    return item;
   }
 
-  function render(user, members) {
-    const title = user.role === 'elder' ? 'Your care circle' : `${escapeHtml(user.elderName)}'s care circle`;
-    document.getElementById('header-holder').innerHTML = renderHeader('Family', user.role === 'elder' ? 'Elder care space' : 'Care space');
-    document.getElementById('nav-holder').innerHTML = renderNav(user.role, 'family');
-    document.getElementById('main').innerHTML = `
-      <h1 class="page-title">${title}</h1>
-      <p class="page-lede">${user.role === 'elder' ? 'These people are part of your care space.' : 'People who share this care space.'}</p>
-      <section aria-labelledby="members-title">
-        <h2 class="section-title" id="members-title">Members</h2>
-        <ul class="list card" id="member-list">${memberRows(members)}</ul>
-      </section>
-      ${roleLinks(user)}`;
+  function renderMembers() {
+    const list = document.getElementById('member-list');
+    list.replaceChildren(...members.map(memberRow));
+    list.setAttribute('aria-busy', 'false');
+    const hasFamily = members.some((member) => member.role === 'family');
+    const empty = document.getElementById('member-empty');
+    empty.textContent = user.role === 'elder'
+      ? 'No family members added yet. Add one.'
+      : 'No other people have joined this care space yet.';
+    empty.hidden = hasFamily;
+    const elder = members.find((member) => member.role === 'elder');
+    document.getElementById('elder-role-name').textContent = `${elder ? elder.name : user.displayName || 'The elder'} (you)`;
     hydrateIcons();
-    initTextSize();
-    bindInviteActions(user);
-    bindSuggestionForm();
   }
 
-  function bindInviteActions(user) {
+  function render(userInfo, roster) {
+    user = userInfo;
+    members = roster;
+    const elderLabel = user.displayName || 'the elder';
+    document.getElementById('family-title').textContent = user.role === 'elder' ? 'Your care circle' : `${elderLabel}'s care circle`;
+    document.getElementById('header-holder').innerHTML = renderHeader('Family', 'Care space');
+    document.getElementById('nav-holder').innerHTML = renderNav(user.role, 'family');
+    document.getElementById('family-copy').textContent = 'People who share this care space.';
+    document.getElementById('family-approval-copy').textContent = `You can see the schedule and suggest changes. ${elderLabel} approves them.`;
+    document.getElementById('family-suggestion-message').dataset.elderName = elderLabel;
+    document.getElementById('elder-only-guide').hidden = user.role !== 'elder';
+    document.getElementById('elder-invites').hidden = user.role !== 'elder';
+    document.getElementById('caretaker-actions').hidden = user.role !== 'caretaker';
+    document.getElementById('family-actions').hidden = user.role !== 'family';
+    document.getElementById('member-management').hidden = user.role !== 'elder';
+    document.getElementById('elder-activity-link').hidden = user.role !== 'elder';
+    renderMembers();
+    bindInviteActions();
+    bindSuggestionForm();
+    bindMemberForm();
+    document.getElementById('family-retry').onclick = loadRoster;
+    initTextSize();
+  }
+
+  function openMemberForm(member) {
+    const form = document.getElementById('member-form');
+    form.hidden = false;
+    form.dataset.memberId = member ? member.id : '';
+    document.getElementById('member-form-title').textContent = member ? 'Edit person' : 'Add person';
+    document.getElementById('member-name').value = member ? member.name : '';
+    document.getElementById('member-email').value = member ? member.email || '' : '';
+    document.getElementById('member-phone').value = member ? member.phone || '' : '';
+    document.getElementById('member-role').value = member ? member.role : 'family';
+    document.getElementById('member-relation').value = member ? member.relation || 'Other' : 'Other';
+    document.getElementById('member-name').focus();
+  }
+
+  function bindMemberForm() {
+    document.getElementById('add-person').onclick = () => openMemberForm(null);
+    document.getElementById('cancel-member').onclick = () => { document.getElementById('member-form').hidden = true; };
+    document.getElementById('member-form').onsubmit = async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const name = document.getElementById('member-name').value.trim().replace(/\s+/gu, ' ');
+      const validName = name.length >= 2 && name.length <= 60 && /^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u.test(name);
+      const email = document.getElementById('member-email').value.trim().toLowerCase();
+      const validEmail = !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!validName || !validEmail) {
+        const field = document.getElementById(validName ? 'member-email' : 'member-name');
+        field.focus();
+        const error = document.getElementById('member-error');
+        error.textContent = validName ? 'Please enter an email like name@example.com.' : 'Enter a name using letters, spaces, apostrophes or hyphens.';
+        error.hidden = false;
+        return;
+      }
+      const memberId = form.dataset.memberId;
+      const data = {
+        name,
+        relation: document.getElementById('member-relation').value,
+        ...(!memberId ? { role: document.getElementById('member-role').value } : {}),
+        ...(email ? { email } : {}),
+        ...(document.getElementById('member-phone').value.trim() ? { phone: document.getElementById('member-phone').value.trim() } : {}),
+      };
+      const submit = form.querySelector('[type="submit"]');
+      submit.disabled = true;
+      document.getElementById('member-error').hidden = true;
+      try {
+        const result = memberId
+          ? await API.patch(`/api/members/${encodeURIComponent(memberId)}`, data)
+          : await API.post('/api/members', data);
+        if (memberId) members = members.map((item) => item.id === memberId ? result.member : item);
+        else members.push(result.member);
+        renderMembers();
+        form.hidden = true;
+        toast(memberId ? 'Person updated.' : 'Person added.');
+      } catch (error) {
+        const message = document.getElementById('member-error');
+        message.textContent = error.message;
+        message.hidden = false;
+      } finally {
+        submit.disabled = false;
+      }
+    };
+  }
+
+  async function removeMember(member) {
+    if (!window.confirm(`Remove ${member.name} from this care space? Their access and reminder emails will stop.`)) return;
+    try {
+      await API.del(`/api/members/${encodeURIComponent(member.id)}`);
+      members = members.filter((item) => item.id !== member.id);
+      renderMembers();
+      toast('Person removed. Their access and reminder emails have stopped.');
+    } catch (error) {
+      toast(error.message, 'error');
+    }
+  }
+
+  async function copyCode(input) {
+    try {
+      await navigator.clipboard.writeText(input.value);
+      toast('Invite code copied.');
+    } catch {
+      input.focus();
+      input.select();
+      toast('Copy was blocked. Select and copy the code.', 'error');
+    }
+  }
+
+  function bindInviteActions() {
     document.querySelectorAll('[data-generate-code]').forEach((button) => {
-      button.addEventListener('click', async () => {
+      button.onclick = async () => {
         button.disabled = true;
         const error = document.getElementById('invite-error');
         error.hidden = true;
         try {
-          const role = button.dataset.generateCode;
-          const result = await API.post(`/api/spaces/${encodeURIComponent(user.spaceId)}/codes`, { role });
-          const holder = document.getElementById('invite-result');
-          holder.hidden = false;
-          holder.innerHTML = `<p>Share this ${role} code now. It is shown only once, and the previous ${role} code no longer works.</p>
-            <label class="field__label" for="invite-code">${role === 'caretaker' ? 'Caretaker' : 'Family'} code</label>
-            <input class="input" id="invite-code" value="${escapeHtml(result.code)}" readonly>
-            <button class="btn btn--secondary" type="button" id="copy-invite-code">Copy code</button>`;
-          document.getElementById('copy-invite-code').addEventListener('click', async () => {
-            try {
-              await navigator.clipboard.writeText(result.code);
-              toast('Invite code copied.');
-            } catch {
-              const codeInput = document.getElementById('invite-code');
-              codeInput.focus();
-              codeInput.select();
-              toast('Copy was blocked. Select and copy the code above.', 'error');
-            }
-          });
+          const result = await API.post(`/api/spaces/${encodeURIComponent(user.spaceId)}/codes`, { role: button.dataset.generateCode });
+          document.getElementById('invite-code-label').textContent = `${button.dataset.generateCode === 'caretaker' ? 'Caretaker' : 'Family'} code`;
+          document.getElementById('invite-code').value = result.code;
+          document.getElementById('invite-result').hidden = false;
+          document.getElementById('invite-copy').onclick = () => copyCode(document.getElementById('invite-code'));
         } catch (requestError) {
           error.textContent = requestError.message;
           error.hidden = false;
         } finally {
           button.disabled = false;
         }
-      });
+      };
     });
   }
 
   function bindSuggestionForm() {
-    const form = document.getElementById('suggestion-create-form');
-    if (!form) return;
-    form.addEventListener('submit', async (event) => {
+    document.getElementById('suggestion-create-form').onsubmit = async (event) => {
       event.preventDefault();
+      const form = event.currentTarget;
       const submit = form.querySelector('button[type="submit"]');
-      const message = document.getElementById('suggestion-message');
+      const message = document.getElementById('family-suggestion-message');
       submit.disabled = true;
       try {
         await API.post('/api/suggestions', {
@@ -143,7 +212,7 @@
           details: document.getElementById('suggestion-details').value.trim(),
         });
         form.reset();
-        message.textContent = 'Suggestion sent. Dadu decides whether to approve it.';
+        message.textContent = `Suggestion sent. ${message.dataset.elderName} decides whether to approve it.`;
         message.hidden = false;
       } catch (error) {
         message.textContent = error.message;
@@ -151,21 +220,25 @@
       } finally {
         submit.disabled = false;
       }
-    });
+    };
+  }
+
+  async function loadRoster() {
+    document.getElementById('family-error').hidden = true;
+    try {
+      const { members: roster } = await API.get('/api/members');
+      render(user, roster);
+    } catch (error) {
+      const section = document.getElementById('family-error');
+      section.hidden = false;
+      section.querySelector('p').textContent = `We couldn't load the care circle. ${error.message}`;
+      document.getElementById('member-list').setAttribute('aria-busy', 'false');
+    }
   }
 
   document.addEventListener('DOMContentLoaded', async () => {
-    const user = await SentiDoseRole.ready;
+    user = await SentiDoseRole.ready;
     if (!user) return;
-    try {
-      const { members } = await API.get('/api/members');
-      render(user, members);
-    } catch (error) {
-      document.getElementById('main').innerHTML = '<section class="card" role="alert"><h1>Care circle unavailable</h1><p class="field__error"></p><button class="btn btn--primary" type="button" id="family-retry">Try again</button></section>';
-      document.querySelector('#main .field__error').textContent = error.message;
-      document.getElementById('family-retry').addEventListener('click', () => location.reload());
-    } finally {
-      document.body.removeAttribute('data-role-pending');
-    }
+    await loadRoster();
   });
 })();

@@ -30,7 +30,6 @@
     <div id="header-holder"></div>
 
     <main id="main" tabindex="-1" class="container page-main">
-      <h1 class="visually-hidden">Join or create a care space</h1>
       <div class="tabs" role="tablist" aria-label="Join or create">
         <button class="tabs__btn" role="tab" id="tab-join" aria-selected="true" aria-controls="panel-join" type="button">Join a care space</button>
         <button class="tabs__btn" role="tab" id="tab-create" aria-selected="false" aria-controls="panel-create" type="button">Create a care space</button>
@@ -39,7 +38,7 @@
       <section id="panel-join" role="tabpanel" aria-labelledby="tab-join">
         <div class="card">
           <span class="chip chip--neutral"><span data-icon="lock" data-size="18"></span>Protected</span>
-          <h2 class="page-title page-title--spaced">Join a care space</h2>
+          <h1 class="page-title page-title--spaced">Join a care space</h1>
           <p class="page-lede">Ask your family member or primary caregiver for their 6-digit code.</p>
 
           <form id="join-form" novalidate>
@@ -83,41 +82,84 @@
 
       <section id="panel-create" role="tabpanel" aria-labelledby="tab-create" hidden>
         <div class="card">
-          <h2 class="page-title">Create a care space</h2>
-          <p class="page-lede">This makes you the elder owner. You can invite family afterwards.</p>
-
+          <p class="page-lede" id="create-step-indicator">Step 1 of 4</p>
+          <div id="create-error-summary" class="notice notice--danger" role="alert" tabindex="-1" hidden>
+            <p>Some details need your attention.</p>
+            <ul id="create-error-list"></ul>
+          </div>
+          <p id="create-failure" class="field__error" role="alert" hidden></p>
           <form id="create-form" novalidate>
-            <div class="field">
-              <label class="field__label" for="create-elder">Your name</label>
-              <input class="input" id="create-elder" type="text" autocomplete="name" required>
-            </div>
-            <div class="field">
-              <label class="field__label" for="create-email">Your email</label>
-              <p class="field__hint">Used for reminder emails. Demo data only.</p>
-              <input class="input" id="create-email" type="email" autocomplete="email" required>
-            </div>
-            <div class="field">
-              <label class="field__label" for="create-timezone">Care space time zone</label>
-              <p class="field__hint">Medicine and appointment reminders follow this local time.</p>
-              <input class="input" id="create-timezone" type="text" autocomplete="off" required>
-            </div>
-            <div class="field">
-              <label class="field__label" for="create-pin">Choose a 6-digit PIN</label>
-              <input class="input" id="create-pin" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required>
-              <p class="field__error" id="create-error" role="alert" hidden></p>
-            </div>
-            <div class="form-actions">
-              <button class="btn btn--primary" type="submit">Create care space</button>
-            </div>
+            <section class="create-step" data-step="1" aria-labelledby="create-step-1-title">
+              <h1 id="create-step-1-title" tabindex="-1">About the elder</h1>
+              <div class="field">
+                <label class="field__label" for="create-elder">Full name</label>
+                <input class="input" id="create-elder" name="elderName" type="text" autocomplete="name" maxlength="60" required>
+              </div>
+              <div class="field">
+                <label class="field__label" for="create-display-name">What should we call them?</label>
+                <input class="input" id="create-display-name" name="displayName" type="text" maxlength="30" required>
+              </div>
+              <div class="field">
+                <label class="field__label" for="create-email">Email</label>
+                <p class="field__hint">Used for reminders.</p>
+                <input class="input" id="create-email" name="elderEmail" type="email" autocomplete="email" required>
+              </div>
+              <div class="field">
+                <label class="field__label" for="create-language">Preferred language</label>
+                <select class="select" id="create-language" name="language">
+                  <option>English</option><option>Hindi</option><option>Bengali</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="create-pin">Choose a 6-digit elder access code</label>
+                <input class="input" id="create-pin" name="pin" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required>
+              </div>
+              <input id="create-timezone" name="timezone" type="hidden">
+              <button class="btn btn--primary" type="button" data-next-step>Continue</button>
+            </section>
+
+            <section class="create-step" data-step="2" aria-labelledby="create-step-2-title" hidden>
+              <h1 id="create-step-2-title" tabindex="-1">Caretakers (optional)</h1>
+              <p>Add up to 3 people who help manage care.</p>
+              <div id="caretaker-rows"></div>
+              <button class="btn btn--secondary" id="add-caretaker" type="button">Add caretaker</button>
+              <div class="form-actions">
+                <button class="btn btn--ghost" type="button" data-prev-step>Back</button>
+                <button class="btn btn--primary" type="button" data-next-step>Continue</button>
+              </div>
+            </section>
+
+            <section class="create-step" data-step="3" aria-labelledby="create-step-3-title" hidden>
+              <h1 id="create-step-3-title" tabindex="-1">Family members (optional)</h1>
+              <p>Add up to 10 family members.</p>
+              <div id="family-rows"></div>
+              <button class="btn btn--secondary" id="add-family" type="button">Add another person</button>
+              <div class="form-actions">
+                <button class="btn btn--ghost" type="button" data-prev-step>Back</button>
+                <button class="btn btn--primary" type="button" data-next-step>Continue</button>
+              </div>
+            </section>
+
+            <section class="create-step" data-step="4" aria-labelledby="create-step-4-title" hidden>
+              <h1 id="create-step-4-title" tabindex="-1">Review your care space</h1>
+              <div id="create-review"></div>
+              <p id="create-failure-inline" class="field__error" role="alert" hidden></p>
+              <div class="form-actions">
+                <button class="btn btn--ghost" type="button" data-prev-step>Back</button>
+                <button class="btn btn--primary" id="create-submit" type="submit">Create care space</button>
+                <button class="btn btn--secondary" id="create-retry" type="button" hidden>Try again</button>
+              </div>
+            </section>
           </form>
 
-          <section id="create-success" class="notice notice--info notice--spaced" aria-labelledby="create-success-title" aria-live="polite" hidden>
+          <section id="create-success" class="notice notice--info notice--spaced" aria-labelledby="create-success-title" tabindex="-1" hidden>
             <span class="notice__icon" data-icon="shield-check" data-size="24"></span>
             <div>
               <h2 id="create-success-title">Care space created</h2>
-              <p>Save these role codes and share them with the right people. They expire in 24 hours and are shown only once.</p>
-              <p><strong>Caretaker code:</strong> <output id="caretaker-code"></output></p>
-              <p><strong>Family code:</strong> <output id="family-code"></output></p>
+              <p>Save these now. We can't show them again.</p>
+              <div class="code-copy-row"><label for="elder-code">Elder access code</label><input class="input" id="elder-code" readonly><button class="btn btn--secondary" type="button" data-copy-code="elder-code">Copy</button></div>
+              <div class="code-copy-row"><label for="caretaker-code">Caretaker code</label><input class="input" id="caretaker-code" readonly><button class="btn btn--secondary" type="button" data-copy-code="caretaker-code">Copy</button></div>
+              <div class="code-copy-row"><label for="family-code">Family code</label><input class="input" id="family-code" readonly><button class="btn btn--secondary" type="button" data-copy-code="family-code">Copy</button></div>
               <a class="btn btn--primary" href="/today">Continue to Today</a>
             </div>
           </section>

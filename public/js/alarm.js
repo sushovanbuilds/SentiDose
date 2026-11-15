@@ -114,7 +114,7 @@
 
     const message =
       status === 'taken'
-        ? 'Recorded. Rahul and Priya have been told.'
+        ? 'Recorded. Your care team has been told.'
         : 'Skipped. Your family has been told so they can check in.';
 
     document.querySelector('.alarm-actions').innerHTML = `

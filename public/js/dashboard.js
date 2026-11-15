@@ -23,15 +23,19 @@
     </article>`).join('');
 
   function render(adherence) {
-    document.getElementById('header-holder').innerHTML = renderHeader(
+    const header = document.getElementById('header-holder');
+    header.innerHTML = renderHeader(
       'Overview',
       store.state.viewer.role === 'elder' ? 'Elder care space' : 'Care space',
-      `<a class="btn btn--ghost" href="/family"><span data-icon="help-circle" data-size="24"></span> Help</a>
-       <span class="chip chip--upcoming"><span data-icon="users" data-size="18"></span>${escapeHtml(store.state.viewer.name)}</span>`
+      '<a class="btn btn--ghost" href="/family"><span data-icon="help-circle" data-size="24"></span> Help</a>'
     );
+    const memberChip = document.createElement('span');
+    memberChip.className = 'chip chip--upcoming';
+    memberChip.textContent = store.state.viewer.name;
+    header.querySelector('.row').append(memberChip);
     document.getElementById('nav-holder').innerHTML = renderNav(store.state.viewer.role, 'dashboard');
     document.querySelector('a[href="/add-medicine"]').hidden = !canWrite;
-    document.getElementById('dash-date').textContent = `${formatDate(TODAY)} • ${store.state.space.elderName}`;
+    document.getElementById('dash-date').textContent = `${formatDate(TODAY)} • ${store.state.space.displayName || 'Your care space'}`;
 
     renderAlert();
     renderAdherence(adherence);
@@ -65,9 +69,7 @@
             ${formatDateTime(missed.scheduledFor)} and was not recorded.
             Family was notified.
           </p>
-          <div class="row row--spaced">
-            <a class="btn btn--secondary" href="tel:+919830012345"><span data-icon="phone" data-size="24"></span> Call Dadu</a>
-          </div>
+          <p class="field__hint">Contact your care team if you need help.</p>
         </div>
       </section>`;
   }
@@ -108,21 +110,31 @@
 
     const holder = document.getElementById('approvals-preview');
     if (pending.length === 0) {
-      holder.innerHTML = '<p class="field__hint">Nothing waiting. Dadu has no decisions to make.</p>';
+          holder.textContent = 'Nothing is waiting for the elder to decide.';
       return;
     }
 
-    holder.innerHTML = `<ul class="list">${pending
-      .map(
-        (item) => `<li class="list__row">
-          <span data-icon="hourglass" data-size="24"></span>
-          <div class="list__body">
-            <p class="list__title">${escapeHtml(item.proposedBy)} suggests: ${escapeHtml(item.title)}</p>
-            <p class="list__meta">${escapeHtml(item.proposedAt)} • waiting for Dadu</p>
-          </div>
-        </li>`
-      )
-      .join('')}</ul>`;
+    const list = document.createElement('ul');
+    list.className = 'list';
+    pending.forEach((item) => {
+      const row = document.createElement('li');
+      row.className = 'list__row';
+      const icon = document.createElement('span');
+      icon.dataset.icon = 'hourglass';
+      icon.dataset.size = '24';
+      const body = document.createElement('div');
+      body.className = 'list__body';
+      const title = document.createElement('p');
+      title.className = 'list__title';
+      title.textContent = `${item.proposedBy} suggests: ${item.title}`;
+      const detail = document.createElement('p');
+      detail.className = 'list__meta';
+      detail.textContent = `${item.proposedAt} • waiting for the elder`;
+      body.append(title, detail);
+      row.append(icon, body);
+      list.append(row);
+    });
+    holder.replaceChildren(list);
   }
 
   function renderDoses() {
@@ -208,9 +220,10 @@
       API.get('/api/medicines'),
       API.get(`/api/doses?date=${TODAY}`),
       API.get('/api/appointments'),
+      API.get('/api/suggestions'),
       API.get(`/api/doses/adherence?days=7&through=${TODAY}`),
     ])
-      .then(([user, medicineData, doseData, appointmentData, adherenceData]) => {
+      .then(([user, medicineData, doseData, appointmentData, suggestionData, adherenceData]) => {
         stopDoseSkeleton();
         stopAppointmentSkeleton();
         canWrite = user.role !== 'family';
@@ -218,6 +231,8 @@
         store.state.medicines = medicineData.medicines;
         store.state.doseLogs = doseData.doses;
         store.state.appointments = appointmentData.appointments;
+        store.state.suggestions = suggestionData.suggestions;
+        store.state.space.displayName = user.displayName || 'the elder';
         render(adherenceData.adherence);
       })
       .catch((error) => {

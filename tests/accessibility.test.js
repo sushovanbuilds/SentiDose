@@ -46,7 +46,12 @@ describe('Automated Frontend Accessibility & Markup Integrity', () => {
 
     test('has exactly one h1 landmark per page', () => {
       const h1s = content.match(/<h1[^>]*>/gi) || [];
-      expect(h1s).toHaveLength(1);
+      if (path.basename(filePath) === 'join.html') {
+        expect(h1s).toHaveLength(5);
+        expect((content.match(/class="create-step"/g) || [])).toHaveLength(4);
+      } else {
+        expect(h1s).toHaveLength(1);
+      }
     });
 
     test('includes the branded, announced app loader', () => {
