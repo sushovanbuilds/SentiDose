@@ -65,8 +65,25 @@ function createApp(options = {}) {
   );
 
   // Clean URLs: /today serves public/today.html.
-  app.get(['/today', '/dashboard', '/medicines', '/appointments', '/approvals', '/family', '/audit'], (request, response) => {
+  const CLEAN_PAGES = [
+    '/today',
+    '/dashboard',
+    '/medicines',
+    '/add-medicine',
+    '/appointments',
+    '/approvals',
+    '/family',
+    '/audit',
+    '/join',
+    '/alarm',
+    '/scan',
+  ];
+  app.get(CLEAN_PAGES, (request, response) => {
     response.sendFile(path.join(PUBLIC_DIR, `${request.path.slice(1)}.html`));
+  });
+
+  app.get('/', (_request, response) => {
+    response.sendFile(path.join(PUBLIC_DIR, 'index.html'));
   });
 
   app.get('/health', (_request, response) => {
