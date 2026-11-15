@@ -222,8 +222,9 @@ body:has(.nav) main { padding-bottom: calc(var(--tap) + var(--sp-8)); }
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--sp-1);
-  padding: var(--sp-1) var(--sp-3);
+  gap: var(--sp-2);
+  /* 8px vertical keeps text off the pill border at 130% text size. */
+  padding: var(--sp-2) var(--sp-3);
   border-radius: var(--radius-full);
   font-size: var(--fs-label);
   font-weight: 600;
