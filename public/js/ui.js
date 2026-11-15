@@ -107,7 +107,7 @@ function renderNav(variant, active) {
 function renderHeader(title, subtitle, trailing) {
   return `<header class="site-header">
     <div class="container site-header__inner">
-      <a class="brand" href="/" aria-label="SentiDose home">
+      <a class="brand" href="/">
         ${iconSlot('heart-handshake', 28)}
         <span class="brand__text">
           <span class="brand__name">SentiDose</span>
@@ -122,9 +122,9 @@ function renderHeader(title, subtitle, trailing) {
 /** Text-size control: three steps, persisted as an html attribute. */
 function renderTextSize() {
   return `<div class="textsize" role="group" aria-label="Text size">
-    <button class="textsize__btn" type="button" data-textsize="base" aria-pressed="true">A</button>
-    <button class="textsize__btn" type="button" data-textsize="large" aria-pressed="false" aria-label="Larger text">A+</button>
-    <button class="textsize__btn" type="button" data-textsize="xlarge" aria-pressed="false" aria-label="Largest text">A++</button>
+    <button class="textsize__btn" type="button" data-textsize="base" aria-pressed="true" aria-label="A default text size">A</button>
+    <button class="textsize__btn" type="button" data-textsize="large" aria-pressed="false" aria-label="A+ larger text">A+</button>
+    <button class="textsize__btn" type="button" data-textsize="xlarge" aria-pressed="false" aria-label="A++ largest text">A++</button>
   </div>`;
 }
 

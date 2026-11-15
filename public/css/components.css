@@ -92,10 +92,13 @@ a:not(.btn):hover { color: var(--primary-hover); }
   min-height: 64px;
   flex-wrap: wrap;
 }
+#header-holder { min-height: 65px; }
+
 .brand {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
+  min-height: var(--tap);
   font-weight: 700;
   color: var(--text);
   text-decoration: none;
