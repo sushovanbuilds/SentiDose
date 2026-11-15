@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "jest --runInBand",
-    "lint": "node --check src/server.js && node --check src/config.js"
+    "lint": "node --check api/index.js && node --check src/server.js && node --check src/config.js"
   },
   "dependencies": {
     "@google-cloud/firestore": "9.4.1",
