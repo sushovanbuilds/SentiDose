@@ -104,7 +104,7 @@ body.elder .page-main { padding-block-start: var(--sp-4); }
 .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--sp-2); margin: var(--sp-4) 0; overflow-x: auto; min-width: 0; }
 .week__day { text-align: center; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-1); min-width: 0; }
 .week__name { display: block; font-size: var(--fs-label); color: var(--text-muted); }
-.week__value { display: block; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: normal; font-size: clamp(0.75rem, 2.5vw, 1rem); }
+.week__value { display: block; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; font-size: clamp(0.75rem, 2.5vw, 1rem); }
 .week__day--taken { background: var(--success-soft); border-color: var(--success); }
 .week__day--partial { background: var(--warning-soft); border-color: var(--warning); }
 .week__day--missed { background: var(--danger-soft); border-color: var(--danger); }
@@ -136,6 +136,15 @@ body.elder .page-main { padding-block-start: var(--sp-4); }
 .alert__icon { color: var(--danger); flex: 0 0 auto; }
 .alert__title { margin: 0 0 var(--sp-1); font-weight: 700; }
 .alert__body { margin: 0; }
+
+.request-error {
+  max-width: var(--container-wide);
+  margin-block: var(--sp-4);
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.request-error p { min-width: 0; margin: 0; overflow-wrap: anywhere; }
 
 .notice {
   display: flex;
@@ -338,6 +347,7 @@ body.elder .page-main { padding-block-start: var(--sp-4); }
 .table__med { font-weight: 600; }
 .table td .btn--cc-sm { min-width: 0; padding: var(--sp-2) var(--sp-3); }
 @media (max-width: 640px) {
+  .table th, .table td { padding-inline: var(--sp-2); }
   .table .col-medicine { width: 38%; }
   .table .col-actions { width: 120px; }
   .table th:nth-child(4), .table td:nth-child(4) { display: none; }
@@ -382,16 +392,17 @@ body.elder .page-main { padding-block-start: var(--sp-4); }
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--text);
-  color: #fff;
+  color: var(--surface);
   box-shadow: var(--shadow);
   font-size: var(--fs-label);
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 .toast--error { background: var(--danger); border-color: var(--danger); }
 .toast__close {
   background: transparent;
   border: 0;
-  color: #fff;
+  color: var(--surface);
   font: inherit;
   text-decoration: underline;
   cursor: pointer;

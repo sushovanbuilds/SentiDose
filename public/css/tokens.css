@@ -58,6 +58,12 @@
   --tap: 48px;
   --gap-targets: 12px;
 
+  /* Icon slots reserve their final SVG dimensions before JavaScript runs. */
+  --icon-sm: 18px;
+  --icon-md: 24px;
+  --icon-lg: 28px;
+  --icon-xl: 32px;
+
   /* Layout */
   --container: 560px;
   --container-wide: 1040px;
