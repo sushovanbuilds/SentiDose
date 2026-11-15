@@ -101,6 +101,12 @@ function createApp(options = {}) {
     response.sendFile(path.join(PUBLIC_DIR, `${request.path.slice(1)}.html`));
   });
 
+  app.get('/favicon.ico', (_request, response) => {
+    response.sendFile(path.join(PUBLIC_DIR, 'favicon.svg'), {
+      headers: { 'Content-Type': 'image/svg+xml' },
+    });
+  });
+
   app.get('/', (_request, response) => {
     response.sendFile(path.join(PUBLIC_DIR, 'index.html'));
   });
