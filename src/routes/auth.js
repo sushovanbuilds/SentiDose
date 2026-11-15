@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { z } = require('zod');
 
 const { asyncHandler } = require('../middleware/error');
-const { requireAuth, SESSION_COOKIE, sessionCookieOptions } = require('../middleware/auth');
+const { requireAuth, requireRole, SESSION_COOKIE, sessionCookieOptions } = require('../middleware/auth');
 
 const createSchema = z.object({
   elderName: z.string().trim().min(2).max(80),
@@ -23,14 +23,10 @@ const createSchema = z.object({
 }).strict();
 const joinSchema = z.object({
   name: z.string().trim().min(2).max(80),
-  role: z.enum(['elder', 'caretaker', 'family']),
+  role: z.enum(['elder', 'caretaker', 'family']).optional(),
   email: z.string().trim().email().max(254).optional(),
   code: z.string().regex(/^\d{6}$/),
-}).strict().superRefine((value, context) => {
-  if (value.role !== 'elder' && !value.email) {
-    context.addIssue({ code: 'custom', path: ['email'], message: 'Email is required for family and caretakers.' });
-  }
-});
+}).strict();
 const emptySchema = z.object({}).strict();
 
 function noQuery(request, response, next) {
@@ -67,6 +63,7 @@ function createAuthRouter(config, authService) {
       memberId: identity.memberId,
       name: identity.name,
       role: identity.role,
+      elderName: identity.elderName,
     };
     const token = jwt.sign(claims, config.sessionSecret, { algorithm: 'HS256', expiresIn: '12h' });
     response.cookie(SESSION_COOKIE, token, sessionCookieOptions(config.isProduction));
@@ -114,4 +111,31 @@ function createAuthRouter(config, authService) {
   return router;
 }
 
-module.exports = { createAuthRouter };
+/** @param {object} config @param {object} authService */
+function createSpaceRouter(config, authService) {
+  const router = Router();
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 5,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    message: { error: 'Too many code requests. Wait a little and try again.' },
+  });
+  router.post('/:spaceId/codes', noQuery, requireAuth(config.sessionSecret), requireRole('elder'), limiter, asyncHandler(async (request, response) => {
+    const params = z.object({ spaceId: z.string().regex(/^[A-Za-z0-9_-]{1,128}$/) }).safeParse(request.params);
+    const body = z.object({ role: z.enum(['caretaker', 'family']) }).strict().safeParse(request.body);
+    if (!params.success || !body.success) {
+      response.status(400).json({ error: 'Choose a valid care space and invite role.' });
+      return;
+    }
+    if (params.data.spaceId !== request.auth.spaceId) {
+      response.status(403).json({ error: 'You can only create codes for your own care space.' });
+      return;
+    }
+    const code = await authService.rotateInviteCode(params.data.spaceId, body.data.role);
+    response.status(201).json({ role: body.data.role, code: code.code, expiresAt: code.expiresAt.toISOString() });
+  }));
+  return router;
+}
+
+module.exports = { createAuthRouter, createSpaceRouter };

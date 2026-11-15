@@ -4,6 +4,7 @@ const { createHash } = require('node:crypto');
 
 const PAGE_LIMIT = 200;
 const DOSE_LIMIT = 500;
+const MEMBER_LIMIT = 500;
 
 /** @param {string} medId @param {string} scheduledFor */
 function doseDocumentId(medId, scheduledFor) {
@@ -55,6 +56,53 @@ function createRecordsService({ getFirestore, now = () => new Date() }) {
   async function listMedicines(spaceId) {
     const snapshot = await collection(spaceId, 'medicines').orderBy('createdAt', 'desc').limit(PAGE_LIMIT).get();
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })).filter((medicine) => medicine.active !== false);
+  }
+
+  async function listMembers(spaceId) {
+    const snapshot = await collection(spaceId, 'members').orderBy('createdAt', 'asc').limit(MEMBER_LIMIT).get();
+    return snapshot.docs.map((doc) => {
+      const member = doc.data();
+      return { id: doc.id, name: member.name, role: member.role, ...(member.relation ? { relation: member.relation } : {}) };
+    });
+  }
+
+  async function listSuggestions(spaceId) {
+    const snapshot = await collection(spaceId, 'suggestions').orderBy('createdAt', 'desc').limit(PAGE_LIMIT).get();
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async function createSuggestion(spaceId, actor, data) {
+    const ref = collection(spaceId, 'suggestions').doc();
+    const timestamp = now();
+    const record = {
+      title: data.title,
+      details: data.details,
+      after: data.details,
+      reason: data.details,
+      status: 'pending',
+      proposedBy: actor.name,
+      proposedAt: timestamp.toISOString(),
+      createdAt: timestamp,
+    };
+    await ref.create(record);
+    return { id: ref.id, ...record };
+  }
+
+  async function decideSuggestion(spaceId, suggestionId, decision, actor) {
+    const ref = collection(spaceId, 'suggestions').doc(suggestionId);
+    let result;
+    await getFirestore().runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(ref);
+      if (!snapshot.exists) throw notFound('Suggestion');
+      if (snapshot.get('status') !== 'pending') {
+        const error = new Error('This suggestion has already been decided.');
+        error.status = 409;
+        throw error;
+      }
+      result = { ...snapshot.data(), status: decision, decidedBy: actor.memberId, decidedAt: now() };
+      transaction.update(ref, { status: decision, decidedBy: actor.memberId, decidedAt: result.decidedAt });
+    });
+    return { id: ref.id, ...result };
   }
 
   async function createMedicine(spaceId, actor, data) {
@@ -216,6 +264,10 @@ function createRecordsService({ getFirestore, now = () => new Date() }) {
   }
 
   return {
+    listMembers,
+    listSuggestions,
+    createSuggestion,
+    decideSuggestion,
     listMedicines,
     createMedicine,
     updateMedicine,

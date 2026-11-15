@@ -42,6 +42,11 @@ const doseActionSchema = z.object({
   scheduledFor: localDateTimeSchema,
   status: z.enum(['taken', 'skipped']),
 }).strict();
+const suggestionSchema = z.object({
+  title: z.string().trim().min(3).max(120),
+  details: z.string().trim().min(3).max(1000),
+}).strict();
+const suggestionDecisionSchema = z.object({ status: z.enum(['approved', 'rejected']) }).strict();
 const emptySchema = z.object({}).strict();
 
 function noQuery(request, response, next) {
@@ -63,7 +68,33 @@ function noBody(request, response, next) {
 /** @param {object} config @param {object} recordsService */
 function createRecordsRouter(config, recordsService) {
   const router = Router();
-  router.use(['/medicines', '/appointments', '/doses'], requireAuth(config.sessionSecret));
+  router.use(['/medicines', '/appointments', '/doses', '/members', '/suggestions'], requireAuth(config.sessionSecret));
+
+  router.get('/members', noQuery, noBody, asyncHandler(async (request, response) => {
+    response.json({ members: await recordsService.listMembers(request.auth.spaceId) });
+  }));
+  router.get('/suggestions', noQuery, noBody, asyncHandler(async (request, response) => {
+    response.json({ suggestions: await recordsService.listSuggestions(request.auth.spaceId) });
+  }));
+  router.post('/suggestions', noQuery, requireRole('family'), asyncHandler(async (request, response) => {
+    const input = suggestionSchema.safeParse(request.body);
+    if (!input.success) {
+      response.status(400).json({ error: 'Enter a short title and explain the change you want to suggest.' });
+      return;
+    }
+    const suggestion = await recordsService.createSuggestion(request.auth.spaceId, request.auth, input.data);
+    response.status(201).json({ suggestion });
+  }));
+  router.patch('/suggestions/:suggestionId', noQuery, requireRole('elder'), asyncHandler(async (request, response) => {
+    const id = idSchema.safeParse(request.params.suggestionId);
+    const input = suggestionDecisionSchema.safeParse(request.body);
+    if (!id.success || !input.success) {
+      response.status(400).json({ error: 'Choose an existing suggestion and approve or reject it.' });
+      return;
+    }
+    const suggestion = await recordsService.decideSuggestion(request.auth.spaceId, id.data, input.data.status, request.auth);
+    response.json({ suggestion });
+  }));
 
   router.get('/medicines', noQuery, noBody, asyncHandler(async (request, response) => {
     response.json({ medicines: await recordsService.listMedicines(request.auth.spaceId) });

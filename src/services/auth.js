@@ -58,6 +58,10 @@ function createAuthService({ getFirestore, sessionSecret, now = () => Date.now()
           elderPinHash,
           elderMemberId: elderRef.id,
           passcodeHashes: { caretaker: caretakerHash, family: familyHash },
+          inviteCodeIndexIds: {
+            caretaker: indexIds[1],
+            family: indexIds[2],
+          },
           inviteExpiresAt: expiresAt,
         });
         transaction.create(elderRef, {
@@ -82,6 +86,7 @@ function createAuthService({ getFirestore, sessionSecret, now = () => Date.now()
           memberId: elderRef.id,
           name: input.elderName,
           role: 'elder',
+          elderName: input.elderName,
           inviteCodes,
         };
       }
@@ -115,20 +120,29 @@ function createAuthService({ getFirestore, sessionSecret, now = () => Date.now()
       const spaceSnapshot = await transaction.get(spaceRef);
       if (!spaceSnapshot.exists) return null;
       const space = spaceSnapshot.data();
-      const expectedHash = input.role === 'elder'
+      const role = index.role;
+      if (!INDEX_ROLES.includes(role)) return null;
+      const expectedHash = role === 'elder'
         ? space.elderPinHash
-        : space.passcodeHashes && space.passcodeHashes[input.role];
-      if (!expectedHash || index.role !== input.role || !(await bcrypt.compare(input.code, expectedHash))) {
+        : space.passcodeHashes && space.passcodeHashes[role];
+      if (!expectedHash || !(await bcrypt.compare(input.code, expectedHash))) {
         return null;
       }
 
-      if (input.role === 'elder') {
+      if (role === 'elder') {
         return {
           spaceId: spaceRef.id,
           memberId: space.elderMemberId,
           name: space.elderName,
-          role: 'elder',
+          elderName: space.elderName,
+          role,
         };
+      }
+
+      if (!input.email) {
+        const error = new Error('Email is required for caretaker and family accounts.');
+        error.status = 400;
+        throw error;
       }
 
       // Use a correctly scoped member collection ref after the index identifies the space.
@@ -136,13 +150,13 @@ function createAuthService({ getFirestore, sessionSecret, now = () => Date.now()
       transaction.create(scopedMemberRef, {
         name: input.name,
         ...(input.email ? { email: input.email } : {}),
-        role: input.role,
+        role,
         createdAt: new Date(now()),
       });
-      if (input.role === 'caretaker' && !space.primaryCaretakerId) {
+      if (role === 'caretaker' && !space.primaryCaretakerId) {
         transaction.update(spaceRef, { primaryCaretakerId: scopedMemberRef.id });
       }
-      return { spaceId: spaceRef.id, memberId: scopedMemberRef.id, name: input.name, role: input.role };
+      return { spaceId: spaceRef.id, memberId: scopedMemberRef.id, name: input.name, role, elderName: space.elderName };
     });
 
     if (!result) {
@@ -153,7 +167,49 @@ function createAuthService({ getFirestore, sessionSecret, now = () => Date.now()
     return result;
   }
 
-  return { createCareSpace, joinCareSpace };
+  async function rotateInviteCode(spaceId, role) {
+    if (!INVITE_ROLES.includes(role)) {
+      const error = new Error('Choose caretaker or family.');
+      error.status = 400;
+      throw error;
+    }
+    const db = getFirestore();
+    const spaceRef = db.collection('careSpaces').doc(spaceId);
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const code = generatePasscode();
+      const indexId = inviteIndexId(sessionSecret, code);
+      const newIndexRef = db.collection('inviteCodeIndex').doc(indexId);
+      const rotated = await db.runTransaction(async (transaction) => {
+        const [spaceSnapshot, collision, oldIndexes] = await Promise.all([
+          transaction.get(spaceRef),
+          transaction.get(newIndexRef),
+          transaction.get(db.collection('inviteCodeIndex').where('spaceId', '==', spaceId).where('role', '==', role)),
+        ]);
+        if (!spaceSnapshot.exists) {
+          const error = new Error('Care space was not found.');
+          error.status = 404;
+          throw error;
+        }
+        if (collision.exists) return null;
+        const expiresAt = new Date(now() + INVITE_TTL_MS);
+        const hash = await bcrypt.hash(code, BCRYPT_ROUNDS);
+        oldIndexes.docs.forEach((snapshot) => transaction.delete(snapshot.ref));
+        transaction.create(newIndexRef, { spaceId, role, expiresAt });
+        transaction.update(spaceRef, {
+          [`passcodeHashes.${role}`]: hash,
+          [`inviteCodeIndexIds.${role}`]: indexId,
+          inviteExpiresAt: expiresAt,
+        });
+        return { code, expiresAt };
+      });
+      if (rotated) return rotated;
+    }
+    const error = new Error('Could not generate a unique code. Please try again.');
+    error.status = 503;
+    throw error;
+  }
+
+  return { createCareSpace, joinCareSpace, rotateInviteCode };
 }
 
 module.exports = { createAuthService, inviteIndexId, INVITE_TTL_MS, INVITE_ROLES, INDEX_ROLES };

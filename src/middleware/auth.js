@@ -9,6 +9,7 @@ const sessionPayloadSchema = z.object({
   memberId: z.string().min(1),
   name: z.string().min(1),
   role: z.enum(['elder', 'caretaker', 'family']),
+  elderName: z.string().min(1),
 });
 
 /** @param {boolean} isProduction */

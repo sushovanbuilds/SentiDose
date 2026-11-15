@@ -15,6 +15,8 @@ const {
   previousDate,
 } = require('../src/services/reminders');
 const { createMailer } = require('../src/services/mailer');
+const { createAuthService, inviteIndexId } = require('../src/services/auth');
+const bcrypt = require('bcryptjs');
 
 const app = () => createApp({ config: testConfig() });
 
@@ -25,15 +27,18 @@ function authApp() {
       memberId: 'member-1',
       name: elderName,
       role: 'elder',
+      elderName,
       inviteCodes: { caretaker: '123456', family: '654321' },
     })),
-    joinCareSpace: jest.fn(async ({ name, role, code }) => {
-      if (code !== '123456') {
+    rotateInviteCode: jest.fn(async (_spaceId, role) => ({ code: role === 'family' ? '333333' : '222222', expiresAt: new Date('2026-12-01T00:00:00.000Z') })),
+    joinCareSpace: jest.fn(async ({ name, code }) => {
+      const role = { '111111': 'elder', '222222': 'caretaker', '123456': 'family' }[code];
+      if (!role) {
         const error = new Error('That code is invalid or has expired.');
         error.status = 401;
         throw error;
       }
-      return { spaceId: 'space-1', memberId: 'member-2', name, role };
+      return { spaceId: 'space-1', memberId: `member-${role}`, name: role === 'elder' ? 'Subrata' : name, role, elderName: 'Subrata' };
     }),
   };
   return { app: createApp({ config: testConfig(), authService }), authService };
@@ -45,11 +50,15 @@ function recordsApp(role = 'elder') {
       spaceId: 'space-1', memberId: 'member-1', name: 'Subrata', role: 'elder', inviteCodes: {},
     })),
     joinCareSpace: jest.fn(async ({ name }) => ({
-      spaceId: 'space-1', memberId: 'member-2', name, role,
+      spaceId: 'space-1', memberId: 'member-2', name, role, elderName: 'Subrata',
     })),
   };
   const recordsService = {
     listMedicines: jest.fn(async () => []),
+    listMembers: jest.fn(async () => []),
+    listSuggestions: jest.fn(async () => []),
+    createSuggestion: jest.fn(async (_spaceId, _actor, data) => ({ id: 'suggestion-1', ...data })),
+    decideSuggestion: jest.fn(async (_spaceId, id, status) => ({ id, status })),
     createMedicine: jest.fn(async (_spaceId, _actor, data) => ({ id: 'med-1', ...data })),
     updateMedicine: jest.fn(),
     deleteMedicine: jest.fn(),
@@ -201,7 +210,7 @@ describe('authentication API', () => {
 
     expect(response.status).toBe(201);
     expect(response.body).toEqual({
-      user: { spaceId: 'space-1', memberId: 'member-1', name: 'Subrata Halder', role: 'elder' },
+      user: { spaceId: 'space-1', memberId: 'member-1', name: 'Subrata Halder', role: 'elder', elderName: 'Subrata Halder' },
       inviteCodes: { caretaker: '123456', family: '654321' },
     });
     expect(response.headers['set-cookie'][0]).toContain('HttpOnly');
@@ -221,7 +230,28 @@ describe('authentication API', () => {
     const sessionCookie = joined.headers['set-cookie'][0].split(';')[0];
     const current = await request(authServer).get('/api/auth/me').set('Cookie', sessionCookie);
     expect(current.status).toBe(200);
-    expect(current.body.user).toEqual({ spaceId: 'space-1', memberId: 'member-2', name: 'Rahul', role: 'family' });
+    expect(current.body.user).toEqual({ spaceId: 'space-1', memberId: 'member-family', name: 'Rahul', role: 'family', elderName: 'Subrata' });
+    const me = await request(authServer).get('/api/me').set('Cookie', sessionCookie);
+    expect(me.body).toEqual({ spaceId: 'space-1', name: 'Rahul', role: 'family', elderName: 'Subrata' });
+  });
+
+  test.each([
+    ['elder', '111111'],
+    ['caretaker', '222222'],
+    ['family', '123456'],
+  ])('the %s passcode sets the signed session role', async (expectedRole, code) => {
+    const { app: authServer } = authApp();
+    const joined = await request(authServer).post('/api/auth/join').send({
+      name: expectedRole === 'elder' ? 'Subrata' : 'Member',
+      ...(expectedRole === 'elder' ? {} : { email: 'member@example.test' }),
+      role: expectedRole === 'elder' ? 'family' : 'elder',
+      code,
+    });
+    const cookie = joined.headers['set-cookie'][0].split(';')[0];
+    const me = await request(authServer).get('/api/me').set('Cookie', cookie);
+    expect(joined.status).toBe(200);
+    expect(me.body.role).toBe(expectedRole);
+    expect(me.body.elderName).toBe('Subrata');
   });
 
   test('rejects invalid input, unknown fields, and missing sessions', async () => {
@@ -286,8 +316,39 @@ describe('care record API', () => {
     expect(write.status).toBe(403);
     expect(recordsService.createMedicine).not.toHaveBeenCalled();
 
+    const doseWrite = await request(server).post('/api/doses').set('Cookie', cookie).send({
+      medId: 'med-1', scheduledFor: '2026-11-19T09:00', status: 'taken',
+    });
+    expect(doseWrite.status).toBe(403);
+    expect(recordsService.recordDose).not.toHaveBeenCalled();
+
+    const appointmentWrite = await request(server).post('/api/appointments').set('Cookie', cookie).send({
+      doctor: 'Dr. Sen', datetime: '2026-11-24T16:00',
+    });
+    expect(appointmentWrite.status).toBe(403);
+    expect(recordsService.createAppointment).not.toHaveBeenCalled();
+
+    const decision = await request(server).patch('/api/suggestions/suggestion-1').set('Cookie', cookie).send({ status: 'approved' });
+    expect(decision.status).toBe(403);
+    expect(recordsService.decideSuggestion).not.toHaveBeenCalled();
+
     const unexpectedQuery = await request(server).get('/api/medicines?unexpected=true').set('Cookie', cookie);
     expect(unexpectedQuery.status).toBe(400);
+  });
+
+  test('only an elder may rotate a role invite code', async () => {
+    const { app: server, authService } = authApp();
+    const caretakerJoin = await request(server).post('/api/auth/join').send({ name: 'Meena', email: 'meena@example.test', code: '222222' });
+    const caretakerCookie = caretakerJoin.headers['set-cookie'][0].split(';')[0];
+    const denied = await request(server).post('/api/spaces/space-1/codes').set('Cookie', caretakerCookie).send({ role: 'family' });
+    expect(denied.status).toBe(403);
+
+    const elderJoin = await request(server).post('/api/auth/join').send({ name: 'Subrata', code: '111111' });
+    const elderCookie = elderJoin.headers['set-cookie'][0].split(';')[0];
+    const created = await request(server).post('/api/spaces/space-1/codes').set('Cookie', elderCookie).send({ role: 'family' });
+    expect(created.status).toBe(201);
+    expect(created.body).toMatchObject({ role: 'family', code: '333333' });
+    expect(authService.rotateInviteCode).toHaveBeenCalledWith('space-1', 'family');
   });
 
   test('validates dose dates, records an action, and creates appointments', async () => {
