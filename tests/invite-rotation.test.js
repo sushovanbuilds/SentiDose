@@ -21,6 +21,7 @@ function memoryFirestore(seed) {
           this.filters.push([nextField, nextOperator, nextValue]);
           return this;
         },
+        limit() { return this; },
       };
     },
   });

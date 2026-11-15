@@ -62,7 +62,83 @@ function createRecordsService({ getFirestore, now = () => new Date() }) {
     const snapshot = await collection(spaceId, 'members').orderBy('createdAt', 'asc').limit(MEMBER_LIMIT).get();
     return snapshot.docs.map((doc) => {
       const member = doc.data();
-      return { id: doc.id, name: member.name, role: member.role, ...(member.relation ? { relation: member.relation } : {}) };
+      if (member.active === false) return null;
+      return {
+        id: doc.id,
+        name: member.name,
+        role: member.role,
+        ...(member.relation ? { relation: member.relation } : {}),
+        ...(member.email ? { email: member.email } : {}),
+        ...(member.phone ? { phone: member.phone } : {}),
+      };
+    }).filter(Boolean);
+  }
+
+  function duplicateEmailError() {
+    const error = new Error('That email is already used by someone in this care space.');
+    error.status = 409;
+    return error;
+  }
+
+  async function createMember(spaceId, data, actor) {
+    const db = getFirestore();
+    const members = collection(spaceId, 'members');
+    const spaceRef = db.collection('careSpaces').doc(spaceId);
+    const memberRef = members.doc();
+    const auditRef = collection(spaceId, 'auditLog').doc();
+    let result;
+    await db.runTransaction(async (transaction) => {
+      const [duplicate, roleMembers, spaceSnapshot] = await Promise.all([
+        data.email ? transaction.get(members.where('email', '==', data.email).limit(1)) : Promise.resolve(null),
+        transaction.get(members.where('role', '==', data.role).limit(MEMBER_LIMIT)),
+        transaction.get(spaceRef),
+      ]);
+      if (!spaceSnapshot.exists) throw notFound('Care space');
+      if (duplicate && !duplicate.empty) throw duplicateEmailError();
+      const roleLimit = data.role === 'caretaker' ? 3 : 10;
+      if (roleMembers.docs.filter((doc) => doc.get('active') !== false).length >= roleLimit) {
+        const error = new Error(`A care space can have up to ${roleLimit} ${data.role === 'caretaker' ? 'caretakers' : 'family members'}.`);
+        error.status = 400;
+        throw error;
+      }
+      const member = { ...data, active: true, sessionVersion: 0, createdAt: now() };
+      transaction.create(memberRef, member);
+      if (data.role === 'caretaker' && !spaceSnapshot.get('primaryCaretakerId')) {
+        transaction.update(spaceRef, { primaryCaretakerId: memberRef.id });
+      }
+      transaction.create(auditRef, { actor: actor.memberId, action: 'member.added', target: memberRef.id, at: now() });
+      result = { id: memberRef.id, ...member };
+    });
+    return result;
+  }
+
+  async function updateMember(spaceId, memberId, data, actor) {
+    const db = getFirestore();
+    const memberRef = collection(spaceId, 'members').doc(memberId);
+    const auditRef = collection(spaceId, 'auditLog').doc();
+    let result;
+    await db.runTransaction(async (transaction) => {
+      const [memberSnapshot, duplicate] = await Promise.all([
+        transaction.get(memberRef),
+        data.email ? transaction.get(collection(spaceId, 'members').where('email', '==', data.email).limit(2)) : Promise.resolve(null),
+      ]);
+      if (!memberSnapshot.exists || memberSnapshot.get('active') === false || memberSnapshot.get('role') === 'elder') throw notFound('Member');
+      if (duplicate && duplicate.docs.some((doc) => doc.id !== memberId && doc.get('active') !== false)) throw duplicateEmailError();
+      result = { ...memberSnapshot.data(), ...data, updatedAt: now() };
+      transaction.update(memberRef, { ...data, updatedAt: result.updatedAt });
+      transaction.create(auditRef, { actor: actor.memberId, action: 'member.updated', target: memberId, at: result.updatedAt });
+    });
+    return { id: memberId, ...result };
+  }
+
+  async function removeMember(spaceId, memberId, actor) {
+    const memberRef = collection(spaceId, 'members').doc(memberId);
+    const auditRef = collection(spaceId, 'auditLog').doc();
+    await getFirestore().runTransaction(async (transaction) => {
+      const snapshot = await transaction.get(memberRef);
+      if (!snapshot.exists || snapshot.get('active') === false || snapshot.get('role') === 'elder') throw notFound('Member');
+      transaction.update(memberRef, { active: false, sessionVersion: (snapshot.get('sessionVersion') || 0) + 1, removedAt: now() });
+      transaction.create(auditRef, { actor: actor.memberId, action: 'member.removed', target: memberId, at: now() });
     });
   }
 
@@ -265,6 +341,9 @@ function createRecordsService({ getFirestore, now = () => new Date() }) {
 
   return {
     listMembers,
+    createMember,
+    updateMember,
+    removeMember,
     listSuggestions,
     createSuggestion,
     decideSuggestion,

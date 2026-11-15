@@ -47,6 +47,18 @@ const suggestionSchema = z.object({
   details: z.string().trim().min(3).max(1000),
 }).strict();
 const suggestionDecisionSchema = z.object({ status: z.enum(['approved', 'rejected']) }).strict();
+const memberName = z.string().transform((value) => value.trim().replace(/\s+/gu, ' ')).pipe(
+  z.string().min(2, 'Enter a name with at least 2 letters.').max(60, 'Keep the name to 60 characters or fewer.').regex(/^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u, 'Use letters, spaces, apostrophes or hyphens.')
+);
+const memberEmail = z.string().trim().toLowerCase().pipe(z.string().email('Please enter an email like name@example.com.').max(254));
+const memberFields = {
+  name: memberName,
+  email: memberEmail.optional(),
+  phone: z.string().trim().max(32).optional(),
+  relation: z.enum(['Son', 'Daughter', 'Grandson', 'Granddaughter', 'Spouse', 'Sibling', 'Friend', 'Other']).optional(),
+};
+const createMemberSchema = z.object({ ...memberFields, role: z.enum(['caretaker', 'family']) }).strict();
+const updateMemberSchema = z.object(memberFields).partial().strict().refine((value) => Object.keys(value).length > 0);
 const emptySchema = z.object({}).strict();
 
 function noQuery(request, response, next) {
@@ -66,12 +78,39 @@ function noBody(request, response, next) {
 }
 
 /** @param {object} config @param {object} recordsService */
-function createRecordsRouter(config, recordsService) {
+function createRecordsRouter(config, recordsService, getMemberStatus) {
   const router = Router();
-  router.use(['/medicines', '/appointments', '/doses', '/members', '/suggestions'], requireAuth(config.sessionSecret));
+  router.use(['/medicines', '/appointments', '/doses', '/members', '/suggestions'], requireAuth(config.sessionSecret, getMemberStatus));
 
   router.get('/members', noQuery, noBody, asyncHandler(async (request, response) => {
-    response.json({ members: await recordsService.listMembers(request.auth.spaceId) });
+    const members = await recordsService.listMembers(request.auth.spaceId);
+    response.json({ members: request.auth.role === 'elder' ? members : members.map(({ email, phone, ...member }) => member) });
+  }));
+  router.post('/members', noQuery, requireRole('elder'), asyncHandler(async (request, response) => {
+    const input = createMemberSchema.safeParse(request.body);
+    if (!input.success) {
+      response.status(400).json({ error: 'Check the person details and try again.', fields: input.error.issues.map((issue) => ({ field: issue.path.join('.'), message: issue.message })) });
+      return;
+    }
+    response.status(201).json({ member: await recordsService.createMember(request.auth.spaceId, input.data, request.auth) });
+  }));
+  router.patch('/members/:memberId', noQuery, requireRole('elder'), asyncHandler(async (request, response) => {
+    const id = idSchema.safeParse(request.params.memberId);
+    const input = updateMemberSchema.safeParse(request.body);
+    if (!id.success || !input.success) {
+      response.status(400).json({ error: 'Check the person details and try again.', fields: input.success ? [] : input.error.issues.map((issue) => ({ field: issue.path.join('.'), message: issue.message })) });
+      return;
+    }
+    response.json({ member: await recordsService.updateMember(request.auth.spaceId, id.data, input.data, request.auth) });
+  }));
+  router.delete('/members/:memberId', noQuery, noBody, requireRole('elder'), asyncHandler(async (request, response) => {
+    const id = idSchema.safeParse(request.params.memberId);
+    if (!id.success) {
+      response.status(400).json({ error: 'Member ID is invalid.' });
+      return;
+    }
+    await recordsService.removeMember(request.auth.spaceId, id.data, request.auth);
+    response.status(204).end();
   }));
   router.get('/suggestions', noQuery, noBody, asyncHandler(async (request, response) => {
     response.json({ suggestions: await recordsService.listSuggestions(request.auth.spaceId) });

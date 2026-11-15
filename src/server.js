@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const path = require('node:path');
 
 const { loadConfig } = require('./config');
-const { createAuthRouter, createSpaceRouter } = require('./routes/auth');
+const { createAuthRouter, createSpaceRouter, createSpacesRouter } = require('./routes/auth');
 const { createRecordsRouter } = require('./routes/records');
 const { createCronRouter } = require('./routes/cron');
 const { createFirestoreAccessor } = require('./services/firestore');
@@ -117,16 +117,18 @@ function createApp(options = {}) {
   });
 
   app.use('/api/auth', createAuthRouter(config, authService));
+  app.use('/api/spaces', createSpacesRouter(config, authService));
   app.use('/api/spaces', createSpaceRouter(config, authService));
-  app.get('/api/me', requireAuth(config.sessionSecret), (request, response) => {
+  app.get('/api/me', requireAuth(config.sessionSecret, authService.getMemberStatus), (request, response) => {
     response.json({
       name: request.auth.name,
       role: request.auth.role,
       spaceId: request.auth.spaceId,
       elderName: request.auth.elderName,
+      displayName: request.auth.displayName || request.auth.elderName,
     });
   });
-  app.use('/api', createRecordsRouter(config, recordsService));
+  app.use('/api', createRecordsRouter(config, recordsService, authService.getMemberStatus));
   app.use('/api/cron', createCronRouter(config, reminderService));
 
   app.use(notFound);

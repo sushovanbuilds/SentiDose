@@ -139,8 +139,8 @@ function createReminderService({ getFirestore, sendEmail, now = currentTime }) {
     return ref;
   }
 
-  async function sendDoseDue(spaceRef, space, medicine, doseRef, scheduledFor, counts) {
-    if (!space.elderEmail) {
+  async function sendDoseDue(spaceRef, space, elder, medicine, doseRef, scheduledFor, counts) {
+    if (!elder || !elder.email) {
       counts.skipped += 1;
       return;
     }
@@ -150,7 +150,7 @@ function createReminderService({ getFirestore, sendEmail, now = currentTime }) {
       targetField: 'remindedAt',
       kind: 'dose_due',
       key: `dose_due:${doseRef.id}`,
-      recipients: [space.elderEmail],
+      recipients: [elder.email],
       subject: `Dose reminder: ${medicine.name}`,
       text: `It is time for ${medicine.name} (${medicine.dose}), scheduled for ${scheduledFor.replace('T', ' ')}. Open SentiDose to record this dose.`,
       allowTarget: (dose) => dose.status === 'pending',
@@ -252,10 +252,11 @@ function createReminderService({ getFirestore, sendEmail, now = currentTime }) {
       spaceRef.collection('appointments').where('active', '==', true).limit(APPOINTMENT_LIMIT).get(),
     ]);
     const medicines = medicineSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    const members = memberSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const members = memberSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })).filter((member) => member.active !== false);
+    const elder = members.find((member) => member.role === 'elder');
     const primaryCaretaker = members.find((member) => member.id === space.primaryCaretakerId);
     const familyEmails = members.filter((member) => member.role === 'family' && member.email).map((member) => member.email);
-    const appointmentRecipients = [...new Set([space.elderEmail, ...members.map((member) => member.email)].filter(Boolean))];
+    const appointmentRecipients = [...new Set(members.map((member) => member.email).filter(Boolean))];
     const nowMinute = localMinuteNumber(localNow);
 
     for (const medicine of medicines) {
@@ -268,7 +269,7 @@ function createReminderService({ getFirestore, sendEmail, now = currentTime }) {
           const actions = doseReminderActions(elapsedMinutes, date === today);
           const doseRef = await ensureDose(spaceRef, medicine, scheduledFor);
           if (actions.remindElder) {
-            await sendDoseDue(spaceRef, space, medicine, doseRef, scheduledFor, counts);
+            await sendDoseDue(spaceRef, space, elder, medicine, doseRef, scheduledFor, counts);
           }
           if (actions.escalateCaretaker) {
             await markMissedAndNotify(spaceRef, space, medicine, doseRef, scheduledFor, primaryCaretaker, counts);

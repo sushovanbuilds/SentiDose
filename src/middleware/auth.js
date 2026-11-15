@@ -10,6 +10,8 @@ const sessionPayloadSchema = z.object({
   name: z.string().min(1),
   role: z.enum(['elder', 'caretaker', 'family']),
   elderName: z.string().min(1),
+  displayName: z.string().min(1).optional(),
+  sessionVersion: z.number().int().nonnegative().default(0),
 });
 
 /** @param {boolean} isProduction */
@@ -24,8 +26,8 @@ function sessionCookieOptions(isProduction) {
 }
 
 /** @param {string} secret */
-function requireAuth(secret) {
-  return function authenticate(request, response, next) {
+function requireAuth(secret, getMemberStatus) {
+  return async function authenticate(request, response, next) {
     const token = request.cookies && request.cookies[SESSION_COOKIE];
     if (!token) {
       response.status(401).json({ error: 'Sign in to continue.' });
@@ -39,9 +41,20 @@ function requireAuth(secret) {
         response.status(401).json({ error: 'Your session is invalid. Please sign in again.' });
         return;
       }
+      if (getMemberStatus) {
+        const member = await getMemberStatus(parsed.data.spaceId, parsed.data.memberId);
+        if (!member.active || member.role !== parsed.data.role || (member.sessionVersion || 0) !== parsed.data.sessionVersion) {
+          response.status(401).json({ error: 'This account is no longer active. Ask the elder for access.' });
+          return;
+        }
+      }
       request.auth = parsed.data;
       next();
-    } catch {
+    } catch (error) {
+      if (error && error.name !== 'JsonWebTokenError' && error.name !== 'TokenExpiredError' && error.name !== 'ZodError') {
+        next(error);
+        return;
+      }
       response.status(401).json({ error: 'Your session has expired. Please sign in again.' });
     }
   };
