@@ -70,19 +70,23 @@ function iconSlot(name, size = 24, label) {
 
 /**
  * Elder bottom nav / caretaker sidebar. One component, CSS switches shape.
- * @param {'elder'|'caretaker'} variant
+ * @param {'elder'|'caretaker'|'family'} role
  * @param {string} active current page key
  * @returns {string}
  */
-function renderNav(variant, active) {
-  const items =
-    variant === 'elder'
+function renderNav(role, active) {
+  const items = role === 'elder'
       ? [
           { key: 'today', href: '/today', label: 'Today', icon: 'calendar' },
           { key: 'medicines', href: '/medicines', label: 'Medicines', icon: 'pill' },
           { key: 'family', href: '/family', label: 'Family', icon: 'users' },
         ]
-      : [
+      : role === 'family'
+        ? [
+            { key: 'dashboard', href: '/dashboard', label: 'Overview', icon: 'calendar' },
+            { key: 'family', href: '/family', label: 'Family', icon: 'users' },
+          ]
+        : [
           { key: 'dashboard', href: '/dashboard', label: 'Overview', icon: 'calendar' },
           { key: 'medicines', href: '/medicines', label: 'Medicines', icon: 'pill' },
           { key: 'appointments', href: '/appointments', label: 'Appointments', icon: 'stethoscope' },
@@ -100,7 +104,8 @@ function renderNav(variant, active) {
     )
     .join('');
 
-  return `<nav class="nav" aria-label="${variant === 'elder' ? 'Elder' : 'Caretaker'} sections"><ul class="nav__list">${links}</ul></nav>`;
+  const label = role === 'elder' ? 'Elder' : role === 'family' ? 'Family' : 'Caretaker';
+  return `<nav class="nav" aria-label="${label} sections"><ul class="nav__list">${links}</ul></nav>`;
 }
 
 /** @param {string} title @param {string} [subtitle] @param {string} [trailing] */

@@ -80,7 +80,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('elder');
     document.getElementById('header-holder').innerHTML = renderHeader('Review prescription', 'Elder care space');
     document.getElementById('nav-holder').innerHTML = renderNav('elder', 'medicines');
 

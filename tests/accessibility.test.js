@@ -60,6 +60,12 @@ describe('Automated Frontend Accessibility & Markup Integrity', () => {
       expect(content).not.toMatch(/<time[^>]+aria-live=/i);
     });
 
+    test('loads the signed-session role guard on protected pages', () => {
+      const publicPages = ['index.html', 'join.html'];
+      if (publicPages.includes(path.basename(filePath))) return;
+      expect(content).toContain('<script src="/js/role.js" defer></script>');
+    });
+
     test('does not use inline styles or style attributes (strict CSP)', () => {
       expect(content).not.toMatch(/<style[^>]*>/i);
       expect(content).not.toMatch(/\sstyle\s*=/i);

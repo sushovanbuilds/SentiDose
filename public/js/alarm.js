@@ -10,7 +10,6 @@
   const doseId = params.get('dose') || 'd2';
 
   function render() {
-    document.body.classList.add('elder');
     document.getElementById('header-holder').innerHTML = renderHeader('Reminder', 'Elder care space');
 
     const dose = store.dose(doseId);

@@ -79,7 +79,8 @@
 }
 
 /* Elder scale: larger body, 56px targets, single column max 560px. */
-body.elder {
+body.elder,
+body[data-role="elder"] {
   --font-body: var(--font-elder);
   --fs-body: 1.25rem;
   --fs-label: 1.125rem;

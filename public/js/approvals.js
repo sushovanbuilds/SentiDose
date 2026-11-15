@@ -2,10 +2,12 @@
 
 (function approvalsPage() {
   let filter = 'pending';
+  let suggestions = [];
+  let currentRole = 'elder';
 
   function render() {
     const holder = document.getElementById('suggestion-list');
-    const items = store.state.suggestions.filter((s) =>
+    const items = suggestions.filter((s) =>
       filter === 'pending' ? s.status === 'pending' : s.status !== 'pending'
     );
 
@@ -52,7 +54,7 @@
 
           <p class="med__note">${escapeHtml(item.proposedBy)} says: “${escapeHtml(item.reason)}”</p>
 
-          ${isPending
+          ${isPending && currentRole === 'elder'
             ? `<div class="next-card__actions">
                  <button class="btn btn--primary btn--block" type="button"
                          data-decide="${item.id}" data-decision="approved" aria-label="Approve: ${escapeHtml(item.title)} from ${escapeHtml(item.proposedBy)}">
@@ -70,26 +72,36 @@
 
     holder.querySelectorAll('[data-decide]').forEach((button) => {
       button.addEventListener('click', () => {
-        store.decide(button.dataset.decide, button.dataset.decision);
-        const message = button.dataset.decision === 'approved'
-          ? 'Approved. Your routine is updated.'
-          : 'Declined. Nothing changed.';
-        toast(message);
-        announceViewChange(message);
-        render();
-        focusMain();
+        button.disabled = true;
+        API.patch(`/api/suggestions/${encodeURIComponent(button.dataset.decide)}`, { status: button.dataset.decision })
+          .then(({ suggestion }) => {
+            suggestions = suggestions.map((item) => item.id === suggestion.id ? suggestion : item);
+            const message = button.dataset.decision === 'approved'
+              ? 'Approved. Your routine is updated.'
+              : 'Declined. Nothing changed.';
+            toast(message);
+            announceViewChange(message);
+            render();
+            focusMain();
+          })
+          .catch((error) => toast(error.message, 'error'))
+          .finally(() => { button.disabled = false; });
       });
     });
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('elder');
+    SentiDoseRole.ready.then(async (user) => {
+      if (!user) return;
+      currentRole = user.role;
+      const result = await API.get('/api/suggestions');
+      suggestions = result.suggestions;
     document.getElementById('header-holder').innerHTML = renderHeader(
       'Approvals',
       'Elder care space',
       `<a class="btn btn--ghost" href="/family"><span data-icon="help-circle" data-size="24"></span> Help</a>`
     );
-    document.getElementById('nav-holder').innerHTML = renderNav('elder', '');
+    document.getElementById('nav-holder').innerHTML = renderNav(user.role, '');
 
     render();
     initTextSize();
@@ -108,5 +120,6 @@
         render();
       });
     });
+    }).catch((error) => toast(error.message, 'error'));
   });
 })();

@@ -130,14 +130,13 @@
       submit.disabled = true;
       submit.textContent = 'Joining...';
       try {
-        await API.post('/api/auth/join', {
+        const { user } = await API.post('/api/auth/join', {
           name,
-          role: roleInput.value,
           ...(emailInput.value.trim() ? { email: emailInput.value.trim() } : {}),
           code,
         });
         toast('You joined the care space.');
-        location.href = '/today';
+        location.href = user.role === 'elder' ? '/today' : '/dashboard';
       } catch (requestError) {
         error.textContent = requestError.message;
         error.hidden = false;

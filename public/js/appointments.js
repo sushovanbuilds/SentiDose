@@ -186,8 +186,8 @@
     initTextSize();
     document.getElementById('appt-form').addEventListener('submit', submit);
     const stopListSkeleton = beginDelayedSkeleton(document.getElementById('appt-list'), listSkeleton);
-    Promise.all([API.get('/api/auth/me'), API.get('/api/appointments')])
-      .then(([{ user }, { appointments }]) => {
+    Promise.all([SentiDoseRole.ready, API.get('/api/appointments')])
+      .then(([user, { appointments }]) => {
         stopListSkeleton();
         canWrite = user.role !== 'family';
         document.getElementById('tab-add').hidden = !canWrite;

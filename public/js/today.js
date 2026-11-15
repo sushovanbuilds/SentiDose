@@ -34,7 +34,6 @@
   }
 
   function render() {
-    document.body.classList.add('elder');
     document.getElementById('header-holder').innerHTML = renderHeader(
       'Today',
       'Elder care space',
@@ -283,12 +282,12 @@
     const stopListSkeleton = beginDelayedSkeleton(document.getElementById('later-list'), listSkeleton);
     const stopAppointmentSkeleton = beginDelayedSkeleton(document.getElementById('next-appt'), appointmentSkeleton);
     Promise.all([
-      API.get('/api/auth/me'),
+      SentiDoseRole.ready,
       API.get('/api/medicines'),
       API.get(`/api/doses?date=${TODAY}`),
       API.get('/api/appointments'),
     ])
-      .then(([{ user }, medicineData, doseData, appointmentData]) => {
+      .then(([user, medicineData, doseData, appointmentData]) => {
         stopListSkeleton();
         stopAppointmentSkeleton();
         store.state.viewer = user;

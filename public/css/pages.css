@@ -2,7 +2,8 @@
 
 .page-main { padding-block: var(--sp-8) var(--sp-12); }
 /* Elder pages start higher: the dose card must clear the fold at 130% text. */
-body.elder .page-main { padding-block-start: var(--sp-4); }
+body.elder .page-main,
+body[data-role="elder"] .page-main { padding-block-start: var(--sp-4); }
 .today-head { margin-bottom: var(--sp-6); }
 .card--spaced { margin-top: var(--sp-6); }
 .time-row { margin-bottom: var(--sp-2); }

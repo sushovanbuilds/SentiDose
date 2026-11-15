@@ -25,11 +25,11 @@
   function render(adherence) {
     document.getElementById('header-holder').innerHTML = renderHeader(
       'Overview',
-      'Caretaker dashboard',
+      store.state.viewer.role === 'elder' ? 'Elder care space' : 'Care space',
       `<a class="btn btn--ghost" href="/family"><span data-icon="help-circle" data-size="24"></span> Help</a>
-       <span class="chip chip--upcoming"><span data-icon="users" data-size="18"></span>Rahul</span>`
+       <span class="chip chip--upcoming"><span data-icon="users" data-size="18"></span>${escapeHtml(store.state.viewer.name)}</span>`
     );
-    document.getElementById('nav-holder').innerHTML = renderNav('caretaker', 'dashboard');
+    document.getElementById('nav-holder').innerHTML = renderNav(store.state.viewer.role, 'dashboard');
     document.querySelector('a[href="/add-medicine"]').hidden = !canWrite;
     document.getElementById('dash-date').textContent = `${formatDate(TODAY)} • ${store.state.space.elderName}`;
 
@@ -204,13 +204,13 @@
     const stopDoseSkeleton = beginDelayedSkeleton(document.getElementById('doses-body'), doseSkeleton);
     const stopAppointmentSkeleton = beginDelayedSkeleton(document.getElementById('appt-list'), appointmentSkeleton);
     Promise.all([
-      API.get('/api/auth/me'),
+      SentiDoseRole.ready,
       API.get('/api/medicines'),
       API.get(`/api/doses?date=${TODAY}`),
       API.get('/api/appointments'),
       API.get(`/api/doses/adherence?days=7&through=${TODAY}`),
     ])
-      .then(([{ user }, medicineData, doseData, appointmentData, adherenceData]) => {
+      .then(([user, medicineData, doseData, appointmentData, adherenceData]) => {
         stopDoseSkeleton();
         stopAppointmentSkeleton();
         canWrite = user.role !== 'family';

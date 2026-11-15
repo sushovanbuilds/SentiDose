@@ -52,6 +52,9 @@ body {
   line-height: var(--lh-body);
   min-height: 100vh;
 }
+body[data-role-pending] #header-holder,
+body[data-role-pending] .shell,
+body[data-role-pending] > main { visibility: hidden; }
 
 h1, h2, h3 {
   font-family: var(--font-body);

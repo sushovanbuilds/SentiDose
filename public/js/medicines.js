@@ -96,7 +96,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('elder');
     document.getElementById('header-holder').innerHTML = renderHeader(
       'Medicines',
       'Elder care space',
@@ -110,8 +109,8 @@
     const search = document.getElementById('med-search');
     search.addEventListener('input', (event) => render(event.target.value, canWrite));
     const stopListSkeleton = beginDelayedSkeleton(document.getElementById('med-list'), listSkeleton);
-    Promise.all([API.get('/api/auth/me'), API.get('/api/medicines')])
-      .then(([{ user }, { medicines }]) => {
+    Promise.all([SentiDoseRole.ready, API.get('/api/medicines')])
+      .then(([user, { medicines }]) => {
         stopListSkeleton();
         canWrite = user.role !== 'family';
         store.state.medicines = medicines;
