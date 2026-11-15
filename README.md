@@ -133,6 +133,24 @@ gcloud scheduler jobs create http sentidose-tick --location=asia-south1 \
   --headers="x-cron-secret=CRON_SECRET,Content-Type=application/json"
 ```
 
+## Deploy to Vercel
+
+Vercel serves the Express app through `api/index.js`. Configure `SESSION_SECRET`
+for every Vercel environment that will receive traffic (Production, Preview,
+and/or Development) before deploying. It is required at function startup; if it
+is missing, the function cannot initialize and requests can fail with
+`FUNCTION_INVOCATION_FAILED`. Create a unique secret and add it through Vercel's
+Environment Variables settings or the CLI; do not commit it to this repository.
+
+```bash
+openssl rand -base64 48 | vercel env add SESSION_SECRET production
+```
+
+Repeat for any other enabled Vercel environment, then redeploy so the function
+receives the updated setting. The other integrations in the Environment
+variables table are optional for startup, but their features need their
+corresponding values to work.
+
 Builds run on Cloud Build with the pinned `node:24-alpine` base image; no local
 Docker is needed.
 

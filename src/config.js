@@ -34,7 +34,10 @@ const OPTIONAL_VARS = Object.freeze([
 function loadConfig(env = process.env) {
   const missing = REQUIRED.filter((key) => !env[key]);
   if (missing.length > 0) {
-    throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+    throw new Error(
+      `Missing required environment variables: ${missing.join(', ')}. ` +
+        'Set them in the deployment environment before starting the service.'
+    );
   }
 
   // Warn about missing optional services (omitted in test to keep test logs quiet)
