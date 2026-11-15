@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="description" content="Dadu's active medicine routine.">
+    <title>Medicines — SentiDose</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages.css">
+  </head>
+  <body class="elder">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="header-holder"></div>
+
+    <div class="shell">
+      <div id="nav-holder"></div>
+
+      <main id="main" class="container page-main">
+        <h1 class="page-title">Medicines</h1>
+        <p class="page-lede" id="med-count"></p>
+
+        <div class="row row--flush">
+          <a class="btn btn--primary" href="/add-medicine"><span data-icon="plus" data-size="24"></span> Add medicine</a>
+          <a class="btn btn--secondary" href="#scan"><span data-icon="camera" data-size="24"></span> Scan prescription note</a>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="med-search">Search your medicines</label>
+          <input class="input" id="med-search" type="search" placeholder="Type a name or a time of day" autocomplete="off">
+        </div>
+
+        <div id="med-list"></div>
+
+        <section aria-labelledby="family-note" class="notice notice--info notice--spaced">
+          <span class="notice__icon" data-icon="shield-check" data-size="28"></span>
+          <div>
+            <h2 id="family-note" class="timeline__title">Protected family schedule</h2>
+            <p>Prescriptions are coordinated with Rahul and Priya. Any update needs your approval before it changes your routine.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/js/icons.js"></script>
+    <script src="/js/store.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/medicines.js"></script>
+  </body>
+</html>

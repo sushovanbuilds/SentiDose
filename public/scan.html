@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="description" content="Review medicines read from a prescription photo before saving.">
+    <title>Review prescription — SentiDose</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages.css">
+  </head>
+  <body class="elder">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="header-holder"></div>
+
+    <div class="shell">
+      <div id="nav-holder"></div>
+
+      <main id="main" class="container page-main">
+        <div class="row row--flush">
+          <a class="btn btn--ghost" href="/medicines"><span data-icon="chevron-left" data-size="24"></span> Back to medicines</a>
+        </div>
+
+        <h1 class="page-title">Review your prescription</h1>
+        <p class="page-lede" id="scan-meta">No page scanned yet.</p>
+
+        <div class="notice notice--spaced" role="status">
+          <span class="notice__icon" data-icon="info" data-size="28"></span>
+          <div>
+            <h2 class="timeline__title">Please check every medicine</h2>
+            <p>We read this paper slip automatically. Double-check all doses with your box before saving.</p>
+          </div>
+        </div>
+
+        <div class="field field--spaced">
+          <label class="field__label" for="scan-file">Prescription photo</label>
+          <p class="field__hint">JPEG, PNG or WebP, up to 5 MB.</p>
+          <input class="input" id="scan-file" type="file" accept="image/jpeg,image/png,image/webp">
+          <p class="field__hint" id="scan-status" aria-live="polite"></p>
+        </div>
+
+        <h2 class="section-title" id="found-title">Found medicines</h2>
+
+        <div id="scan-list"></div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" type="button" id="scan-save" disabled aria-disabled="true">
+            Confirm and save
+          </button>
+          <a class="btn btn--secondary" href="/medicines">Cancel</a>
+        </div>
+        <p class="field__hint">Not medical advice. Always follow your doctor's direct instructions.</p>
+      </main>
+    </div>
+
+    <script src="/js/icons.js"></script>
+    <script src="/js/store.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/scan.js"></script>
+  </body>
+</html>

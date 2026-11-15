@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="description" content="Join a SentiDose care space with your 6-digit code, or create a new one.">
+    <title>Join a care space — SentiDose</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages.css">
+  </head>
+  <body class="elder">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="header-holder"></div>
+
+    <main id="main" class="container page-main">
+      <div class="tabs" role="tablist" aria-label="Join or create">
+        <button class="tabs__btn" role="tab" id="tab-join" aria-selected="true" aria-controls="panel-join" type="button">Join a care space</button>
+        <button class="tabs__btn" role="tab" id="tab-create" aria-selected="false" aria-controls="panel-create" type="button">Create a care space</button>
+      </div>
+
+      <section id="panel-join" role="tabpanel" aria-labelledby="tab-join">
+        <div class="card">
+          <span class="chip chip--neutral"><span data-icon="lock" data-size="18"></span>Protected</span>
+          <h1 class="page-title page-title--spaced">Join a care space</h1>
+          <p class="page-lede">Ask your family member or primary caregiver for their 6-digit code.</p>
+
+          <form id="join-form" novalidate>
+            <fieldset class="field">
+              <legend class="field__label">Enter your 6-digit code</legend>
+              <div class="code-boxes" id="code-boxes"></div>
+              <p class="field__hint" id="code-progress">0 of 6 entered</p>
+              <p class="field__error" id="join-error" role="alert" hidden></p>
+            </fieldset>
+
+            <div class="field">
+              <label class="field__label" for="join-name">Your name</label>
+              <input class="input" id="join-name" type="text" autocomplete="name" required>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="join-role">Your role</label>
+              <select class="select" id="join-role">
+                <option value="family">Family — see the schedule and suggest changes</option>
+                <option value="caretaker">Caretaker — add and edit medicines</option>
+              </select>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn--primary" type="submit">Join care space</button>
+            </div>
+          </form>
+
+          <p class="field__hint">Only people with the code can view medication details. Codes are 6 numbers and expire after 24 hours.</p>
+        </div>
+      </section>
+
+      <section id="panel-create" role="tabpanel" aria-labelledby="tab-create" hidden>
+        <div class="card">
+          <h1 class="page-title">Create a care space</h1>
+          <p class="page-lede">This makes you the elder owner. You can invite family afterwards.</p>
+
+          <form id="create-form" novalidate>
+            <div class="field">
+              <label class="field__label" for="create-elder">Your name</label>
+              <input class="input" id="create-elder" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label class="field__label" for="create-email">Your email</label>
+              <p class="field__hint">Used for reminder emails. Demo data only.</p>
+              <input class="input" id="create-email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label class="field__label" for="create-pin">Choose a 6-digit PIN</label>
+              <input class="input" id="create-pin" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required>
+              <p class="field__error" id="create-error" role="alert" hidden></p>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn--primary" type="submit">Create care space</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script src="/js/icons.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/join.js"></script>
+  </body>
+</html>

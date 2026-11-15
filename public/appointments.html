@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="description" content="Doctor visits and family accompaniment.">
+    <title>Appointments — SentiDose</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="header-holder"></div>
+
+    <div class="shell">
+      <div id="nav-holder"></div>
+
+      <main id="main" class="container page-main">
+        <h1 class="page-title">Appointments</h1>
+        <p class="page-lede">Doctor visits and family accompaniment.</p>
+
+        <div class="tabs" role="tablist" aria-label="Appointment views">
+          <button class="tabs__btn" role="tab" aria-selected="true" aria-controls="upcoming-panel" id="tab-upcoming" type="button">Upcoming</button>
+          <button class="tabs__btn" role="tab" aria-selected="false" aria-controls="add-panel" id="tab-add" type="button">Add appointment</button>
+        </div>
+
+        <section id="upcoming-panel" role="tabpanel" aria-labelledby="tab-upcoming">
+          <div id="appt-list"></div>
+        </section>
+
+        <section id="add-panel" role="tabpanel" aria-labelledby="tab-add" hidden>
+          <form id="appt-form" class="card" novalidate>
+            <h2 class="section-title section-title--flush">New appointment</h2>
+
+            <div class="field">
+              <label class="field__label" for="appt-doctor">Doctor name</label>
+              <input class="input" id="appt-doctor" name="doctor" type="text" required aria-describedby="appt-doctor-error">
+              <p class="field__error" id="appt-doctor-error" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="appt-specialty">Specialty or purpose</label>
+              <input class="input" id="appt-specialty" name="specialty" type="text">
+            </div>
+
+            <div class="two-up">
+              <div class="field">
+                <label class="field__label" for="appt-date">Date</label>
+                <input class="input" id="appt-date" name="date" type="date" required aria-describedby="appt-date-error">
+                <p class="field__error" id="appt-date-error" hidden></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="appt-time">Time</label>
+                <input class="input" id="appt-time" name="time" type="time" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="appt-location">Clinic or hospital address</label>
+              <input class="input" id="appt-location" name="location" type="text">
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="appt-notes">Important reminders or documents</label>
+              <textarea class="textarea" id="appt-notes" name="notes" maxlength="500"></textarea>
+              <p class="field__hint">For example: bring the previous blood test slip.</p>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn--primary" type="submit">Save appointment</button>
+              <button class="btn btn--secondary" type="button" id="cancel-add">Cancel</button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <script src="/js/icons.js"></script>
+    <script src="/js/store.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/appointments.js"></script>
+  </body>
+</html>

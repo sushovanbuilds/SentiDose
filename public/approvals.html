@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="description" content="Family suggestions waiting for Dadu's approval.">
+    <title>Approvals — SentiDose</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages.css">
+  </head>
+  <body class="elder">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="header-holder"></div>
+
+    <div class="shell">
+      <div id="nav-holder"></div>
+
+      <main id="main" class="container page-main">
+        <h1 class="page-title">Suggestions from family</h1>
+        <p class="page-lede">
+          Family can propose updates. Nothing changes until you say yes.
+        </p>
+
+        <div class="segmented" role="group" aria-label="Filter suggestions">
+          <button class="segmented__btn" type="button" data-filter="pending" aria-pressed="true">Waiting</button>
+          <button class="segmented__btn" type="button" data-filter="decided" aria-pressed="false">Decided recently</button>
+        </div>
+
+        <div id="suggestion-list"></div>
+      </main>
+    </div>
+
+    <script src="/js/icons.js"></script>
+    <script src="/js/store.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/approvals.js"></script>
+  </body>
+</html>

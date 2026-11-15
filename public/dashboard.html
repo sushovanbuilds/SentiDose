@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="description" content="Caretaker overview: adherence, today's doses and pending approvals.">
+    <title>Overview — SentiDose</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="header-holder"></div>
+
+    <div class="shell">
+      <div id="nav-holder"></div>
+
+      <main id="main" class="container page-main">
+        <div class="row row--between">
+          <div>
+            <h1 class="page-title">Overview</h1>
+            <p class="page-lede" id="dash-date"></p>
+          </div>
+          <a class="btn btn--primary" href="/add-medicine"><span data-icon="plus" data-size="24"></span> Add medicine</a>
+        </div>
+
+        <div id="alert-holder"></div>
+
+        <div class="two-up two-up--spaced">
+          <section class="card" aria-labelledby="adherence-title">
+            <h2 class="section-title section-title--flush" id="adherence-title">Weekly adherence</h2>
+            <p class="adherence__number" id="adherence-number">—</p>
+            <p class="page-lede" id="adherence-sub"></p>
+            <div class="week" id="week-strip"></div>
+            <p class="field__hint" id="adherence-foot"></p>
+          </section>
+
+          <section class="card" aria-labelledby="approvals-title">
+            <div class="row row--between">
+              <h2 class="section-title section-title--flush" id="approvals-title">Pending approvals</h2>
+              <span id="approvals-count"></span>
+            </div>
+            <p class="field__hint">Only Dadu can approve. Family changes wait here until he says yes.</p>
+            <div id="approvals-preview"></div>
+            <a class="btn btn--secondary btn--block btn--spaced" href="/approvals">View all suggestions</a>
+          </section>
+        </div>
+
+        <section aria-labelledby="doses-title">
+          <div class="section-head">
+            <h2 class="section-title" id="doses-title">Today's doses</h2>
+            <span id="doses-count"></span>
+          </div>
+          <div class="card table-card">
+            <div class="table-card__head">
+              <p class="field__hint" id="doses-note"></p>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <caption class="visually-hidden">Today's doses, their status and who recorded them</caption>
+                <thead>
+                  <tr>
+                    <th scope="col" class="col-medicine">Medicine</th>
+                    <th scope="col" class="col-scheduled">Scheduled</th>
+                    <th scope="col" class="col-status">Status</th>
+                    <th scope="col" class="col-actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="doses-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="appts-title">
+          <div class="section-head">
+            <h2 class="section-title" id="appts-title">Upcoming appointments</h2>
+            <a class="btn btn--ghost" href="/appointments">View all</a>
+          </div>
+          <div class="two-up" id="appt-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/js/icons.js"></script>
+    <script src="/js/store.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/dashboard.js"></script>
+  </body>
+</html>

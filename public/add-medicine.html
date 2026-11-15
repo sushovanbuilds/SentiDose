@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="description" content="Add a medicine and record a family voice reminder.">
+    <title>Add medicine — SentiDose</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages.css">
+  </head>
+  <body class="elder">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="header-holder"></div>
+
+    <div class="shell">
+      <div id="nav-holder"></div>
+
+      <main id="main" class="container page-main">
+        <div class="row row--flush">
+          <a class="btn btn--ghost" href="/medicines"><span data-icon="chevron-left" data-size="24"></span> Back to medicines</a>
+        </div>
+
+        <h1 class="page-title" id="form-title">Add medicine</h1>
+        <p class="page-lede">Enter the label details, or record a short voice message from family.</p>
+
+        <form id="med-form" novalidate>
+          <div class="card">
+            <div class="field">
+              <label class="field__label" for="med-name">Medicine name</label>
+              <p class="field__hint">As written on the box or bottle label.</p>
+              <input class="input" id="med-name" name="name" type="text" autocomplete="off" required
+                     aria-describedby="med-name-error">
+              <p class="field__error" id="med-name-error" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="med-dose">Dose</label>
+              <p class="field__hint">For example “500 mg” or “1 tablet”.</p>
+              <input class="input" id="med-dose" name="dose" type="text" autocomplete="off" required
+                     aria-describedby="med-dose-error">
+              <p class="field__error" id="med-dose-error" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="med-times">Times to take it</label>
+              <p class="field__hint">Add up to six times a day. Use the time picker.</p>
+              <div id="time-rows"></div>
+              <button class="btn btn--secondary" type="button" id="add-time">
+                <span data-icon="plus" data-size="24"></span> Add another time
+              </button>
+              <p class="field__error" id="med-times-error" hidden></p>
+            </div>
+
+            <fieldset class="field">
+              <legend class="field__label">How to take it with food</legend>
+              <div class="food-options">
+                <label class="radio-card"><input type="radio" name="withFood" value="before"> Before food</label>
+                <label class="radio-card"><input type="radio" name="withFood" value="after" checked> After food</label>
+                <label class="radio-card"><input type="radio" name="withFood" value="anytime"> Any time</label>
+              </div>
+            </fieldset>
+
+            <div class="field">
+              <label class="field__label" for="med-stock">Pills in stock</label>
+              <p class="field__hint">We will warn the family when fewer than 7 days remain.</p>
+              <div class="stepper">
+                <button class="iconbtn" type="button" id="stock-minus" aria-label="One less pill">−</button>
+                <input class="input" id="med-stock" name="stock" type="number" min="0" max="9999" value="28"
+                       inputmode="numeric">
+                <button class="iconbtn" type="button" id="stock-plus" aria-label="One more pill">+</button>
+              </div>
+            </div>
+          </div>
+
+          <section class="card card--spaced" aria-labelledby="voice-title">
+            <h2 class="section-title section-title--flush" id="voice-title">Family voice message</h2>
+            <p class="page-lede">Plays in Dadu's voice alarm instead of a beep. Up to 20 seconds.</p>
+            <input class="visually-hidden" id="voice-file" type="file" accept="audio/mpeg,audio/wav,audio/webm">
+            <div class="row">
+              <button class="btn btn--secondary" type="button" id="voice-record">
+                <span data-icon="mic" data-size="24"></span> Record a message
+              </button>
+              <span class="field__hint" id="voice-status" aria-live="polite">No recording yet.</span>
+            </div>
+          </section>
+
+          <div class="notice notice--info notice--spaced">
+            <span class="notice__icon" data-icon="shield-check" data-size="28"></span>
+            <div>
+              <h2 class="timeline__title">Family safety protocol</h2>
+              <p>New medicines entered by family members need Dadu's approval before they sound on his alarm.</p>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn--primary" type="submit" id="save-med">Save medicine</button>
+            <a class="btn btn--secondary" href="/medicines">Cancel</a>
+          </div>
+          <p class="field__hint">Not medical advice. Consult your doctor.</p>
+        </form>
+      </main>
+    </div>
+
+    <script src="/js/icons.js"></script>
+    <script src="/js/store.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/add-medicine.js"></script>
+  </body>
+</html>

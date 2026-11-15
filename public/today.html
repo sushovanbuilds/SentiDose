@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="description" content="Today's medicines for Dadu, one clear dose at a time.">
+    <title>Today — SentiDose</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/pages.css">
+  </head>
+  <body class="elder">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="header-holder"></div>
+
+    <div class="shell">
+      <div id="nav-holder"></div>
+
+      <main id="main" class="container page-main">
+        <div class="today-head">
+          <h1 class="today-head__greeting" id="greeting">Good morning, Dadu</h1>
+          <p class="today-head__date" id="today-date"></p>
+        </div>
+
+        <div class="elder-grid">
+          <div>
+            <section id="next-dose" aria-labelledby="next-dose-title" class="card">
+              <div class="next-card__top">
+                <h2 class="next-card__label" id="next-dose-title">Next medicine</h2>
+                <span id="next-dose-status"></span>
+              </div>
+              <p class="next-card__med" id="next-med-name"></p>
+              <p class="next-card__when" id="next-med-when"></p>
+
+              <div id="voice-holder"></div>
+
+              <div class="next-card__actions">
+                <button class="btn btn--success btn--block" type="button" id="took-it">
+                  <span data-icon="check-circle" data-size="24"></span> I took it
+                </button>
+                <button class="btn btn--secondary btn--block" type="button" id="snooze">
+                  <span data-icon="clock" data-size="24"></span> Remind me in 10 minutes
+                </button>
+              </div>
+              <p class="confirmed" id="confirm-note" hidden></p>
+            </section>
+
+            <section aria-labelledby="later-title">
+              <h2 class="section-title" id="later-title">Later today</h2>
+              <ul class="timeline card" id="later-list"></ul>
+            </section>
+          </div>
+
+          <div>
+            <section aria-labelledby="ask-title" class="card">
+              <h2 class="section-title section-title--flush" id="ask-title">Ask SentiDose</h2>
+              <p class="page-lede">Tap to speak with family or ask about your pills.</p>
+              <button class="btn btn--secondary btn--block" type="button" id="speak">
+                <span data-icon="mic" data-size="28"></span> Press to speak
+              </button>
+              <p class="field__hint" id="speak-hint" aria-live="polite"></p>
+            </section>
+
+            <section aria-labelledby="appt-title">
+              <h2 class="section-title" id="appt-title">Next appointment</h2>
+              <div class="card" id="next-appt"></div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/js/icons.js"></script>
+    <script src="/js/store.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/today.js"></script>
+  </body>
+</html>

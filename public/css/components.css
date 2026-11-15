@@ -75,6 +75,8 @@ a:not(.btn):hover { color: var(--primary-hover); }
 .stack > * + * { margin-top: var(--sp-6); }
 .row { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
 .row--between { justify-content: space-between; }
+.row--flush { margin-bottom: var(--sp-6); }
+.row--spaced { margin-top: var(--sp-3); }
 
 /* ---------- Header / nav ---------- */
 
