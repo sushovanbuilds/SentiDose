@@ -1,0 +1,11 @@
+/* Page-level layout only. Components and tokens live elsewhere. */
+
+.page-main { padding-block: var(--sp-12); }
+.page-footer {
+  padding-block: var(--sp-8);
+  color: var(--text-muted);
+  font-size: var(--fs-label);
+}
+
+.hero__chip { margin-bottom: var(--sp-4); }
+.hero__actions { margin-top: var(--sp-6); }
