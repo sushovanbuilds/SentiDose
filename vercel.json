@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -32,6 +31,54 @@
     {
       "source": "/health",
       "destination": "/api/index"
+    },
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/today",
+      "destination": "/today.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
+    },
+    {
+      "source": "/medicines",
+      "destination": "/medicines.html"
+    },
+    {
+      "source": "/add-medicine",
+      "destination": "/add-medicine.html"
+    },
+    {
+      "source": "/appointments",
+      "destination": "/appointments.html"
+    },
+    {
+      "source": "/approvals",
+      "destination": "/approvals.html"
+    },
+    {
+      "source": "/family",
+      "destination": "/family.html"
+    },
+    {
+      "source": "/audit",
+      "destination": "/audit.html"
+    },
+    {
+      "source": "/join",
+      "destination": "/join.html"
+    },
+    {
+      "source": "/alarm",
+      "destination": "/alarm.html"
+    },
+    {
+      "source": "/scan",
+      "destination": "/scan.html"
     }
   ]
 }
