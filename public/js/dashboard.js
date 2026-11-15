@@ -156,6 +156,7 @@
           render(result.adherence);
         } catch (error) {
           toast(error.message, 'error');
+          button.textContent = 'Try again';
           button.disabled = false;
         }
       });

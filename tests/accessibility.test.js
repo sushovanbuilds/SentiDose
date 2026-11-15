@@ -85,10 +85,19 @@ describe('Automated Frontend Accessibility & Markup Integrity', () => {
       }
     });
 
-    test('references Google Fonts with display=swap and correct Atkinson Hyperlegible family', () => {
-      expect(content).toMatch(
-        /href="https:\/\/fonts\.googleapis\.com\/css2\?family=Atkinson\+Hyperlegible:wght@400;700&family=Inter:wght@400;600;700&display=swap"/
-      );
+    test('loads only the page font with display=swap and defers its scripts', () => {
+      const elderPage = /<body[^>]*class="elder"/.test(content);
+      const expectedFamily = elderPage
+        ? 'Atkinson\\+Hyperlegible:wght@400;700'
+        : 'Inter:wght@400;600;700';
+      expect(content).toMatch(new RegExp(`fonts\\.googleapis\\.com/css2\\?family=${expectedFamily}&display=swap`));
+
+      const scripts = content.match(/<script[^>]+src="[^"]+"[^>]*>/g) || [];
+      expect(scripts.length).toBeGreaterThan(0);
+      scripts.forEach((script) => expect(script).toMatch(/\bdefer\b/));
+
+      expect(content.match(/rel="preconnect" href="https:\/\/fonts\.googleapis\.com"/g)).toHaveLength(1);
+      expect(content.match(/rel="preconnect" href="https:\/\/fonts\.gstatic\.com"/g)).toHaveLength(1);
     });
   });
 

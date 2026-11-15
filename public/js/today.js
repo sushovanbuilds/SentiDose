@@ -213,6 +213,7 @@
           focusMain();
         } catch (error) {
           toast(error.message, 'error');
+          tookButton.textContent = 'Try again';
         } finally {
           tookButton.disabled = false;
         }

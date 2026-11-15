@@ -149,6 +149,7 @@
       toast('Appointment saved.');
     } catch (error) {
       toast(error.message, 'error');
+      submitButton.textContent = 'Try again';
     } finally {
       submitButton.disabled = false;
     }

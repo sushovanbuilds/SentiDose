@@ -128,7 +128,7 @@
     } catch (error) {
       toast(error.message, 'error');
       submitButton.disabled = false;
-      submitButton.textContent = editingId ? 'Save changes' : 'Save medicine';
+      submitButton.textContent = 'Try again';
     }
   }
 

@@ -1,5 +1,4 @@
-/* API client. The front end currently reads demo data from store.js; these
-   helpers already speak the wire format so M2-M6 only swap the call sites. */
+/* Same-origin API client with a persistent, accessible recovery message. */
 
 /**
  * @param {string} path
@@ -7,21 +6,31 @@
  * @returns {Promise<any>}
  */
 async function api(path, options = {}) {
-  const response = await fetch(path, {
-    credentials: 'same-origin',
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    ...options,
-  });
+  try {
+    const response = await fetch(path, {
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      ...options,
+    });
 
-  const isJson = (response.headers.get('content-type') || '').includes('application/json');
-  const body = isJson ? await response.json() : { error: await response.text() };
+    const isJson = (response.headers.get('content-type') || '').includes('application/json');
+    const body = isJson ? await response.json() : { error: await response.text() };
 
-  if (!response.ok) {
-    const error = new Error(body.error || `Request failed with ${response.status}`);
-    error.status = response.status;
+    if (!response.ok) {
+      const error = new Error(body.error || `Request failed with ${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
+
+    clearRequestError();
+    return body;
+  } catch (error) {
+    const message = error && Number.isInteger(error.status) && error.message
+      ? error.message
+      : 'We could not reach SentiDose. Check your connection and try again.';
+    showRequestError(message);
     throw error;
   }
-  return body;
 }
 
 const API = {

@@ -142,7 +142,7 @@
         error.textContent = requestError.message;
         error.hidden = false;
         submit.disabled = false;
-        submit.textContent = 'Join care space';
+        submit.textContent = 'Try again';
       }
     });
 
@@ -178,7 +178,7 @@
         error.textContent = requestError.message;
         error.hidden = false;
         submit.disabled = false;
-        submit.textContent = 'Create care space';
+        submit.textContent = 'Try again';
       }
     });
   });
