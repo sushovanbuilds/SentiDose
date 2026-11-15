@@ -12,6 +12,16 @@
 
 .hero__chip { margin-bottom: var(--sp-4); }
 .hero__actions { margin-top: var(--sp-6); }
+@media (max-width: 480px) {
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero__actions .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
 
 .brand__text { display: flex; flex-direction: column; line-height: 1.2; }
 .brand__name { font-weight: 700; }
@@ -85,10 +95,10 @@
 
 /* ---------- Week strip ---------- */
 
-.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--sp-2); margin: var(--sp-4) 0; }
-.week__day { text-align: center; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-1); }
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--sp-2); margin: var(--sp-4) 0; overflow-x: auto; min-width: 0; }
+.week__day { text-align: center; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--sp-2) var(--sp-1); min-width: 0; }
 .week__name { display: block; font-size: var(--fs-label); color: var(--text-muted); }
-.week__value { display: block; font-weight: 700; font-variant-numeric: tabular-nums; }
+.week__value { display: block; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: normal; font-size: clamp(0.75rem, 2.5vw, 1rem); }
 .week__day--taken { background: var(--success-soft); border-color: var(--success); }
 .week__day--partial { background: var(--warning-soft); border-color: var(--warning); }
 .week__day--missed { background: var(--danger-soft); border-color: var(--danger); }

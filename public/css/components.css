@@ -181,6 +181,7 @@ body:has(.nav) main { padding-bottom: calc(var(--tap) + var(--sp-8)); }
   justify-content: center;
   gap: var(--sp-2);
   min-height: var(--tap);
+  max-width: 100%;
   padding: var(--sp-3) var(--sp-6);
   border-radius: var(--radius);
   border: 2px solid transparent;
@@ -190,6 +191,7 @@ body:has(.nav) main { padding-bottom: calc(var(--tap) + var(--sp-8)); }
   line-height: 1.2;
   cursor: pointer;
   text-decoration: none;
+  overflow-wrap: break-word;
   transition: background-color 160ms ease-out, border-color 160ms ease-out;
 }
 .btn svg { flex: 0 0 auto; }
@@ -233,8 +235,9 @@ body:has(.nav) main { padding-bottom: calc(var(--tap) + var(--sp-8)); }
   border-radius: var(--radius-full);
   font-size: var(--fs-label);
   font-weight: 600;
-  white-space: nowrap;
-  flex-shrink: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
   border: 1px solid transparent;
 }
 .chip svg { flex: 0 0 auto; }
