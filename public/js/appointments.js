@@ -72,11 +72,26 @@
       addTab.setAttribute('aria-selected', String(!isUpcoming));
       upcomingPanel.hidden = !isUpcoming;
       addPanel.hidden = isUpcoming;
+      announceViewChange(
+        isUpcoming
+          ? 'Upcoming appointments list shown.'
+          : 'New appointment form shown.'
+      );
       if (!isUpcoming) document.getElementById('appt-doctor').focus();
     };
 
     upcomingTab.addEventListener('click', () => select('upcoming'));
     addTab.addEventListener('click', () => select('add'));
+    // Arrow keys move between tabs per WAI-ARIA tab pattern.
+    [upcomingTab, addTab].forEach((tab) => {
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        const next = event.target === upcomingTab ? addTab : upcomingTab;
+        next.focus();
+        next.click();
+      });
+    });
     document.getElementById('cancel-add').addEventListener('click', () => select('upcoming'));
 
     return select;

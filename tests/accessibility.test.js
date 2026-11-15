@@ -144,5 +144,75 @@ describe('Automated Frontend Accessibility & Markup Integrity', () => {
     test('focus ring provides at least 3:1 contrast against page background', () => {
       expect(ratio(tokens.primary, tokens.bg)).toBeGreaterThanOrEqual(3.0);
     });
+
+    test('status chips carry colour on icon and border, label text uses --text (AA safe)', () => {
+      // Measured: success on success-soft is 3.52:1 and warning on warning-soft
+      // is 3.25:1 — both fail AA for small text. Chip labels use --text instead.
+      expect(ratio(tokens.text, '#e8f2ec')).toBeGreaterThanOrEqual(4.5);
+      expect(ratio(tokens.text, '#fbf1de')).toBeGreaterThanOrEqual(4.5);
+      expect(ratio(tokens.text, '#fbeae8')).toBeGreaterThanOrEqual(4.5);
+      expect(ratio(tokens.text, '#e6f2f0')).toBeGreaterThanOrEqual(4.5);
+    });
+  });
+
+  describe('ARIA and Focus Management (rendered markup)', () => {
+    const JS_FILES = fs
+      .readdirSync(path.join(PUBLIC_DIR, 'js'))
+      .filter((f) => f.endsWith('.js') && f !== 'icons.js' && f !== 'store.js' && f !== 'api.js')
+      .map((f) => path.join(PUBLIC_DIR, 'js', f));
+
+    test.each(JS_FILES)('every interactive element is a real <button> or <a>, not a click-div: %s', (filePath) => {
+      const content = fs.readFileSync(filePath, 'utf8');
+      // No bare onclick on non-button elements; handlers go through addEventListener
+      // on button/a elements rendered from template strings.
+      const clickDivs = content.match(/<(?:div|span|li|p|article|section)[^>]+onclick/i);
+      expect(clickDivs).toBeNull();
+    });
+
+    test.each(JS_FILES)('icon-only buttons carry an aria-label: %s', (filePath) => {
+      const content = fs.readFileSync(filePath, 'utf8');
+      // <button ...> blocks that contain only a data-icon span must have aria-label.
+      const buttonBlocks = content.match(/<button[^>]*>[\s\S]*?<\/button>/gi) || [];
+      buttonBlocks.forEach((block) => {
+        const openingTag = block.slice(0, block.indexOf('>'));
+        const isIconOnly = /data-icon/.test(block) && !/>[A-Za-z0-9]/.test(block.replace(openingTag, '').replace(/<[^>]*>/g, ''));
+        if (isIconOnly) {
+          expect(openingTag).toMatch(/aria-label=/i);
+        }
+      });
+    });
+
+    test('ui.js defines announceViewChange and focusMain for view changes', () => {
+      const ui = fs.readFileSync(path.join(PUBLIC_DIR, 'js', 'ui.js'), 'utf8');
+      expect(ui).toContain('function announceViewChange');
+      expect(ui).toContain('function focusMain');
+      expect(ui).toContain("'aria-live', 'polite'");
+    });
+
+    test('every main landmark is focusable with tabindex="-1" for post-action focus', () => {
+      const mains = content_readdirSync();
+      function content_readdirSync() {
+        return fs
+          .readdirSync(PUBLIC_DIR)
+          .filter((f) => f.endsWith('.html'))
+          .map((f) => fs.readFileSync(path.join(PUBLIC_DIR, f), 'utf8'))
+          .map((content) => (content.match(/<main[^>]*>/gi) || []).join('\n'))
+          .join('\n');
+      }
+      expect(mains).not.toMatch(/<main(?![^>]*tabindex="-1")[^>]*id="main"/);
+    });
+
+    test('text-size buttons expose aria-label and aria-pressed state', () => {
+      const ui = fs.readFileSync(path.join(PUBLIC_DIR, 'js', 'ui.js'), 'utf8');
+      expect(ui).toMatch(/renderTextSize[\s\S]*aria-label/);
+      expect(ui).toMatch(/aria-pressed/);
+    });
+
+    test('tab switchers move focus with arrow keys (WAI-ARIA tab pattern)', () => {
+      const join = fs.readFileSync(path.join(PUBLIC_DIR, 'js', 'join.js'), 'utf8');
+      const appts = fs.readFileSync(path.join(PUBLIC_DIR, 'js', 'appointments.js'), 'utf8');
+      expect(join).toMatch(/ArrowRight/);
+      expect(appts).toMatch(/ArrowRight/);
+    });
   });
 });

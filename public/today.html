@@ -21,7 +21,7 @@
     <div class="shell">
       <div id="nav-holder"></div>
 
-      <main id="main" class="container page-main">
+      <main id="main" tabindex="-1" class="container page-main">
         <div class="today-head">
           <h1 class="today-head__greeting" id="greeting">Good morning, Dadu</h1>
           <p class="today-head__date" id="today-date"></p>
@@ -59,11 +59,10 @@
           <div>
             <section aria-labelledby="ask-title" class="card">
               <h2 class="section-title section-title--flush" id="ask-title">Ask SentiDose</h2>
-              <p class="page-lede">Tap to speak with family or ask about your pills.</p>
-              <button class="btn btn--secondary btn--block" type="button" id="speak">
+              <button class="btn btn--secondary btn--block" type="button" id="speak" aria-describedby="speak-hint">
                 <span data-icon="mic" data-size="28"></span> Press to speak
               </button>
-              <p class="field__hint" id="speak-hint" aria-live="polite"></p>
+              <p class="field__hint" id="speak-hint" aria-live="polite">Tap to speak with family or ask about your pills.</p>
             </section>
 
             <section aria-labelledby="appt-title">

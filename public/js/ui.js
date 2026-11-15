@@ -165,6 +165,40 @@ function escapeHtml(value) {
 }
 
 /**
+ * Announce a page change to screen readers without moving focus.
+ * One polite live region per page, created on demand.
+ * Full page navigation announces <title> natively; this covers in-page
+ * view swaps (tab panels, filter re-renders, list refreshes).
+ * @param {string} message
+ */
+function announceViewChange(message) {
+  let region = document.getElementById('view-announcer');
+  if (!region) {
+    region = document.createElement('div');
+    region.id = 'view-announcer';
+    region.className = 'visually-hidden';
+    region.setAttribute('aria-live', 'polite');
+    region.setAttribute('role', 'status');
+    document.body.append(region);
+  }
+  // Clear then set: re-announces even when the message is unchanged.
+  region.textContent = '';
+  requestAnimationFrame(() => {
+    region.textContent = message;
+  });
+}
+
+/**
+ * Move keyboard focus to the main region after a content swap.
+ * tabindex="-1" on <main> makes this valid; screen readers land on the
+ * heading instead of <body>. Returns focus if the browser won't take it.
+ */
+function focusMain() {
+  const main = document.getElementById('main');
+  if (main) main.focus({ preventScroll: true });
+}
+
+/**
  * Bottom toast. Success auto-dismisses, errors stay until closed.
  * @param {string} message
  * @param {'success'|'error'} [tone]

@@ -27,6 +27,9 @@
   --fs-label: 0.875rem;
   --fs-h2: clamp(1.25rem, 4vw + 0.5rem, 1.5rem);
   --fs-h1: clamp(1.5rem, 5vw + 0.75rem, 2rem);
+  /* Landing hero only: a step above h1 so the marketing headline reads as a
+     display face. Not used on app screens — the app scale ends at h1. */
+  --fs-display: clamp(2rem, 6vw + 1rem, 2.75rem);
   --fs-alarm: clamp(1.5rem, 5vw + 0.75rem, 2rem);
 
   --lh-body: 1.5;
@@ -67,6 +70,8 @@ body.elder {
   --fs-label: 1.125rem;
   --fs-h2: clamp(1.35rem, 4vw + 0.75rem, 1.75rem);
   --fs-h1: clamp(1.65rem, 5vw + 1rem, 2.25rem);
+  /* The one thing Dadu must never miss: the medicine name on the dose card. */
+  --fs-dose: clamp(1.75rem, 6vw + 1rem, 2.25rem);
   --fs-alarm: clamp(1.85rem, 6vw + 1rem, 2.5rem);
   --lh-body: 1.5;
   --tap: 56px;

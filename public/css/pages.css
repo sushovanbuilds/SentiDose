@@ -1,6 +1,9 @@
 /* Page-level layout only. Components and tokens live elsewhere. */
 
 .page-main { padding-block: var(--sp-8) var(--sp-12); }
+/* Elder pages start higher: the dose card must clear the fold at 130% text. */
+body.elder .page-main { padding-block-start: var(--sp-4); }
+.today-head { margin-bottom: var(--sp-6); }
 .card--spaced { margin-top: var(--sp-6); }
 .time-row { margin-bottom: var(--sp-2); }
 .time-row .input { flex: 1 1 160px; }
@@ -12,6 +15,7 @@
 
 .hero__chip { margin-bottom: var(--sp-4); }
 .hero__actions { margin-top: var(--sp-6); }
+.hero__title { font-size: var(--fs-display); line-height: 1.15; }
 @media (max-width: 480px) {
   .hero__actions {
     flex-direction: column;
@@ -65,9 +69,12 @@
 
 .next-card__top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-4); }
 .next-card__label { font-size: var(--fs-label); font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 0; }
-.next-card__med { margin: 0 0 var(--sp-1); }
-.next-card__when { margin: 0 0 var(--sp-4); color: var(--text-muted); }
+.next-card__med { margin: 0 0 var(--sp-1); font-size: var(--fs-dose); font-weight: 700; line-height: 1.2; }
+.next-card__when { margin: 0 0 var(--sp-4); color: var(--text-muted); font-size: var(--fs-label); }
 .next-card__actions { display: grid; gap: var(--sp-3); margin-top: var(--sp-6); }
+/* Voice is the emotional hook of the product: keep it visible above the fold
+   by not stacking quote + spacing too deep. */
+.audio__quote { margin: var(--sp-3) 0 0; font-style: italic; color: var(--text); font-size: var(--fs-label); }
 
 .confirmed { display: flex; align-items: center; gap: var(--sp-2); color: var(--success); font-weight: 600; margin: var(--sp-3) 0 0; }
 
@@ -76,7 +83,6 @@
 .audio__label { font-weight: 600; margin: 0 0 var(--sp-2); }
 .audio__label--flush, .audio__meta--flush { margin-bottom: 0; }
 .audio__meta { font-size: var(--fs-label); color: var(--text-muted); margin: 0 0 var(--sp-3); }
-.audio__quote { margin: var(--sp-3) 0 0; font-style: italic; color: var(--text); }
 
 /* ---------- Timeline rows ---------- */
 

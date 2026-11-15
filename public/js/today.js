@@ -134,6 +134,24 @@
       return;
     }
 
+    const missed = doses.find((dose) => dose.status === 'missed');
+    if (missed) {
+      const med = store.medicine(missed.medId);
+      // Plain language, one recovery step, no blame. Dadu should not have to
+      // wonder what a missed dose means for him.
+      list.insertAdjacentHTML(
+        'afterend',
+        `<div class="notice notice--info" role="status" id="missed-note">
+           <span class="notice__icon" data-icon="info" data-size="28"></span>
+           <div>
+             <p class="timeline__title">${escapeHtml(med ? `${med.name} this morning was not recorded.` : 'A dose was not recorded.')}</p>
+             <p>We have told your family. Do not take it twice — wait for the next dose. If you feel unwell, call Rahul.</p>
+           </div>
+         </div>`
+      );
+      hydrateIcons();
+    }
+
     list.innerHTML = doses
       .map((dose) => {
         const med = store.medicine(dose.medId);
@@ -190,7 +208,9 @@
           });
           Object.assign(next, dose);
           toast('Dose recorded.');
+          announceViewChange('Dose marked as taken. Next medicine shown.');
           render();
+          focusMain();
         } catch (error) {
           toast(error.message, 'error');
         } finally {
@@ -257,6 +277,7 @@
         store.state.appointments = [];
         document.querySelector('.next-card__actions').hidden = true;
         render();
+        focusMain();
         toast(error.message, 'error');
       });
   });

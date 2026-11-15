@@ -63,10 +63,25 @@
       createTab.setAttribute('aria-selected', String(!isJoin));
       joinPanel.hidden = !isJoin;
       createPanel.hidden = isJoin;
+      announceViewChange(
+        isJoin
+          ? 'Join a care space panel shown. Ask your family member for their 6-digit code.'
+          : 'Create a care space panel shown. Enter the elder details to start.'
+      );
     };
 
     joinTab.addEventListener('click', () => select(true));
     createTab.addEventListener('click', () => select(false));
+    // Arrow keys move between tabs per WAI-ARIA tab pattern.
+    [joinTab, createTab].forEach((tab) => {
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        const next = event.target === joinTab ? createTab : joinTab;
+        next.focus();
+        next.click();
+      });
+    });
 
     if (location.hash === '#create') select(false);
   }

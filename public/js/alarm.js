@@ -52,7 +52,7 @@
 
     holder.innerHTML = `
       <div class="audio">
-        <button class="audio__btn" type="button" id="enable-voice">
+        <button class="audio__btn" type="button" id="enable-voice" aria-label="Play message from ${escapeHtml(med.voiceFrom)}">
           <span data-icon="play" data-size="28"></span>
         </button>
         <div class="audio__wave">

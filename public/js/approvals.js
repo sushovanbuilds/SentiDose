@@ -55,7 +55,7 @@
           ${isPending
             ? `<div class="next-card__actions">
                  <button class="btn btn--primary btn--block" type="button"
-                         data-decide="${item.id}" data-decision="approved">
+                         data-decide="${item.id}" data-decision="approved" aria-label="Approve: ${escapeHtml(item.title)} from ${escapeHtml(item.proposedBy)}">
                    <span data-icon="check-circle" data-size="24"></span> Approve
                  </button>
                  <button class="btn btn--secondary btn--block" type="button"
@@ -71,8 +71,13 @@
     holder.querySelectorAll('[data-decide]').forEach((button) => {
       button.addEventListener('click', () => {
         store.decide(button.dataset.decide, button.dataset.decision);
-        toast(button.dataset.decision === 'approved' ? 'Approved. Your routine is updated.' : 'Declined. Nothing changed.');
+        const message = button.dataset.decision === 'approved'
+          ? 'Approved. Your routine is updated.'
+          : 'Declined. Nothing changed.';
+        toast(message);
+        announceViewChange(message);
         render();
+        focusMain();
       });
     });
   }
@@ -95,6 +100,11 @@
         document.querySelectorAll('[data-filter]').forEach((other) => {
           other.setAttribute('aria-pressed', String(other === button));
         });
+        announceViewChange(
+          filter === 'pending'
+            ? 'Showing suggestions waiting for your approval.'
+            : 'Showing suggestions you already decided.'
+        );
         render();
       });
     });

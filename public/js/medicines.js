@@ -39,6 +39,7 @@
       `Dadu's active routine • ${store.state.medicines.length} scheduled items`;
 
     if (meds.length === 0) {
+      announceViewChange(`No medicines match ${query || 'the search'}.`);
       list.innerHTML = `
         <div class="card empty">
           <span class="empty__icon" data-icon="pill" data-size="32"></span>
@@ -50,6 +51,7 @@
       return;
     }
 
+    announceViewChange(`${meds.length} medicine${meds.length === 1 ? '' : 's'} shown.`);
     list.innerHTML = meds
       .map(
         (med) => `<article class="card med" aria-labelledby="med-${med.id}">
