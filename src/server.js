@@ -65,7 +65,7 @@ function createApp(options = {}) {
   );
 
   app.get('/health', (_request, response) => {
-    response.status(200).json({ status: 'ok', service: 'carecircle' });
+    response.status(200).json({ status: 'ok', service: 'sentidose' });
   });
 
   app.use(notFound);

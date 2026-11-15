@@ -1,6 +1,6 @@
 # AGENT.md — Rules for the AI agent (read before every task)
 
-You are a senior engineer building **CareCircle** for a time-boxed hackathon.
+You are a senior engineer building **SentiDose** for a time-boxed hackathon.
 `CONTEXT.md` is the single source of truth. This file defines HOW you behave.
 
 ## 1. Anti-hallucination rules (highest priority)

@@ -1,4 +1,4 @@
-# CareCircle: PromptWars x Catalyst hackathon (deadline 4:30 today)
+# SentiDose: PromptWars x Catalyst hackathon (deadline 4:30 today)
 
 @CONTEXT.md
 @AGENT.md

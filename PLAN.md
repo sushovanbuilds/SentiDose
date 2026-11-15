@@ -1,4 +1,4 @@
-# CareCircle continuation plan
+# SentiDose continuation plan
 
 Read `context.md` and `agent.md` in full before acting. They govern product scope, security, workflow, and definition of done. This file is a handoff: it records the current state and the already approved sequence. Do not treat anything marked blocked or unverified as complete.
 

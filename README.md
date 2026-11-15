@@ -1,4 +1,4 @@
-# CareCircle
+# SentiDose
 
 Elder-first care the whole family runs together. One shared medication routine,
 a familiar family voice instead of a harsh alarm, and the elder always in control.
@@ -15,7 +15,7 @@ hold part of the picture. Reminder apps buzz at the wrong time, caretakers canno
 see what actually happened, and the person taking the medicine has the least
 control over their own schedule.
 
-CareCircle gives one shared care space: the elder sees one clear dose at a time,
+SentiDose gives one shared care space: the elder sees one clear dose at a time,
 the family sees the whole week, and nothing changes without the elder's approval.
 
 ## What it does
@@ -123,12 +123,12 @@ gcloud storage buckets create gs://GCS_BUCKET --location=asia-south1 \
 printf '%s' "$VALUE" | gcloud secrets create SESSION_SECRET --data-file=-
 printf '%s' "$VALUE" | gcloud secrets create CRON_SECRET --data-file=-
 
-gcloud run deploy carecircle --source . --region=asia-south1 \
+gcloud run deploy sentidose --source . --region=asia-south1 \
   --allow-unauthenticated --port=8080 \
   --set-env-vars=NODE_ENV=production,GOOGLE_CLOUD_PROJECT=PROJECT_ID,GCS_BUCKET=GCS_BUCKET,APP_BASE_URL=URL,SMTP_HOST=HOST,SMTP_PORT=587,MAIL_FROM=FROM,GEMINI_MODEL=MODEL \
   --set-secrets=SESSION_SECRET=SESSION_SECRET:latest,CRON_SECRET=CRON_SECRET:latest,GEMINI_API_KEY=GEMINI_API_KEY:latest,SMTP_USER=SMTP_USER:latest,SMTP_PASS=SMTP_PASS:latest
 
-gcloud scheduler jobs create http carecircle-tick --location=asia-south1 \
+gcloud scheduler jobs create http sentidose-tick --location=asia-south1 \
   --schedule="* * * * *" --uri="URL/api/cron/tick" --http-method=POST \
   --headers="x-cron-secret=CRON_SECRET,Content-Type=application/json"
 ```

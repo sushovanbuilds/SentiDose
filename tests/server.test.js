@@ -11,7 +11,7 @@ describe('service skeleton', () => {
     const response = await request(app()).get('/health');
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ status: 'ok', service: 'carecircle' });
+    expect(response.body).toEqual({ status: 'ok', service: 'sentidose' });
   });
 
   test('serves the accessible landing page', async () => {

@@ -1,4 +1,4 @@
-# CONTEXT.md — CareCircle (single source of truth)
+# CONTEXT.md — SentiDose (single source of truth)
 
 > Read this file fully before planning or coding. If something is not written
 > here, it is NOT a requirement and NOT a fact. Do not invent it. Ask instead.
@@ -32,7 +32,7 @@ and caretakers informed.
   collaborative, with the **elder at the centre of their own healthcare
   decisions**.
 
-## 3. Product: CareCircle
+## 3. Product: SentiDose
 Pitch: "Elder-first care the whole family runs together. A familiar family
 voice instead of a harsh alarm, Gemini-powered scanning, and the elder always
 in control."

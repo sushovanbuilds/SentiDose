@@ -1,4 +1,4 @@
-CareCircle design system
+SentiDose design system
 Read with CONTEXT.md and AGENT.md. This file defines how the UI looks and behaves. Reuse these tokens everywhere. Do NOT invent new colours, fonts, spacing values or component styles. If a Stitch export exists, extract its tokens into public/css/tokens.css and keep this file as the rulebook.
 1. Design principles
 
